@@ -105,13 +105,13 @@
                             android:layout_marginTop="16dp">
 
                             <EditText
+                                android:id="@+id/emailPhone"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:drawablePadding="16dp"
                                 android:drawableStart="@drawable/ic_email_light_blue_24dp"
                                 android:fontFamily="@font/calibri"
-                                android:hint="Email"
-                                android:inputType="textEmailAddress"
+                                android:hint="Email or Phone"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp" />
