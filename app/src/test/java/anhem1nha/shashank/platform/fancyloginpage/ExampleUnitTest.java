@@ -1,4 +1,4 @@
-package com.shashank.platform.fancyloginpage;
+package anhem1nha.shashank.platform.fancyloginpage;
 
 import org.junit.Test;
 

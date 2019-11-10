@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginPage">
+    tools:context="anhem1nha.shashank.platform.fancyloginpage.LoginPage">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -111,7 +111,6 @@
                                 android:drawablePadding="16dp"
                                 android:drawableStart="@drawable/ic_email_light_blue_24dp"
                                 android:fontFamily="@font/calibri"
-                                android:hint="Email or Phone"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp" />
@@ -130,7 +129,6 @@
                                 android:drawablePadding="16dp"
                                 android:drawableStart="@drawable/ic_lock_light_blue_24dp"
                                 android:fontFamily="@font/calibri"
-                                android:hint="Password"
                                 android:inputType="textPassword"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
@@ -154,6 +152,14 @@
                             android:textColor="#ffffff"
                             android:textSize="18sp"
                             android:textStyle="bold" />
+
+                        <com.facebook.login.widget.LoginButton
+                            android:id="@+id/login_Button_Facebook"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="30dp" />
 
                         <TextView
                             android:id="@+id/forgot_password"
