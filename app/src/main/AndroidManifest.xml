@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.Home"></activity>
         <activity android:name="anhem1nha.shashank.platform.fancyloginpage.RegisterPage" />
         <activity
             android:name="anhem1nha.shashank.platform.fancyloginpage.LoginPage"

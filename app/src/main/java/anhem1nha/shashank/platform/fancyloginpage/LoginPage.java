@@ -2,7 +2,6 @@ package anhem1nha.shashank.platform.fancyloginpage;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,9 +30,12 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +58,7 @@ public class LoginPage extends AppCompatActivity {
     String fbName,fbEmail,fbAvatar;
     LoginButton loginButtonFacebook;
     CallbackManager callbackManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,12 @@ public class LoginPage extends AppCompatActivity {
 
             }
         });
+
+        ///
+
+
+
+
 
         //Khi bấm vào tag SingIn
         signin.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +159,11 @@ public class LoginPage extends AppCompatActivity {
                                 public void onResponse(JSONObject response) {
                                     try {
                                         token=response.getString("token");
+                                        Intent intent = new Intent(LoginPage.this,Home.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -197,6 +211,10 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
+
+
+
+
     private boolean isValidEmailId(String email){
         return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
                 + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
@@ -213,6 +231,7 @@ public class LoginPage extends AppCompatActivity {
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
 
     }
+
     AccessTokenTracker tokenTracker= new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -256,6 +275,12 @@ public class LoginPage extends AppCompatActivity {
                                 public void onResponse(JSONObject response) {
                                     try {
                                         token=response.getString("token");
+
+                                        Intent intent = new Intent(LoginPage.this,Home.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -293,25 +318,5 @@ public class LoginPage extends AppCompatActivity {
         parameters.putString("fields","first_name,last_name,email,id");
         request.setParameters(parameters);
         request.executeAsync();
-    }
-
-    private Boolean exit = false;
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            finish(); // finish activity
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-
-        }
-
     }
 }
