@@ -58,12 +58,17 @@ public class LoginPage extends AppCompatActivity {
     String fbName,fbEmail,fbAvatar;
     LoginButton loginButtonFacebook;
     CallbackManager callbackManager;
-
+    // Login GG
+    GoogleSignInClient mGoogleSignInClient;
+    int RC_SIGN_IN=0;
+    SignInButton signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
+        signInButton = (SignInButton) findViewById(R.id.sign_in_button);
 
         signin = findViewById(R.id.signin);
         signup = findViewById(R.id.signup);
@@ -99,7 +104,19 @@ public class LoginPage extends AppCompatActivity {
 
         ///
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken("30016777562-qk7umu04d9k3m1kk27drr5ajqa029bfi.apps.googleusercontent.com")
+                .requestServerAuthCode("30016777562-qk7umu04d9k3m1kk27drr5ajqa029bfi.apps.googleusercontent.com")
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
 
 
 
@@ -135,6 +152,8 @@ public class LoginPage extends AppCompatActivity {
                 signin_signup_btn.setText("Next");
                 emailPhone.setHint("Email");
                 forgot_password.setVisibility(View.INVISIBLE);
+                loginButtonFacebook.setVisibility(View.INVISIBLE);
+                signInButton.setVisibility(View.INVISIBLE);
                 emailPhone.setText("");
                 password.setText("");
                 isSignIn=false;
@@ -212,7 +231,10 @@ public class LoginPage extends AppCompatActivity {
     }
 
 
-
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 
 
     private boolean isValidEmailId(String email){
@@ -226,12 +248,74 @@ public class LoginPage extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+        else
             callbackManager.onActivityResult(requestCode,resultCode,data);
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
 
     }
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            String authCode = account.getServerAuthCode();
+            String idToken = account.getIdToken();
+            // Signed in successfully, show authenticated UI.
+            RequestQueue requestQueue= Volley.newRequestQueue(this);
+            String URL = "https://www.googleapis.com/oauth2/v4/token";
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("grant_type", "authorization_code");
+            params.put("client_id", "30016777562-qk7umu04d9k3m1kk27drr5ajqa029bfi.apps.googleusercontent.com");
+            params.put("client_secret","BOyRgPD-5XwSiZTwnkXA5gOX");
+            params.put("redirect_uri","");
+            params.put("code",authCode);
+            JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                token=response.getString("access_token");
+                                Intent intent = new Intent(LoginPage.this,Home.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    NetworkResponse networkResponse = error.networkResponse;
+                    if (networkResponse != null) {
+                        String statusCode=String.valueOf(networkResponse.statusCode);
+                        switch(statusCode){
+                            case "400":
+                                Toast.makeText(LoginPage.this, "Phone/Email already registered", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "503":
+                                Toast.makeText(LoginPage.this, "Server error on creating user", Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                Toast.makeText(LoginPage.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+            requestQueue.add(request_json);
 
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("AA", "signInResult:failed code=" + e.getStatusCode());
+        }
+    }
     AccessTokenTracker tokenTracker= new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
