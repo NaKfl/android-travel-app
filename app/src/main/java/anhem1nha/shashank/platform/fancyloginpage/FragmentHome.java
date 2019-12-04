@@ -48,7 +48,6 @@ public class FragmentHome extends Fragment {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
         String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=5"+"&pageNum="+Home.page;
-
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -66,15 +65,25 @@ public class FragmentHome extends Fragment {
                                 String endDate = tour.getString("endDate");
                                 String adults = tour.getString("adults");
                                 String avatar = tour.getString("avatar");
+                                String timeStart="0";
+                                String timeEnd="0";
+                                try{
+                                    long miliStartDate=Long.parseLong(startDate);
+                                    Date startD=new Date(miliStartDate);
+                                    DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
+                                    timeStart=dateFormat.format(startD);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
-                                long miliStartDate=Long.parseLong(startDate);
-                                Date startD=new Date(miliStartDate);
-                                DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
-                                String timeStart=dateFormat.format(startD);
-                                long miliEndDate=Long.parseLong(endDate);
-                                Date endD=new Date(miliEndDate);
-                                DateFormat dateFormat1=new SimpleDateFormat("dd/MM/yyyy");
-                                String timeEnd=dateFormat1.format(endD);
+                               try{
+                                   long miliEndDate=Long.parseLong(endDate);
+                                   Date endD=new Date(miliEndDate);
+                                   DateFormat dateFormat1=new SimpleDateFormat("dd/MM/yyyy");
+                                   timeEnd=dateFormat1.format(endD);
+                               }catch(Exception e){
+                                   e.printStackTrace();
+                               }
 
 
                                 tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+"-"+maxCost);

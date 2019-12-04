@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginPage extends AppCompatActivity {
-    public static String token;
+    public static String token="";
     Boolean isSignIn=true;
     TextView signin,signup,signin_signup_txt,forgot_password;
     CircleImageView circleImageView;
@@ -67,9 +67,14 @@ public class LoginPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-
+        if(!token.isEmpty()) {
+            Intent intent = new Intent(LoginPage.this, Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-
         signin = findViewById(R.id.signin);
         signup = findViewById(R.id.signup);
         signin_signup_txt = findViewById(R.id.signin_signup_txt);

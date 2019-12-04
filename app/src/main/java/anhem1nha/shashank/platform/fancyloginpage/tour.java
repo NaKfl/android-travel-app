@@ -46,4 +46,8 @@ public class tour {
     public void setPeople(String people) {
         this.people = people;
     }
+
+    public String toString(){
+        return avatar+" "+destination+" "+date+" "+cash+" "+people;
+    }
 }
