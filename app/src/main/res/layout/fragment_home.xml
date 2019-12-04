@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar1"
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhiteTransparent"
@@ -86,7 +86,7 @@
 
     </android.support.design.widget.AppBarLayout>
     <ListView
-        android:layout_below="@id/appbar1"
+        android:layout_below="@id/appbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_tour_home"/>

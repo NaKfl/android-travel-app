@@ -126,14 +126,6 @@ public class FragmentHome extends Fragment {
         })
         {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("rowPerPage", "3");
-                params.put("numPage", "1");
-                return params;
-            }
-            @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 //headers.put("Content-Type", "application/json");
