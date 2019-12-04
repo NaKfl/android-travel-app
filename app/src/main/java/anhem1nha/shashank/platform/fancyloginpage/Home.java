@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,32 +25,19 @@ public class Home extends AppCompatActivity {
     FragmentCreate createFragment;
     FragmentNofi nofiFragment;
     FragmentSetting settingFragment;
-    EditText numPage;
-    Button btnShow;
-    public static String numTour,page="1";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         mainNav= (BottomNavigationView) findViewById(R.id.nav);
         mainFrame= (FrameLayout) findViewById(R.id.main_frame);
 
-        numPage = (EditText) findViewById(R.id.numPage);
-        btnShow = (Button) findViewById(R.id.btnShow);
 
-        numPage.setText("1");
         homeFragment = new FragmentHome();
         setFragment(homeFragment);
 
-        btnShow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                page = numPage.getText().toString();
-                homeFragment = new FragmentHome();
-                setFragment(homeFragment);
-            }
-        });
 
         mainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

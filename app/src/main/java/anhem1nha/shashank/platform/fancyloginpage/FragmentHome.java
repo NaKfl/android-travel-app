@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -40,14 +41,31 @@ import java.util.Map;
 public class FragmentHome extends Fragment {
     static ArrayList<tour> tours=new ArrayList<>();
     public static AdapterTour adapter;
+    EditText numPage;
+    Button btnShow;
+    FragmentHome homeFragment;
+    public static String numTour,page="1";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         final ListView listView=(ListView)rootView.findViewById(R.id.list_tour_home);
 
+        numPage = (EditText) rootView.findViewById(R.id.numPage);
+        btnShow = (Button) rootView.findViewById(R.id.btnShow);
+        numPage.setText("1");
+        btnShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                page = numPage.getText().toString();
+                homeFragment = new FragmentHome();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.main_frame,homeFragment);
+                fragmentTransaction.commit();
+            }
+        });
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-        String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=5"+"&pageNum="+Home.page;
+        String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=5"+"&pageNum="+ page;
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
                 new Response.Listener<JSONObject>() {
                     @Override

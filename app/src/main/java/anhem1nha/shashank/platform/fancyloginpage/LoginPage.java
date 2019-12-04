@@ -87,6 +87,8 @@ public class LoginPage extends AppCompatActivity {
         final RequestQueue requestQueue= Volley.newRequestQueue(this);
         emailPhone.setHint("Email or Phone");
         password.setHint("Password");
+        emailPhone.setText("0944026115");
+        password.setText("369258");
 
         callbackManager=CallbackManager.Factory.create();
         loginButtonFacebook.setReadPermissions(Arrays.asList("email","public_profile"));
@@ -140,6 +142,8 @@ public class LoginPage extends AppCompatActivity {
                 forgot_password.setVisibility(View.VISIBLE);
                 emailPhone.setText("");
                 password.setText("");
+                loginButtonFacebook.setVisibility(View.VISIBLE);
+                signInButton.setVisibility(View.VISIBLE);
                 isSignIn=true;
             }
         });
