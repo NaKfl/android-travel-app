@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,9 @@ public class FragmentHome extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         final ListView listView=(ListView)rootView.findViewById(R.id.list_tour_home);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.list_tour_title);
+
 
         numPage = (EditText) rootView.findViewById(R.id.numPage);
         btnShow = (Button) rootView.findViewById(R.id.btnShow);

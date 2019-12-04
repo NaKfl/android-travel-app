@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">Fancy Login Page</string>
+    <string name="facebook_login_title">
+        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Login with Facebook
+    </string>
+    <string name="google_login_title">Login with Google</string>
+    <string name="list_tour_title">Travel Assistant</string>
+    <string name="app_name">Travel App</string>
     <string name="facebook_app_id">2483756858616575</string>
     <string name="fb_login_protocol_scheme">fb2483756858616575</string>
 </resources>
