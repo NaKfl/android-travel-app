@@ -28,6 +28,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.Login;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -82,15 +83,16 @@ public class LoginPage extends AppCompatActivity {
         }
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+
         signin = findViewById(R.id.signin);
         signup = findViewById(R.id.signup);
         signin_signup_txt = findViewById(R.id.signin_signup_txt);
         forgot_password = findViewById(R.id.forgot_password);
         circleImageView = findViewById(R.id.circleImageView);
         signin_signup_btn = findViewById(R.id.signin_signup_btn);
-        emailPhone=(EditText) findViewById(R.id.emailPhone);
-        password=(EditText) findViewById(R.id.password);
-        loginButtonFacebook=(LoginButton)findViewById(R.id.login_Button_Facebook);
+        emailPhone= findViewById(R.id.emailPhone);
+        password= findViewById(R.id.password);
+        loginButtonFacebook= findViewById(R.id.login_Button_Facebook);
         final RequestQueue requestQueue= Volley.newRequestQueue(this);
         emailPhone.setHint("Email or Phone");
         password.setHint("Password");
@@ -185,6 +187,7 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String txtEmailPhone=emailPhone.getText().toString().trim();
+
                 String txtPassword=password.getText().toString().trim();
                 if(isSignIn){
                     String URL = "http://35.197.153.192:3000/user/login";
@@ -197,6 +200,7 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
+
                                         token=response.getString("token");
                                         Intent intent = new Intent(LoginPage.this,Home.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -205,12 +209,15 @@ public class LoginPage extends AppCompatActivity {
                                         startActivity(intent);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
+
                                     }
                                 }
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+
                             NetworkResponse networkResponse = error.networkResponse;
+                            Toast.makeText(LoginPage.this,"abc",Toast.LENGTH_SHORT).show();
                             if (networkResponse != null) {
                                 String statusCode=String.valueOf(networkResponse.statusCode);
                                 switch(statusCode){
@@ -221,7 +228,9 @@ public class LoginPage extends AppCompatActivity {
                                         Toast.makeText(LoginPage.this, "Wrong email/phone or password", Toast.LENGTH_SHORT).show();
                                         break;
                                     default:
+
                                         Toast.makeText(LoginPage.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                        break;
                                 }
                             }
                         }

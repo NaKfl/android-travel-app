@@ -10,7 +10,9 @@
         android:label="App-Tour"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
         <activity android:name="anhem1nha.shashank.platform.fancyloginpage.Home"></activity>
         <activity android:name="anhem1nha.shashank.platform.fancyloginpage.RegisterPage" />
         <activity
