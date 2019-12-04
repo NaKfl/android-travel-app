@@ -7,12 +7,13 @@
         android:id="@+id/appbar1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#688ae2"
+        android:background="@color/colorWhiteTransparent"
         android:paddingTop="10dp"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
+            android:background="@drawable/border_bottom"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +47,8 @@
                         android:padding="12dp"
                         android:textColor="@android:color/black"
                         android:textColorHint="#aeaeae"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        />
                     <LinearLayout
                         android:orientation="horizontal"
                         android:weightSum="90"
@@ -77,10 +79,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
-
-
-
-
                 </LinearLayout>
             </LinearLayout>
 
