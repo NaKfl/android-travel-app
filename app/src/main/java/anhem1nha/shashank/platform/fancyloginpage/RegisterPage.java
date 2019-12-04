@@ -41,15 +41,15 @@ public class RegisterPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_page);
-        name=(EditText) findViewById(R.id.name);
-        phone=(EditText) findViewById(R.id.phone);
-        address=(EditText) findViewById(R.id.address);
-        dayofbirth=(EditText) findViewById(R.id.dayofbirth);
-        text_gender=(TextView) findViewById(R.id.text_gender);
-        gender=(RadioGroup) findViewById(R.id.gender);
-        male=(RadioButton) findViewById(R.id.male);
-        female=(RadioButton) findViewById(R.id.female);
-        signup=(Button) findViewById(R.id.signup_btn);
+        name= findViewById(R.id.name);
+        phone= findViewById(R.id.phone);
+        address= findViewById(R.id.address);
+        dayofbirth= findViewById(R.id.dayofbirth);
+        text_gender= findViewById(R.id.text_gender);
+        gender= findViewById(R.id.gender);
+        male= findViewById(R.id.male);
+        female= findViewById(R.id.female);
+        signup= findViewById(R.id.signup_btn);
         final RequestQueue requestQueue= Volley.newRequestQueue(this);
         text_gender.setFocusable(false);
         dayofbirth.setFocusable(false);

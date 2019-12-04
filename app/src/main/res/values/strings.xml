@@ -2,4 +2,10 @@
     <string name="app_name">Fancy Login Page</string>
     <string name="facebook_app_id">2483756858616575</string>
     <string name="fb_login_protocol_scheme">fb2483756858616575</string>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>VietNamese</item>
+        <item>Braxin</item>
+    </string-array>
 </resources>

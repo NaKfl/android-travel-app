@@ -30,8 +30,8 @@ public class FragmentCreate extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create,container,false);
-        tour_name = (EditText) rootView.findViewById(R.id.tour_name);
-        startDate=(EditText)rootView.findViewById(R.id.startDate);
+        tour_name = rootView.findViewById(R.id.tour_name);
+        startDate= rootView.findViewById(R.id.startDate);
         startDate.setFocusable(false);
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +39,7 @@ public class FragmentCreate extends Fragment {
                 PickTime1();
             }
         });
-        endDate=(EditText)rootView.findViewById(R.id.endDate);
+        endDate= rootView.findViewById(R.id.endDate);
         endDate.setFocusable(false);
         endDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,10 +47,10 @@ public class FragmentCreate extends Fragment {
                 PickTime2();
             }
         });
-        adults = (EditText) rootView.findViewById(R.id.adults);
-        children = (EditText) rootView.findViewById(R.id.children);
-        mincost = (EditText) rootView.findViewById(R.id.mincost);
-        maxcost = (EditText) rootView.findViewById(R.id.maxcost);
+        adults = rootView.findViewById(R.id.adults);
+        children = rootView.findViewById(R.id.children);
+        mincost = rootView.findViewById(R.id.mincost);
+        maxcost = rootView.findViewById(R.id.maxcost);
 
 
 

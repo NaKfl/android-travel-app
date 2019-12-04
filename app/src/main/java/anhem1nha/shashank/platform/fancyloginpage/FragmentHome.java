@@ -49,10 +49,10 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
-        final ListView listView=(ListView)rootView.findViewById(R.id.list_tour_home);
+        final ListView listView= rootView.findViewById(R.id.list_tour_home);
 
-        numPage = (EditText) rootView.findViewById(R.id.numPage);
-        btnShow = (Button) rootView.findViewById(R.id.btnShow);
+        numPage = rootView.findViewById(R.id.numPage);
+        btnShow = rootView.findViewById(R.id.btnShow);
         numPage.setText("1");
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
