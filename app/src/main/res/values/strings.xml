@@ -2,4 +2,5 @@
     <string name="app_name">Fancy Login Page</string>
     <string name="facebook_app_id">2483756858616575</string>
     <string name="fb_login_protocol_scheme">fb2483756858616575</string>
+    <string name="map_api_key">AIzaSyBSmYHC4QAkCbzNOYCrkObyRM5JSdXoejE</string>
 </resources>

@@ -265,7 +265,7 @@
 
 
                         <Button
-                            android:id="@+id/signup_btn"
+                            android:id="@+id/btnCreate"
                             android:layout_width="210dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"

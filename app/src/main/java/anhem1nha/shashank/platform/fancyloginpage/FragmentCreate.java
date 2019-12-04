@@ -1,6 +1,8 @@
 package anhem1nha.shashank.platform.fancyloginpage;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +28,7 @@ public class FragmentCreate extends Fragment {
     RadioGroup Private;
     RadioButton truePrivate;
     RadioButton falsePrivate;
+    Button btnCreate;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,7 +55,14 @@ public class FragmentCreate extends Fragment {
         mincost = (EditText) rootView.findViewById(R.id.mincost);
         maxcost = (EditText) rootView.findViewById(R.id.maxcost);
 
-
+        btnCreate = (Button) rootView.findViewById(R.id.btnCreate);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 

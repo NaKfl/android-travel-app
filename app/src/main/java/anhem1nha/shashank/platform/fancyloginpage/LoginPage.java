@@ -187,6 +187,7 @@ public class LoginPage extends AppCompatActivity {
                                 public void onResponse(JSONObject response) {
                                     try {
                                         token=response.getString("token");
+
                                         Intent intent = new Intent(LoginPage.this,Home.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
