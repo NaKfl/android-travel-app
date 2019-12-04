@@ -2,6 +2,7 @@ package anhem1nha.shashank.platform.fancyloginpage;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -63,11 +64,16 @@ public class LoginPage extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN=0;
     SignInButton signInButton;
+    SignInButton signInButtonGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.app_name);
+
         if(!token.isEmpty()) {
             Intent intent = new Intent(LoginPage.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -75,7 +81,9 @@ public class LoginPage extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
-        signInButton = findViewById(R.id.sign_in_button);
+
+        signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+
         signin = findViewById(R.id.signin);
         signup = findViewById(R.id.signup);
         signin_signup_txt = findViewById(R.id.signin_signup_txt);
@@ -90,6 +98,10 @@ public class LoginPage extends AppCompatActivity {
         password.setHint("Password");
         emailPhone.setText("0944026115");
         password.setText("369258");
+
+        signInButtonGoogle = findViewById(R.id.sign_in_button);
+        TextView googleTitle = (TextView) signInButtonGoogle.getChildAt(0);
+        googleTitle.setText(R.string.google_login_title);
 
         callbackManager=CallbackManager.Factory.create();
         loginButtonFacebook.setReadPermissions(Arrays.asList("email","public_profile"));

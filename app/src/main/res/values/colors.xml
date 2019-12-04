@@ -9,5 +9,8 @@
 
     <color name="twitter_blue">#1da1f2</color>
     <color name="deep_gray">#ff657786</color>
+    <color name="gray">#BDBDBD</color>
     <color name="tab_selected">@color/twitter_blue</color>
+
+    <color name="colorBlack">#000</color>
 </resources>

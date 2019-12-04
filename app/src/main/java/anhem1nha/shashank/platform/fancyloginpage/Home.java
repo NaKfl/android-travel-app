@@ -34,7 +34,6 @@ public class Home extends AppCompatActivity {
         mainNav= findViewById(R.id.nav);
         mainFrame= findViewById(R.id.main_frame);
 
-
         homeFragment = new FragmentHome();
         setFragment(homeFragment);
 

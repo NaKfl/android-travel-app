@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/E:/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_attach_money_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_directions_walk_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,9 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="b25823" />
-                            <entry key="outputName" value="ic_attach_money_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\WIN 10" />
+                            <entry key="color" value="1d0cb5" />
+                            <entry key="outputName" value="ic_directions_walk_black_24dp" />
+                            <entry key="sourceFile" value="$APPLICATION_HOME_DIR$/bin/C:\Users\WIN 10" />
                           </map>
                         </option>
                       </PersistentState>

@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +53,11 @@ public class FragmentHome extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         final ListView listView= rootView.findViewById(R.id.list_tour_home);
 
-        numPage = rootView.findViewById(R.id.numPage);
-        btnShow = rootView.findViewById(R.id.btnShow);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.list_tour_title);
+
+
+        numPage = (EditText) rootView.findViewById(R.id.numPage);
+        btnShow = (Button) rootView.findViewById(R.id.btnShow);
         numPage.setText("1");
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,14 +125,6 @@ public class FragmentHome extends Fragment {
             }
         })
         {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("rowPerPage", "3");
-                params.put("numPage", "1");
-                return params;
-            }
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
