@@ -5,7 +5,8 @@
     <string name="google_login_title">Login with Google</string>
 
     <string name="list_tour_title">Travel Assistant</string>
-    <string name="history_tour">My Tours</string>
+    <string name="history_tour_title">My Tours</string>
+    <string name="create_tour_title">Create Tour</string>
 
     <string name="app_name">Travel App</string>
     <string name="facebook_app_id">2483756858616575</string>

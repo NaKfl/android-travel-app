@@ -43,7 +43,7 @@ public class FragmentHistory extends Fragment {
 
         final ListView listView=(ListView)rootView.findViewById(R.id.list_tour_history);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.history_tour);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.history_tour_title);
 
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
         String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=5"+"&pageNum=1";
@@ -85,7 +85,7 @@ public class FragmentHistory extends Fragment {
                                 }
 
 
-                                tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+"-"+maxCost);
+                                tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
                                 tours.add(temp);
                             }
                             adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);

@@ -109,7 +109,7 @@ public class FragmentHome extends Fragment {
                                }
 
 
-                                tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+"-"+maxCost);
+                                tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
                                 tours.add(temp);
                             }
                             adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);

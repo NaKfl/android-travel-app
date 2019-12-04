@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ public class FragmentCreate extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create,container,false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.create_tour_title);
+
         tour_name = (EditText) rootView.findViewById(R.id.tour_name);
         startDate=(EditText)rootView.findViewById(R.id.startDate);
         startDate.setFocusable(false);
@@ -51,13 +55,6 @@ public class FragmentCreate extends Fragment {
         children = (EditText) rootView.findViewById(R.id.children);
         mincost = (EditText) rootView.findViewById(R.id.mincost);
         maxcost = (EditText) rootView.findViewById(R.id.maxcost);
-
-
-
-
-
-
-
         return rootView;
     }
     private void PickTime1()

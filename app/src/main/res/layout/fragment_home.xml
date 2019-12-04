@@ -39,7 +39,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:background="@drawable/white_rounded_shape"
-                        android:drawableLeft="@drawable/ic_search_gray_24dp"
+                        android:drawableLeft="@drawable/businessman"
                         android:drawablePadding="8dp"
                         android:fontFamily="@font/calibri"
                         android:hint="What are you looking for ?"
