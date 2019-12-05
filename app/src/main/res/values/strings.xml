@@ -18,4 +18,9 @@
         <item>Vietnamese</item>
         <item>Brazil</item>
     </string-array>
+    <string name="forgotPW">Select which contact details should we use to reset your password</string>
+    <string name="input_phone">Enter your phone number</string>
+    <string name="input_email">Enter your email address</string>
+    <string name="check_email">Please check your inbox email for OTP</string>
+    <string name="password_recovery">Đổi mật khẩu mới</string>
 </resources>
