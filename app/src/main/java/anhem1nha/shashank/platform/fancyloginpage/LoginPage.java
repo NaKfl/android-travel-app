@@ -143,7 +143,14 @@ public class LoginPage extends AppCompatActivity {
                 signIn();
             }
         });
-
+        //quên mật khẩu
+        forgot_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(LoginPage.this,ForgotPassword.class);
+                startActivity(intent);
+            }
+        });
         //Khi bấm vào tag SingIn
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
