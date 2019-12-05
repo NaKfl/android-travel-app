@@ -102,7 +102,7 @@
                             android:layout_height="wrap_content">
 
                             <EditText
-                                android:id="@+id/phone"
+                                android:id="@+id/address_stoppoint"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:drawableStart="@drawable/ic_location_black_24dp"
@@ -130,19 +130,19 @@
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:gravity="center_vertical"
-                                    android:text="Province"
+                                    android:text="Province :"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
                                     />
-                                <Spinner
+                                <EditText
                                     android:layout_weight="6"
                                     android:id="@+id/province"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:layout_below="@+id/service_type"
-                                    >
-
-                                </Spinner>
+                                    android:fontFamily="@font/calibri"
+                                    android:maxLines="1"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="16sp" />
 
                             </LinearLayout>
                         </android.support.design.widget.TextInputLayout>
@@ -159,7 +159,7 @@
                                 android:layout_height="match_parent">
                                 <EditText
                                     android:layout_weight="50"
-                                    android:id="@+id/mincost"
+                                    android:id="@+id/mincost_stop"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:drawableStart="@drawable/down_arrow"
@@ -172,7 +172,7 @@
                                     android:textSize="16sp" />
                                 <EditText
                                     android:layout_weight="50"
-                                    android:id="@+id/maxcost"
+                                    android:id="@+id/maxcost_stop"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:drawableStart="@drawable/up_arrows"

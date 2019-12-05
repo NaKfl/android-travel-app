@@ -67,6 +67,7 @@
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
                                 android:hint="Tour Name"
+                                android:text="2a123"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp" />
@@ -90,6 +91,7 @@
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Start Date"
+                                    android:text="1999-02-08"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
@@ -103,6 +105,7 @@
                                     android:fontFamily="@font/calibri"
                                     android:hint="End Date"
                                     android:maxLines="1"
+                                    android:text="1999-02-08"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
                             </LinearLayout>
@@ -127,6 +130,7 @@
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Adults"
+                                    android:text="1"
                                     android:inputType="number"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
@@ -141,6 +145,7 @@
                                     android:fontFamily="@font/calibri"
                                     android:hint="Children"
                                     android:inputType="number"
+                                    android:text="1"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
@@ -168,6 +173,7 @@
                                     android:hint="Min cost"
                                     android:inputType="number"
                                     android:maxLines="1"
+                                    android:text="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
                                 <EditText
@@ -180,6 +186,7 @@
                                     android:inputType="number"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Max cost"
+                                    android:text="1"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />

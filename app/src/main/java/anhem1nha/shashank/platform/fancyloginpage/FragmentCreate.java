@@ -46,6 +46,7 @@ public class FragmentCreate extends Fragment {
     RadioButton privateTour;
     RadioButton publicTour;
     Button btnCreate;
+    public static String tourID="";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -129,7 +130,7 @@ public class FragmentCreate extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    String tourID =response.getString("id");
+                                    tourID =response.getString("id");
                                     Intent intent = new Intent(getActivity(),MapActivity.class);
                                     startActivity(intent);
                                     Toast.makeText(getActivity(), "TourID :"+tourID, Toast.LENGTH_SHORT).show();
