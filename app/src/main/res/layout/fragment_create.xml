@@ -127,6 +127,7 @@
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Adults"
+                                    android:inputType="number"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
@@ -139,6 +140,7 @@
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Children"
+                                    android:inputType="number"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
@@ -164,6 +166,7 @@
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Min cost"
+                                    android:inputType="number"
                                     android:maxLines="1"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
@@ -174,6 +177,7 @@
                                     android:layout_height="match_parent"
                                     android:drawableStart="@drawable/up_arrows"
                                     android:drawablePadding="16dp"
+                                    android:inputType="number"
                                     android:fontFamily="@font/calibri"
                                     android:hint="Max cost"
                                     android:maxLines="1"
@@ -221,7 +225,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
                                 <TextView
-                                    android:id="@+id/isPrivate"
                                     android:layout_weight="1"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -236,21 +239,21 @@
 
                                 <RadioGroup
                                     android:gravity="center_vertical"
-                                    android:id="@+id/gender"
+                                    android:id="@+id/isPrivate"
                                     android:layout_weight="1"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="horizontal">
 
                                     <RadioButton
-                                        android:id="@+id/truePrivate"
+                                        android:id="@+id/privateTour"
                                         android:layout_width="96dp"
                                         android:layout_height="wrap_content"
                                         android:checked="true"
                                         android:text="Private"></RadioButton>
 
                                     <RadioButton
-                                        android:id="@+id/falsePrivate"
+                                        android:id="@+id/publicTour"
                                         android:layout_width="84dp"
                                         android:layout_height="wrap_content"
                                         android:text="Public"></RadioButton>

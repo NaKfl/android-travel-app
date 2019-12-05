@@ -1,8 +1,11 @@
 package anhem1nha.shashank.platform.fancyloginpage;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -51,6 +54,7 @@ public class MapActivity extends AppCompatActivity implements
     private LocationRequest locationRequest;
     private Location lastLocation;
     private Marker currentUserLocationMarker;
+    private Marker stopPointTemp;
     private static final int Request_User_Location_Code=99;
 
     @Override
@@ -74,13 +78,33 @@ public class MapActivity extends AppCompatActivity implements
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }
+        LatLng firtRun = new LatLng(10.7625216,106.6801375); // 227 Nguyễn Văn Cừ , HCM
+        map.moveCamera(CameraUpdateFactory.newLatLng(firtRun));
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                Toast.makeText(MapActivity.this, "AAAAAAAAA", Toast.LENGTH_SHORT).show();
+                MarkerOptions temp = new MarkerOptions();
+                temp.position(latLng);
+                temp.title("Current Location");
+                temp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                map.clear();
+                stopPointTemp = map.addMarker(temp);
+                stopPointTemp.setTitle("AAA");
             }
         });
 
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Dialog dialog = new Dialog(MapActivity.this);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setContentView(R.layout.popup_select_stop_point);
+                dialog.show();
+                Dialog dialogAdd = new Dialog(MapActivity.this);
+                return false;
+            }
+        });
 
     }
 
@@ -186,5 +210,15 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(map != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+            map.clear();
+
+            // add markers from database to the map
+        }
     }
 }
