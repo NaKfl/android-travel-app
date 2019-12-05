@@ -2,6 +2,7 @@ package anhem1nha.shashank.platform.fancyloginpage;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,10 @@ public class RegisterPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_page);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.sign_up);
+
         name= findViewById(R.id.name);
         phone= findViewById(R.id.phone);
         address= findViewById(R.id.address);

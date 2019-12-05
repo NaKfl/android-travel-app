@@ -55,10 +55,9 @@ public class FragmentHome extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.list_tour_title);
 
-
         numPage = (EditText) rootView.findViewById(R.id.numPage);
         btnShow = (Button) rootView.findViewById(R.id.btnShow);
-        numPage.setText("1");
+        numPage.setText(page);
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

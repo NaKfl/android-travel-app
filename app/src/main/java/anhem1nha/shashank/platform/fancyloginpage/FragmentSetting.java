@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -39,7 +43,9 @@ import java.util.Map;
 public class FragmentSetting extends Fragment {
     Button loginOut;
     ImageView profileAvatar;
-    TextView profileName;
+    TextView profileName,editProfile;
+    FragmentDetailProfile fragmentDetailProfile;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,9 +54,32 @@ public class FragmentSetting extends Fragment {
         //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(rootView.getContext(),
         //     R.array.languages, android.R.layout.simple_spinner_dropdown_item);
 
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.settings_title);
+
         loginOut = (Button) rootView.findViewById(R.id.logout_button);
         profileAvatar=(ImageView) rootView.findViewById(R.id.profile_image);
         profileName=(TextView) rootView.findViewById(R.id.profile_name);
+        editProfile=(TextView)rootView.findViewById(R.id.edit_profile);
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentDetailProfile = new FragmentDetailProfile();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.main_frame,fragmentDetailProfile);
+                fragmentTransaction.commit();
+            }
+        });
+
+        profileAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentDetailProfile = new FragmentDetailProfile();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.main_frame,fragmentDetailProfile);
+                fragmentTransaction.commit();
+            }
+        });
 
         if(!LoginPage.avatar.isEmpty())
             Picasso.get().load(LoginPage.avatar).into(profileAvatar);

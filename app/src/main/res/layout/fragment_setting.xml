@@ -23,9 +23,11 @@
             android:id="@+id/profile_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ava"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
+            android:src="@drawable/user"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/gray"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"/>
 
         <LinearLayout
             android:layout_weight="7"
@@ -40,13 +42,14 @@
                 android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nguyễn Thị Lung Linh"
                 android:textColor="#000"
                 android:textSize="20dp" />
 
             <TextView
                 android:gravity="center"
-                android:id="@+id/edit"
+                android:id="@+id/edit_profile"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground"
                 android:drawableEnd="@drawable/pencil"
                 android:drawablePadding="5dp"
                 android:layout_width="wrap_content"
@@ -54,7 +57,8 @@
                 android:layout_marginTop="5dp"
                 android:text="Edit profile"
                 android:textColor="#000"
-                android:textSize="13dp" />
+                android:textSize="13dp"
+                android:paddingLeft="10dp"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
