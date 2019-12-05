@@ -42,6 +42,7 @@
 
 
         <TextView
+            android:id="@+id/total_tour"
             android:textStyle="bold"
             android:layout_weight="3"
             android:layout_width="0dp"
@@ -53,11 +54,12 @@
             android:gravity="center|start"
             android:paddingHorizontal="12dp"
             android:paddingTop="12dp"
-            android:text="5 trips"
+            android:text="0 trips"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/new_tour"
             android:textStyle="bold"
             android:layout_weight="1.75"
             android:layout_width="0dp"
@@ -69,11 +71,12 @@
             android:gravity="center|start"
             android:paddingHorizontal="6dp"
             android:paddingTop="12dp"
-            android:text="5"
+            android:text="0"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/in_process_tour"
             android:textStyle="bold"
             android:layout_weight="1.75"
             android:layout_width="0dp"
@@ -85,11 +88,12 @@
             android:gravity="center|start"
             android:paddingHorizontal="6dp"
             android:paddingTop="12dp"
-            android:text="5"
+            android:text="0"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/success_tour"
             android:textStyle="bold"
             android:layout_weight="1.75"
             android:layout_width="0dp"
@@ -101,10 +105,11 @@
             android:gravity="center|start"
             android:paddingHorizontal="6dp"
             android:paddingTop="12dp"
-            android:text="5"
+            android:text="0"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
         <TextView
+            android:id="@+id/fail_tour"
             android:textStyle="bold"
             android:layout_weight="1.75"
             android:layout_width="0dp"
@@ -116,7 +121,7 @@
             android:gravity="center|start"
             android:paddingHorizontal="6dp"
             android:paddingTop="12dp"
-            android:text="5"
+            android:text="0"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
     </LinearLayout>
