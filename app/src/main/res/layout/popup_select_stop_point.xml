@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/border_popup"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="6dp"
+            android:id="@+id/name_country"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:layout_marginLeft="6dp"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/stop_point_information"
+                android:text="Stop point information"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="12sp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"
+                android:id="@+id/rating"
+                android:text="Rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="12sp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:layout_marginRight="6dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/delete_stop_point"
+                android:text="Delete stop point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -18,17 +18,33 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.apptour.anhem1nha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FragmentCreate extends Fragment {
     EditText tour_name,startDate,endDate,adults,children,mincost,maxcost;
-    RadioGroup Private;
-    RadioButton truePrivate;
-    RadioButton falsePrivate;
+    RadioGroup isPrivate;
+    RadioButton privateTour;
+    RadioButton publicTour;
     Button btnCreate;
     @Nullable
     @Override
@@ -39,8 +55,7 @@ public class FragmentCreate extends Fragment {
 
         tour_name = (EditText) rootView.findViewById(R.id.tour_name);
         startDate=(EditText)rootView.findViewById(R.id.startDate);
-        tour_name = rootView.findViewById(R.id.tour_name);
-        startDate= rootView.findViewById(R.id.startDate);
+        startDate= (EditText)rootView.findViewById(R.id.startDate);
         startDate.setFocusable(false);
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +63,7 @@ public class FragmentCreate extends Fragment {
                 PickTime1();
             }
         });
-        endDate= rootView.findViewById(R.id.endDate);
+        endDate= (EditText)rootView.findViewById(R.id.endDate);
         endDate.setFocusable(false);
         endDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,19 +75,101 @@ public class FragmentCreate extends Fragment {
         children = (EditText) rootView.findViewById(R.id.children);
         mincost = (EditText) rootView.findViewById(R.id.mincost);
         maxcost = (EditText) rootView.findViewById(R.id.maxcost);
+        isPrivate = (RadioGroup)rootView.findViewById(R.id.isPrivate);
+        privateTour = (RadioButton) rootView.findViewById(R.id.privateTour);
+        publicTour = (RadioButton) rootView.findViewById(R.id.publicTour);
         btnCreate = (Button) rootView.findViewById(R.id.btnCreate);
+        final RequestQueue requestQueue= Volley.newRequestQueue(getContext());
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MapActivity.class);
-                startActivity(intent);
+                String txtTourName=tour_name.getText().toString().trim();
+                String txtStartDate=startDate.getText().toString().trim();
+                String txtEndDate=endDate.getText().toString().trim();
+                String txtAdults=adults.getText().toString().trim();
+                String txtChildren = children.getText().toString().trim();
+                String txtMinCost = mincost.getText().toString().trim();
+                String txtMaxCost = maxcost.getText().toString().trim();
+                long mStartDate =0,mEndDate =0;
+                Date startD, endD;
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+
+                try {
+                    startD = sdf.parse(txtStartDate);
+                    endD = sdf.parse(txtEndDate);
+                    mStartDate = startD.getTime();
+                    mEndDate = endD.getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                String private_select="1";
+
+                if (privateTour.isChecked())
+                    private_select="1";
+                if (publicTour.isChecked())
+                    private_select="0";
+
+                String URL = "http://35.197.153.192:3000/tour/create";
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("name", txtTourName);
+                params.put("startDate", mStartDate+"");
+                params.put("endDate",mEndDate+"");
+                params.put("isPrivate",private_select);
+                params.put("adults",txtAdults);
+                params.put("childs",txtChildren);
+                params.put("minCost",txtMinCost);
+                params.put("maxCost",txtMaxCost);
+
+                JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    String tourID =response.getString("id");
+                                    Intent intent = new Intent(getActivity(),MapActivity.class);
+                                    startActivity(intent);
+                                    Toast.makeText(getActivity(), "TourID :"+tourID, Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        if (networkResponse != null) {
+                            String statusCode=String.valueOf(networkResponse.statusCode);
+                            switch(statusCode){
+                                case "400":
+                                    Toast.makeText(getContext(), "ERROR 400", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "500":
+                                    Toast.makeText(getContext(), "ERROR 500", Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    Toast.makeText(getContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        //headers.put("Content-Type", "application/json");
+                        headers.put("Authorization", LoginPage.token);
+                        return headers;
+                    }
+                };
+                requestQueue.add(request_json);;
             }
         });
 
-        adults = rootView.findViewById(R.id.adults);
-        children = rootView.findViewById(R.id.children);
-        mincost = rootView.findViewById(R.id.mincost);
-        maxcost = rootView.findViewById(R.id.maxcost);
+
+
         return rootView;
     }
     private void PickTime1()
