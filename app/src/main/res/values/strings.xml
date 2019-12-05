@@ -7,8 +7,10 @@
     <string name="list_tour_title">Travel Assistant</string>
     <string name="history_tour_title">My Tours</string>
     <string name="create_tour_title">Create Tour</string>
-
+    <string name="settings_title">Settings</string>
     <string name="app_name">Travel App</string>
+    <string name="sign_up">Create Profile</string>
+
     <string name="facebook_app_id">2483756858616575</string>
     <string name="fb_login_protocol_scheme">fb2483756858616575</string>
     <string name="map_api_key">AIzaSyBSmYHC4QAkCbzNOYCrkObyRM5JSdXoejE</string>
@@ -18,4 +20,9 @@
         <item>Vietnamese</item>
         <item>Brazil</item>
     </string-array>
+    <string name="forgotPW">Select which contact details should we use to reset your password</string>
+    <string name="input_phone">Enter your phone number</string>
+    <string name="input_email">Enter your email address</string>
+    <string name="check_email">Please check your inbox email for OTP</string>
+    <string name="password_recovery">Đổi mật khẩu mới</string>
 </resources>

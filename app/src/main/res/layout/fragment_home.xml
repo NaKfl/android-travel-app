@@ -44,12 +44,14 @@
                         android:fontFamily="@font/calibri"
                         android:hint="What are you looking for ?"
                         android:focusable="false"
-                        android:padding="12dp"
+                        android:paddingVertical="14dp"
+                        android:paddingHorizontal="12dp"
                         android:textColor="@android:color/black"
                         android:textColorHint="#aeaeae"
                         android:textSize="14sp"
                         />
                     <LinearLayout
+                        android:gravity="center|start"
                         android:orientation="horizontal"
                         android:weightSum="90"
                         android:layout_marginTop="5dp"
@@ -59,25 +61,30 @@
 
                         <EditText
                             android:id="@+id/numPage"
-                            android:layout_width="wrap_content"
+                            android:layout_width="132dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
                             android:background="@drawable/white_rounded_shape"
+                            android:drawableLeft="@drawable/seo"
+                            android:drawablePadding="8dp"
                             android:fontFamily="@font/calibri"
-                            android:hint="Number of page?"
+                            android:hint="Number of page ?"
                             android:inputType="number"
-                            android:padding="12dp"
+                            android:padding="10dp"
                             android:textColor="@android:color/black"
                             android:textColorHint="#aeaeae"
                             android:textSize="14sp" />
 
                         <Button
-                            android:layout_marginLeft="5dp"
                             android:id="@+id/btnShow"
-                            android:text="Show"
+                            android:layout_width="3dp"
+                            android:layout_height="43dp"
+                            android:layout_marginLeft="5dp"
                             android:layout_weight="20"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:text="Go"
+                            android:background="@drawable/buttonshape"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
