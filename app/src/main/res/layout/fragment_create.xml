@@ -221,52 +221,48 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp">
                             <LinearLayout
-                                android:orientation="horizontal"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:weightSum="10">
+
                                 <TextView
-                                    android:layout_weight="1"
-                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="4"
                                     android:drawableStart="@drawable/folder"
                                     android:drawablePadding="16dp"
                                     android:fontFamily="@font/calibri"
                                     android:gravity="center_vertical"
                                     android:text="Attribute"
                                     android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    />
+                                    android:textSize="16sp" />
 
                                 <RadioGroup
+                                    android:weightSum="10"
                                     android:gravity="center_vertical"
                                     android:id="@+id/isPrivate"
-                                    android:layout_weight="1"
-                                    android:layout_width="match_parent"
+                                    android:layout_weight="6"
                                     android:layout_height="match_parent"
+                                    android:layout_width="0dp"
                                     android:orientation="horizontal">
 
                                     <RadioButton
                                         android:id="@+id/privateTour"
-                                        android:layout_width="96dp"
+                                        android:layout_weight="5"
                                         android:layout_height="wrap_content"
+                                        android:layout_width="0dp"
                                         android:checked="true"
-                                        android:text="Private"></RadioButton>
+                                        android:text="Private"/>
 
                                     <RadioButton
                                         android:id="@+id/publicTour"
-                                        android:layout_width="84dp"
+                                        android:layout_weight="5"
                                         android:layout_height="wrap_content"
-                                        android:text="Public"></RadioButton>
+                                        android:layout_width="0dp"
+                                        android:text="Public"/>
                                 </RadioGroup>
                             </LinearLayout>
                         </android.support.design.widget.TextInputLayout>
-
-
-
-
-
-
-
                         <Button
                             android:id="@+id/btnCreate"
                             android:layout_width="210dp"
@@ -296,7 +292,4 @@
         </RelativeLayout>
 
     </ScrollView>
-
-
-
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package anhem1nha.shashank.platform.fancyloginpage;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.Login;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -50,6 +52,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginPage extends AppCompatActivity {
     public static String token="";
+    public static String avatar="",fullName="";
     Boolean isSignIn=true;
     TextView signin,signup,signin_signup_txt,forgot_password;
     CircleImageView circleImageView;
@@ -74,6 +77,9 @@ public class LoginPage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.app_name);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        token=sharedPreferences.getString("token","");
+
         if(!token.isEmpty()) {
             Intent intent = new Intent(LoginPage.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -83,7 +89,6 @@ public class LoginPage extends AppCompatActivity {
         }
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-
         signin = findViewById(R.id.signin);
         signup = findViewById(R.id.signup);
         signin_signup_txt = findViewById(R.id.signin_signup_txt);
@@ -103,6 +108,9 @@ public class LoginPage extends AppCompatActivity {
         TextView googleTitle = (TextView) signInButtonGoogle.getChildAt(0);
         googleTitle.setText(R.string.google_login_title);
 
+        if(token==""){
+            LoginManager.getInstance().logOut();
+        }
         callbackManager=CallbackManager.Factory.create();
         loginButtonFacebook.setReadPermissions(Arrays.asList("email","public_profile"));
         loginButtonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -122,8 +130,6 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
-        ///
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken("30016777562-qk7umu04d9k3m1kk27drr5ajqa029bfi.apps.googleusercontent.com")
@@ -137,8 +143,6 @@ public class LoginPage extends AppCompatActivity {
                 signIn();
             }
         });
-
-
 
         //Khi bấm vào tag SingIn
         signin.setOnClickListener(new View.OnClickListener() {
@@ -200,8 +204,12 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
+                                        LoginPage.token=response.getString("token");
 
-                                        token=response.getString("token");
+                                        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("token",LoginPage.token);
+                                        editor.apply();
 
                                         Intent intent = new Intent(LoginPage.this,Home.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -210,7 +218,6 @@ public class LoginPage extends AppCompatActivity {
                                         startActivity(intent);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
-
                                     }
                                 }
                             }, new Response.ErrorListener() {
@@ -229,7 +236,6 @@ public class LoginPage extends AppCompatActivity {
                                         Toast.makeText(LoginPage.this, "Wrong email/phone or password", Toast.LENGTH_SHORT).show();
                                         break;
                                     default:
-
                                         Toast.makeText(LoginPage.this, error.toString(), Toast.LENGTH_SHORT).show();
                                         break;
                                 }
@@ -341,8 +347,6 @@ public class LoginPage extends AppCompatActivity {
             requestQueue.add(request_json);
 
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("AA", "signInResult:failed code=" + e.getStatusCode());
         }
     }
@@ -355,7 +359,9 @@ public class LoginPage extends AppCompatActivity {
                 Toast.makeText(LoginPage.this, "User Logged out", Toast.LENGTH_SHORT).show();
             }else{
                 token=currentAccessToken.getToken();
-
+                SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("token",token);
                 loadUserProfile(currentAccessToken);
             }
         }
@@ -372,14 +378,14 @@ public class LoginPage extends AppCompatActivity {
                     String id=object.getString("id");
                     String image_url="https://graph.facebook.com/"+id+"/picture?type=normal";
 
-
-
                     fbEmail=email;
                     fbName=first_name+" "+last_name;
                     fbAvatar=image_url;
+                    avatar=fbAvatar;
+                    fullName=fbName;
 
-                    //
                     RequestQueue requestQueue= Volley.newRequestQueue(LoginPage.this);
+
                     String URL = "http://35.197.153.192:3000/user/login/by-facebook";
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("accessToken", newAccessToken.getToken());
@@ -388,7 +394,12 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        token=response.getString("token");
+                                        LoginPage.token=response.getString("token");
+
+                                        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("token",LoginPage.token);
+                                        editor.apply();
 
                                         Intent intent = new Intent(LoginPage.this,Home.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -15,75 +15,85 @@
         android:orientation="horizontal"
         android:shadowRadius="1.5"
         android:shadowDx="1"
+        android:weightSum="10"
         >
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_weight="3"
             android:id="@+id/profile_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:src="@drawable/ava"
             app:civ_border_width="2dp"
             app:civ_border_color="#FF000000"/>
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="15dp">
+            android:layout_weight="7"
+            android:gravity="center|start"
+            android:paddingLeft="15dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <TextView
+                android:textStyle="bold"
+                android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
                 android:text="Nguyễn Thị Lung Linh"
-                android:textSize="26dp"
                 android:textColor="#000"
-                />
+                android:textSize="20dp" />
+
             <TextView
-                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:id="@+id/edit"
+                android:drawableEnd="@drawable/pencil"
+                android:drawablePadding="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit"
-                android:text="Edit profile >"
-                android:textSize="15dp"
+                android:layout_marginTop="5dp"
+                android:text="Edit profile"
                 android:textColor="#000"
-                />
+                android:textSize="13dp" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:layout_marginVertical="20dp"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="20dp"
+        android:weightSum="10"
+        android:background="@drawable/border_top_bottom">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:text="Switch language"
-            android:layout_marginTop="20dp"
-            android:textSize="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="20dp"
+            android:textSize="13dp"
             />
 
         <Spinner
             android:id="@+id/language"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="45dp"
+            android:paddingVertical="0dp"
             android:spinnerMode="dropdown"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/bordershape"/>
+            android:background="@drawable/white_rounded_shape"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center|top">
         <Button
-            android:id="@+id/logout"
+            android:id="@+id/logout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+android:layout_marginHorizontal="30dp"
             android:background="@drawable/buttonshape"
             android:text="LOG OUT"
             android:textColor="#FFF"/>
