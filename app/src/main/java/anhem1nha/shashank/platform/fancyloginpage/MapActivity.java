@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -88,19 +89,22 @@ public class MapActivity extends AppCompatActivity implements
         LocationListener
 {
 
-    GoogleMap map;
-
+    private GoogleMap map;
+    private FusedLocationProviderClient client;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private Location lastLocation;
     private Marker currentUserLocationMarker;
     private Marker stopPointTemp;
     private Marker markerSelect;
-    private static final int Request_User_Location_Code=99;
+    private Marker myLocation;
+    public static final int Request_User_Location_Code=99;
     private Geocoder geocoder;
     private String fullAddress="HCM";
-    private List<Marker> markerList = new ArrayList<Marker>();
+    public static List<Marker> markerList = new ArrayList<Marker>();
     private String provinceGet="HCM";
+    public static LatLng myLatLngLocation = new LatLng(10.7625216,106.6801375);
+    private LocationManager locationManager;
 
     private double latitude_marker_add,longtitude_marker_add;
     private String[] ServiceType=new String[]{
@@ -126,6 +130,9 @@ public class MapActivity extends AppCompatActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
 
+
+
+
     }
 
     private int provinceID(String str,String[] array)
@@ -143,19 +150,27 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.clear();
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }
-        LatLng firtRun = new LatLng(10.7625216,106.6801375); // 227 Nguyễn Văn Cừ , HCM
-        map.moveCamera(CameraUpdateFactory.newLatLng(firtRun));
+       for (int i=0;i<markerList.size();i++)
+       {
+           MarkerOptions markerOptions = new MarkerOptions();
+           markerOptions.position(markerList.get(i).getPosition());
+           markerOptions.title(markerList.get(i).getTitle());
+           markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+           map.addMarker(markerOptions);
+       }
+       if (markerList.size()>0)
+       {
+           map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerList.get(markerList.size()-1).getPosition(),10));
+       }
+       else{
+       }
 
-        for (int i=0;i<markerList.size();i++)
-        {
-           Marker marker1 = markerList.get(i);
-            map.addMarker(new MarkerOptions().position(marker1.getPosition())
-                    .title(fullAddress));
-        }
+
 
         if (true)
         {
@@ -164,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements
                 public void onMapClick(LatLng latLng) {
                     MarkerOptions temp = new MarkerOptions();
                     temp.position(latLng);
-                    temp.title("Current Location");
+                    temp.title("Clicked Location");
                     temp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     stopPointTemp = map.addMarker(temp);
                 }
@@ -173,7 +188,7 @@ public class MapActivity extends AppCompatActivity implements
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
+            public boolean onMarkerClick(final Marker marker) {
                 // Popup information
                 final Dialog dialog = new Dialog(MapActivity.this);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -379,10 +394,12 @@ public class MapActivity extends AppCompatActivity implements
                                         new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
-                                                Toast.makeText(MapActivity.this, "Thành công !!!", Toast.LENGTH_LONG).show();
+                                                markerSelect.setTitle(fullAddress);
                                                 markerList.add(markerSelect);
-                                                Intent intent = new Intent(MapActivity.this,MapActivity.class);
-                                                startActivity(intent);
+                                                Toast.makeText(MapActivity.this, "Thành công !!!" + markerList.size(), Toast.LENGTH_LONG).show();
+                                                dialogStopPoint.dismiss();
+                                                dialog.dismiss();
+                                                onMapReady(map);
                                             }
                                         }, new Response.ErrorListener() {
                                     @Override
@@ -536,14 +553,12 @@ public class MapActivity extends AppCompatActivity implements
             currentUserLocationMarker.remove();
         }
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-
-        currentUserLocationMarker = map.addMarker(markerOptions);
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        map.animateCamera(CameraUpdateFactory.zoomBy(8));
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        markerOptions.title("Current Location");
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+//        currentUserLocationMarker = map.addMarker(markerOptions);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
 
         if (googleApiClient != null)
         {

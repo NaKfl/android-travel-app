@@ -1,12 +1,17 @@
 package anhem1nha.shashank.platform.fancyloginpage;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +85,12 @@ public class FragmentCreate extends Fragment {
         privateTour = (RadioButton) rootView.findViewById(R.id.privateTour);
         publicTour = (RadioButton) rootView.findViewById(R.id.publicTour);
         btnCreate = (Button) rootView.findViewById(R.id.btnCreate);
+        boolean isLocation = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            isLocation = checkUserLocationPermission();
+        }
+
         final RequestQueue requestQueue= Volley.newRequestQueue(getContext());
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,9 +142,11 @@ public class FragmentCreate extends Fragment {
                             public void onResponse(JSONObject response) {
                                 try {
                                     tourID =response.getString("id");
+                                    MapActivity.markerList.clear();
                                     Intent intent = new Intent(getActivity(),MapActivity.class);
                                     startActivity(intent);
                                     Toast.makeText(getActivity(), "TourID :"+tourID, Toast.LENGTH_SHORT).show();
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -172,6 +185,27 @@ public class FragmentCreate extends Fragment {
 
 
         return rootView;
+    }
+
+    public boolean checkUserLocationPermission()
+    {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MapActivity.Request_User_Location_Code);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MapActivity.Request_User_Location_Code);
+
+            }
+            return  false;
+        }
+        else
+        {
+            return true;
+        }
     }
     private void PickTime1()
     {
