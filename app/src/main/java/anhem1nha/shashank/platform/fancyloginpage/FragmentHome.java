@@ -35,7 +35,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import anhem1nha.shashank.platform.fancyloginpage.Adapter.Tour;
+import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterTour;
+import anhem1nha.shashank.platform.fancyloginpage.Modal.Tour;
 
 public class FragmentHome extends Fragment {
     static ArrayList<Tour> tours=new ArrayList<>();

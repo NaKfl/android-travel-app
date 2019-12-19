@@ -1,4 +1,4 @@
-package anhem1nha.shashank.platform.fancyloginpage.Adapter;
+package anhem1nha.shashank.platform.fancyloginpage.Modal;
 
 public class Comment {
     String id ;

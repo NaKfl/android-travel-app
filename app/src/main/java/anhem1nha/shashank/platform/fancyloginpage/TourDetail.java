@@ -1,7 +1,10 @@
 package anhem1nha.shashank.platform.fancyloginpage;
         import android.content.Intent;
+        import android.support.v7.app.ActionBar;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
+        import android.util.Log;
+        import android.widget.ListView;
         import android.widget.TextView;
 
         import com.android.volley.AuthFailureError;
@@ -24,25 +27,32 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import java.util.HashMap;
         import java.util.Map;
 
-        import anhem1nha.shashank.platform.fancyloginpage.Adapter.Comment;
-        import anhem1nha.shashank.platform.fancyloginpage.Adapter.Member;
-        import anhem1nha.shashank.platform.fancyloginpage.Adapter.StopPoint;
-        import anhem1nha.shashank.platform.fancyloginpage.Adapter.Tour;
+        import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterComment;
+        import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterStopPoint;
+        import anhem1nha.shashank.platform.fancyloginpage.Modal.Comment;
+        import anhem1nha.shashank.platform.fancyloginpage.Modal.Member;
+        import anhem1nha.shashank.platform.fancyloginpage.Modal.StopPoint;
 
 public class TourDetail extends AppCompatActivity {
     ArrayList<StopPoint> stopPoints=new ArrayList<StopPoint>();
     ArrayList<Comment> comments=new ArrayList<Comment>();
     ArrayList<Member> members=new ArrayList<Member>();
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
+    ListView listStopPoint,listComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_detail);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.tour_detail);
+
         nameOfTour=(TextView)findViewById(R.id.tour_detail_destination);
         dateOfTour=(TextView)findViewById(R.id.tour_detail_datetodate);
         peopleOfTour=(TextView)findViewById(R.id.tour_detail_people);
         cashOfTour=(TextView)findViewById(R.id.tour_detail_cash);
+        listStopPoint=(ListView)findViewById(R.id.list_stop_point);
+        listComment=(ListView)findViewById(R.id.list_comment);
 
         Intent intent = getIntent();
         String idOfTour = intent.getStringExtra("tourId");
@@ -110,7 +120,6 @@ public class TourDetail extends AppCompatActivity {
                                 String serviceTypeId = stopPoint.getString("serviceTypeId");
                                 String avatar = stopPoint.getString("avatar");
                                 String index = stopPoint.getString("index");
-
                                 try{
                                     long miliStartDate=Long.parseLong(arrivalAt);
                                     Date startD=new Date(miliStartDate);
@@ -132,11 +141,11 @@ public class TourDetail extends AppCompatActivity {
                                 StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar);
                                 stopPoints.add(temp);
                             }
-//                            adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
-//                            listView.setAdapter(adapter);
-//                            adapter.notifyDataSetChanged();
+                            AdapterStopPoint adapterStopPoint =new AdapterStopPoint(TourDetail.this,R.layout.stop_point_single,stopPoints);
+                            listStopPoint.setAdapter(adapterStopPoint);
+                            adapterStopPoint.notifyDataSetChanged();
 
-                            JSONArray jsonArrayComment = response.getJSONArray("stopPoints");
+                            JSONArray jsonArrayComment = response.getJSONArray("comments");
                             comments.clear();
                             for (int i=0;i<jsonArrayComment.length();i++)
                             {
@@ -149,12 +158,12 @@ public class TourDetail extends AppCompatActivity {
                                 Comment temp = new Comment( id,  name,  commentContent,  avatar);
                                 comments.add(temp);
                             }
-//                            adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
-//                            listView.setAdapter(adapter);
-//                            adapter.notifyDataSetChanged();
+                            AdapterComment adapterComment =new AdapterComment(TourDetail.this,R.layout.comment_single,comments);
+                            listComment.setAdapter(adapterComment);
+                            adapterComment.notifyDataSetChanged();
 
 
-                            JSONArray jsonArrayMember = response.getJSONArray("stopPoints");
+                            JSONArray jsonArrayMember = response.getJSONArray("members");
                             members.clear();
                             for (int i=0;i<jsonArrayMember.length();i++)
                             {
@@ -174,8 +183,6 @@ public class TourDetail extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -191,6 +198,5 @@ public class TourDetail extends AppCompatActivity {
             }
         };
         requestQueue.add(request_json);
-
     }
 }

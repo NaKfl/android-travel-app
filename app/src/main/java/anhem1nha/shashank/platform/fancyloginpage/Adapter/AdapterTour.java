@@ -1,4 +1,4 @@
-package anhem1nha.shashank.platform.fancyloginpage;
+package anhem1nha.shashank.platform.fancyloginpage.Adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -11,7 +11,7 @@ import com.apptour.anhem1nha.R;
 
 import java.util.ArrayList;
 
-import anhem1nha.shashank.platform.fancyloginpage.Adapter.Tour;
+import anhem1nha.shashank.platform.fancyloginpage.Modal.Tour;
 
 public class AdapterTour extends BaseAdapter {
     Context myContext;
@@ -20,7 +20,7 @@ public class AdapterTour extends BaseAdapter {
     private ArrayList<Tour> myTour;
     private ArrayList<Tour> arrayList;
 
-    public AdapterTour(Context context,int layout,ArrayList<Tour> tours){
+        public AdapterTour(Context context,int layout,ArrayList<Tour> tours){
         myContext=context;
         myLayout=layout;
         myTour=tours;
