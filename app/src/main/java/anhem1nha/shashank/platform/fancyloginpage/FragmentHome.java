@@ -5,21 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.apptour.anhem1nha.R;
-import com.facebook.login.Login;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,8 +35,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import anhem1nha.shashank.platform.fancyloginpage.Adapter.Tour;
+
 public class FragmentHome extends Fragment {
-    static ArrayList<tour> tours=new ArrayList<>();
+    static ArrayList<Tour> tours=new ArrayList<>();
     public static AdapterTour adapter;
     EditText numPage;
     Button btnShow;
@@ -68,6 +65,7 @@ public class FragmentHome extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
         String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=5"+"&pageNum="+ page;
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
@@ -80,6 +78,7 @@ public class FragmentHome extends Fragment {
                             for (int i=0;i<jsonArray.length();i++)
                             {
                                 JSONObject tour = jsonArray.getJSONObject(i);
+                                String tourId = tour.getString("id");
                                 String nameTour = tour.getString("name");
                                 String minCost = tour.getString("minCost");
                                 String maxCost = tour.getString("maxCost");
@@ -108,7 +107,7 @@ public class FragmentHome extends Fragment {
                                }
 
 
-                                tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
                                 tours.add(temp);
                             }
                             adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
@@ -134,6 +133,15 @@ public class FragmentHome extends Fragment {
         };
         requestQueue.add(request_json);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent=new Intent(getContext(),TourDetail.class);
+                intent.putExtra("tourId",tours.get(position).tourId);
+                startActivity(intent);
+
+            }
+        });
 
         super.onCreateView(inflater,container,savedInstanceState);
         return rootView;

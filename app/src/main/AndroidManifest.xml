@@ -3,9 +3,9 @@
     package="com.apptour.anhem1nha">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.ForgotPassword"></activity>
+        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.TourDetail"></activity>
+        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.ForgotPassword" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -24,7 +25,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.MapActivity"></activity>
+        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.MapActivity" />
         <activity android:name="anhem1nha.shashank.platform.fancyloginpage.Home" />
         <activity android:name="anhem1nha.shashank.platform.fancyloginpage.RegisterPage" />
         <activity

@@ -1,7 +1,6 @@
 package anhem1nha.shashank.platform.fancyloginpage;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,14 +11,16 @@ import com.apptour.anhem1nha.R;
 
 import java.util.ArrayList;
 
+import anhem1nha.shashank.platform.fancyloginpage.Adapter.Tour;
+
 public class AdapterTour extends BaseAdapter {
     Context myContext;
     int myLayout;
     private int[]pos=new int[100];
-    private ArrayList<tour> myTour;
-    private ArrayList<tour> arrayList;
+    private ArrayList<Tour> myTour;
+    private ArrayList<Tour> arrayList;
 
-    public AdapterTour(Context context,int layout,ArrayList<tour> tours){
+    public AdapterTour(Context context,int layout,ArrayList<Tour> tours){
         myContext=context;
         myLayout=layout;
         myTour=tours;

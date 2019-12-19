@@ -4,14 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,8 +31,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import anhem1nha.shashank.platform.fancyloginpage.Adapter.Tour;
+
 public class FragmentHistory extends Fragment {
-    static ArrayList<tour> tours=new ArrayList<>();
+    static ArrayList<Tour> tours=new ArrayList<>();
     public static AdapterTour adapter;
     TextView totalTour,newTour,successTour,failTour,inProcessTour;
 
@@ -114,6 +112,7 @@ public class FragmentHistory extends Fragment {
                             for (int i=0;i<jsonArray.length();i++)
                             {
                                 JSONObject tour = jsonArray.getJSONObject(i);
+                                String tourId = tour.getString("id");
                                 String nameTour = tour.getString("name");
                                 String minCost = tour.getString("minCost");
                                 String maxCost = tour.getString("maxCost");
@@ -141,7 +140,7 @@ public class FragmentHistory extends Fragment {
                                     e.printStackTrace();
                                 }
 
-                                tour temp = new tour("",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
                                 tours.add(temp);
                             }
                             adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
