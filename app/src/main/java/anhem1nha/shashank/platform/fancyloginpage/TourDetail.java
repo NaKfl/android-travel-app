@@ -3,7 +3,8 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import android.support.v7.app.ActionBar;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
-        import android.util.Log;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
         import android.widget.ListView;
         import android.widget.TextView;
 
@@ -28,6 +29,7 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import java.util.Map;
 
         import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterComment;
+        import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterMember;
         import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterStopPoint;
         import anhem1nha.shashank.platform.fancyloginpage.Modal.Comment;
         import anhem1nha.shashank.platform.fancyloginpage.Modal.Member;
@@ -38,7 +40,7 @@ public class TourDetail extends AppCompatActivity {
     ArrayList<Comment> comments=new ArrayList<Comment>();
     ArrayList<Member> members=new ArrayList<Member>();
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
-    ListView listStopPoint,listComment;
+    ListView listStopPoint,listComment,listMember;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,8 @@ public class TourDetail extends AppCompatActivity {
         cashOfTour=(TextView)findViewById(R.id.tour_detail_cash);
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
         listComment=(ListView)findViewById(R.id.list_comment);
+        listMember=(ListView)findViewById(R.id.list_member);
+
 
         Intent intent = getIntent();
         String idOfTour = intent.getStringExtra("tourId");
@@ -177,9 +181,9 @@ public class TourDetail extends AppCompatActivity {
                                 Member temp = new Member( id,  name,  phone,  avatar,  isHost);
                                 members.add(temp);
                             }
-//                            adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
-//                            listView.setAdapter(adapter);
-//                            adapter.notifyDataSetChanged();
+                            AdapterMember adapterMember =new AdapterMember(TourDetail.this,R.layout.member_single,members);
+                            listMember.setAdapter(adapterMember);
+                            adapterMember.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
