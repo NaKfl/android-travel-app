@@ -61,7 +61,6 @@ public class FragmentCreate extends Fragment {
 
         tour_name = (EditText) rootView.findViewById(R.id.tour_name);
         startDate=(EditText)rootView.findViewById(R.id.startDate);
-        startDate= (EditText)rootView.findViewById(R.id.startDate);
         startDate.setFocusable(false);
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override

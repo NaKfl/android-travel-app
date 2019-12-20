@@ -92,9 +92,13 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
     <ListView
-        android:layout_below="@id/appbar"
+        android:id="@+id/list_tour_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/list_tour_home"/>
+        android:layout_below="@id/appbar"
+        android:layout_marginTop="-2dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
 </RelativeLayout>
