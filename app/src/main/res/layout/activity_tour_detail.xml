@@ -120,7 +120,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingVertical="10dp">
-
+                <TextView
+                    android:id="@+id/rate"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:text="Rating"
+                    android:drawableLeft="@drawable/star"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="35dp"

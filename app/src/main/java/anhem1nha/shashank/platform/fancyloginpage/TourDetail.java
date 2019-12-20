@@ -33,6 +33,7 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import android.widget.ListView;
         import android.widget.RadioButton;
         import android.widget.RadioGroup;
+        import android.widget.RatingBar;
         import android.widget.Spinner;
         import android.widget.TextView;
         import android.widget.TimePicker;
@@ -103,7 +104,76 @@ public class TourDetail extends AppCompatActivity {
         listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
         ImageView add_comment = (ImageView) findViewById(R.id.add_comment);
-
+        TextView rate = (TextView) findViewById(R.id.rate);
+        //đánh giá
+        rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(TourDetail.this);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setContentView(R.layout.popup_review);
+                final RatingBar ratingBar = dialog.findViewById(R.id.rating);
+                final EditText reviewText = (EditText) dialog.findViewById(R.id.input_review);
+                Button btnReview = (Button) dialog.findViewById(R.id.btn_send_review);
+                btnReview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        float Rate = ratingBar.getNumStars();
+                        int rate = Math.round(Rate);
+                        String review = reviewText.getText().toString();
+                        Toast.makeText(TourDetail.this,  Rate+" " +review+"", Toast.LENGTH_SHORT).show();
+                        final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
+                        String URL = "http://35.197.153.192:3000/tour/add/review";
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        params.put("tourId", idOfTour);
+                        params.put("review",review);
+                        params.put("point",rate +"");
+                        Toast.makeText(TourDetail.this,review + " "+Rate, Toast.LENGTH_SHORT);
+                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Toast.makeText(TourDetail.this, "review thành công", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        finish();
+                                        overridePendingTransition(0, 0);
+                                        startActivity(getIntent());
+                                        overridePendingTransition(0, 0);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                NetworkResponse networkResponse = error.networkResponse;
+                                if (networkResponse != null) {
+                                    String statusCode=String.valueOf(networkResponse.statusCode);
+                                    switch(statusCode){
+                                        case "400":
+                                            Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case "500":
+                                            Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        default:
+                                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }){
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap<String, String> headers = new HashMap<String, String>();
+                                //headers.put("Content-Type", "application/json");
+                                headers.put("Authorization", LoginPage.token);
+                                return headers;
+                            }
+                        };
+                        requestQueue.add(request_json);;
+                    }
+                });
+                dialog.show();
+            }
+        });
+        //thêm comment
         add_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
