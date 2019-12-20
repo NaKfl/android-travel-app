@@ -1,9 +1,11 @@
 package anhem1nha.shashank.platform.fancyloginpage;
         import android.app.DatePickerDialog;
         import android.app.Dialog;
+        import android.app.TimePickerDialog;
         import android.content.Intent;
         import android.graphics.Color;
         import android.graphics.drawable.ColorDrawable;
+        import android.media.Image;
         import android.support.v4.app.Fragment;
         import android.support.v4.app.FragmentTransaction;
         import android.support.v7.app.ActionBar;
@@ -14,13 +16,18 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
         import android.widget.Button;
         import android.widget.DatePicker;
         import android.widget.EditText;
+        import android.widget.ImageView;
         import android.widget.ListView;
         import android.widget.RadioButton;
         import android.widget.RadioGroup;
+        import android.widget.Spinner;
         import android.widget.TextView;
+        import android.widget.TimePicker;
         import android.widget.Toast;
 
         import com.android.volley.AuthFailureError;
@@ -59,6 +66,12 @@ public class TourDetail extends AppCompatActivity {
     ArrayList<Member> members=new ArrayList<Member>();
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
     ListView listStopPoint,listComment,listMember;
+    private String[] ServiceType=new String[]{
+            "Restaurant",
+            "Hotel",
+            "Rest Station",
+            "Other"
+    };
     String idOfTour,isMyTour,tourName,tourMinCost,tourMaxCost,tourStartDate,tourEndDate,tourAdults,tourChilds,tourIsPrivate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +88,181 @@ public class TourDetail extends AppCompatActivity {
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
         listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
+        ImageView delete_stoppoint = (ImageView) findViewById(R.id.delete_stoppoint);
+
+        delete_stoppoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        listStopPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Dialog dialog = new Dialog(TourDetail.this);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setContentView(R.layout.popup_detail_stoppoint);
+
+                final Spinner spinService=(Spinner) dialog.findViewById(R.id.up_service_type);
+                ArrayAdapter arrayAdapter = new ArrayAdapter(TourDetail.this,R.layout.spinner_items,ServiceType);
+                spinService.setAdapter(arrayAdapter);
+
+                final EditText stop_point_name = (EditText) dialog.findViewById(R.id.up_stop_point_name);
+                EditText address_stoppoint = (EditText) dialog.findViewById(R.id.up_address_stoppoint);
+                final EditText mincost_stop = (EditText) dialog.findViewById(R.id.up_mincost_stop);
+                final EditText maxcost_stop = (EditText) dialog.findViewById(R.id.up_maxcost_stop);
+                Button btnUpdate = (Button) dialog.findViewById(R.id.update_btn);
+
+                final EditText dateArrive = (EditText) dialog.findViewById(R.id.up_dateArrive);
+                final EditText dateLeave = (EditText) dialog.findViewById(R.id.up_dateLeave);
+
+
+                stop_point_name.setText(stopPoints.get(position).getName());
+                spinService.setSelection(Integer.parseInt(stopPoints.get(position).getServiceTypeId())+1);
+                address_stoppoint.setText(stopPoints.get(position).getAddress());
+
+                mincost_stop.setText(stopPoints.get(position).getMinCost());
+                maxcost_stop.setText(stopPoints.get(position).getMaxCost());
+                dateArrive.setText(stopPoints.get(position).getArrivalAt());
+                dateLeave.setText(stopPoints.get(position).getLeaveAt());
+
+
+                dateArrive.setFocusable(false);
+                dateLeave.setFocusable(false);
+
+
+
+                dateArrive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Calendar calendar = Calendar.getInstance();
+                        DatePickerDialog datePickerDialog=new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                calendar.set(i,i1,i2);
+                                dateArrive.setText(simpleDateFormat.format(calendar.getTime()));
+                            }
+                        },1999,01,01);
+                        datePickerDialog.show();
+                    }
+                });
+
+                dateLeave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Calendar calendar = Calendar.getInstance();
+                        DatePickerDialog datePickerDialog=new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                calendar.set(i,i1,i2);
+                                dateLeave.setText(simpleDateFormat.format(calendar.getTime()));
+                            }
+                        },1999,01,01);
+                        datePickerDialog.show();
+                    }
+                });
+
+                dialog.show();
+
+                btnUpdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String namePoint = stop_point_name.getText().toString();
+                        String minCost = mincost_stop.getText().toString().trim();
+                        String maxCost = maxcost_stop.getText().toString().trim();
+                        int mType;
+                        if (spinService.getSelectedItem().toString().equals("Restaurant"))
+                        {
+                            mType=1;
+                        }
+                        else if(spinService.getSelectedItem().toString().equals("Hotel"))
+                        {
+                            mType=2;
+                        }
+                        else if (spinService.getSelectedItem().toString().equals("Rest Station"))
+                        {
+                            mType=3;
+                        }
+                        else
+                        {
+                            mType=4;
+                        }
+
+                        long mStartDate =0,mEndDate =0;
+                        Date startD, endD;
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+
+                        try {
+                            startD = sdf.parse(dateArrive.getText().toString());
+                            endD = sdf.parse(dateLeave.getText().toString());
+                            mStartDate = startD.getTime();
+                            mEndDate = endD.getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
+                        String URL = "http://35.197.153.192:3000/tour/update-stop-point";
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        params.put("id",stopPoints.get(position).getId());
+                        params.put("name", namePoint);
+                        params.put("arrivalAt", mStartDate+"");
+                        params.put("leaveAt",mEndDate+"");
+
+                        params.put("serviceTypeId",mType+"");
+                        params.put("minCost",minCost);
+                        params.put("maxCost",maxCost);
+
+                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Toast.makeText(TourDetail.this, "Thanh cong", Toast.LENGTH_SHORT).show();
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                NetworkResponse networkResponse = error.networkResponse;
+                                if (networkResponse != null) {
+                                    String statusCode=String.valueOf(networkResponse.statusCode);
+                                    switch(statusCode){
+                                        case "400":
+                                            Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case "500":
+                                            Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        default:
+                                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }){
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap<String, String> headers = new HashMap<String, String>();
+                                //headers.put("Content-Type", "application/json");
+                                headers.put("Authorization", LoginPage.token);
+                                return headers;
+                            }
+                        };
+                        requestQueue.add(request_json);;
+
+
+                    }
+                });
+
+            }
+        });
+
+
+
+
+
+
 
 
         Intent intent = getIntent();

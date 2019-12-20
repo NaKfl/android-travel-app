@@ -559,6 +559,10 @@ public class MapActivity extends AppCompatActivity implements
 //        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 //        currentUserLocationMarker = map.addMarker(markerOptions);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+        if (markerList.size()>0)
+        {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerList.get(markerList.size()-1).getPosition(),10));
+        }
 
         if (googleApiClient != null)
         {
