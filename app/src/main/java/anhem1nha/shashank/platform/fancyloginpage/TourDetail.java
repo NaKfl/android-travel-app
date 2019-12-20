@@ -400,7 +400,51 @@ public class TourDetail extends AppCompatActivity {
                 });
                 break;
             case R.id.delete_tour:
-               
+                final RequestQueue requestQueue2= Volley.newRequestQueue(this);
+                String URL = "http://35.197.153.192:3000/tour/update-tour";
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("status","-1");
+                params.put("id",idOfTour);
+                JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                Intent intent = new Intent(TourDetail.this,Home.class);
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        if (networkResponse != null) {
+                            String statusCode=String.valueOf(networkResponse.statusCode);
+                            switch(statusCode){
+                                case "400":
+                                    Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "500":
+                                    Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        //headers.put("Content-Type", "application/json");
+                        headers.put("Authorization", LoginPage.token);
+                        return headers;
+                    }
+                };
+                requestQueue2.add(request_json);;
                 break;
         }
         return true;
