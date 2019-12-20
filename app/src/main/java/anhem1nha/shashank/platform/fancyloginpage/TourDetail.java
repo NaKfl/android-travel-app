@@ -19,6 +19,13 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import android.view.View;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
+        import android.support.v7.app.ActionBar;
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.view.View;
+        import android.widget.LinearLayout;
+        import android.view.Menu;
+        import android.view.MenuItem;
         import android.widget.Button;
         import android.widget.DatePicker;
         import android.widget.EditText;
@@ -30,7 +37,6 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import android.widget.TextView;
         import android.widget.TimePicker;
         import android.widget.Toast;
-
         import com.android.volley.AuthFailureError;
         import com.android.volley.NetworkResponse;
         import com.android.volley.Request;
@@ -72,6 +78,7 @@ public class TourDetail extends AppCompatActivity {
     ArrayList<Comment> comments=new ArrayList<Comment>();
     ArrayList<Member> members=new ArrayList<Member>();
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
+    TextView stopPointEmpty, commentEmpty, memberEmpty;
     ListView listStopPoint,listComment,listMember;
     private String[] ServiceType=new String[]{
             "Restaurant",
@@ -338,7 +345,7 @@ public class TourDetail extends AppCompatActivity {
 
 
 
-
+        
         Intent intent = getIntent();
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");
@@ -427,9 +434,17 @@ public class TourDetail extends AppCompatActivity {
                                 StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar);
                                 stopPoints.add(temp);
                             }
-                            AdapterStopPoint adapterStopPoint =new AdapterStopPoint(TourDetail.this,R.layout.stop_point_single,stopPoints);
-                            listStopPoint.setAdapter(adapterStopPoint);
-                            adapterStopPoint.notifyDataSetChanged();
+                            if(stopPoints.isEmpty()){
+                                stopPointEmpty=(TextView)findViewById(R.id.stop_point_empty);
+                                stopPointEmpty.setVisibility(View.VISIBLE);
+                            }else {
+                                if(stopPoints.size()>=2) {
+                                    listStopPoint.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 360));
+                                }
+                                AdapterStopPoint adapterStopPoint = new AdapterStopPoint(TourDetail.this, R.layout.stop_point_single, stopPoints);
+                                listStopPoint.setAdapter(adapterStopPoint);
+                                adapterStopPoint.notifyDataSetChanged();
+                            }
 
                             JSONArray jsonArrayComment = response.getJSONArray("comments");
                             comments.clear();
@@ -444,9 +459,17 @@ public class TourDetail extends AppCompatActivity {
                                 Comment temp = new Comment( id,  name,  commentContent,  avatar);
                                 comments.add(temp);
                             }
-                            AdapterComment adapterComment =new AdapterComment(TourDetail.this,R.layout.comment_single,comments);
-                            listComment.setAdapter(adapterComment);
-                            adapterComment.notifyDataSetChanged();
+                            if(comments.isEmpty()){
+                                commentEmpty=(TextView)findViewById(R.id.comment_empty);
+                                commentEmpty.setVisibility(View.VISIBLE);
+                            }else {
+                                if(comments.size()>=2){
+                                    listComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 410));
+                                }
+                                AdapterComment adapterComment = new AdapterComment(TourDetail.this, R.layout.comment_single, comments);
+                                listComment.setAdapter(adapterComment);
+                                adapterComment.notifyDataSetChanged();
+                            }
 
 
                             JSONArray jsonArrayMember = response.getJSONArray("members");
@@ -463,9 +486,17 @@ public class TourDetail extends AppCompatActivity {
                                 Member temp = new Member( id,  name,  phone,  avatar,  isHost);
                                 members.add(temp);
                             }
-                            AdapterMember adapterMember =new AdapterMember(TourDetail.this,R.layout.member_single,members);
-                            listMember.setAdapter(adapterMember);
-                            adapterMember.notifyDataSetChanged();
+                            if(members.isEmpty()){
+                                memberEmpty=(TextView)findViewById(R.id.member_empty);
+                                memberEmpty.setVisibility(View.VISIBLE);
+                            }else {
+                                if(members.size()>=2) {
+                                    listMember.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 410));
+                                }
+                                AdapterMember adapterMember = new AdapterMember(TourDetail.this, R.layout.member_single, members);
+                                listMember.setAdapter(adapterMember);
+                                adapterMember.notifyDataSetChanged();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

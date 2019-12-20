@@ -137,14 +137,28 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/colorPrimary" />
-
+                <TextView
+                    android:id="@+id/stop_point_empty"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/error_404"
+                    android:drawablePadding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="left|center"
+                    android:paddingLeft="40dp"
+                    android:text="Not Found"
+                    android:textColor="#2C2C2C"
+                    android:textSize="15sp"
+                    android:letterSpacing="0.1"
+                    />
                 <ListView
                     android:id="@+id/list_stop_point"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:descendantFocusability="blocksDescendants"
                     android:divider="@null"
-                    android:dividerHeight="13dp"
+                    android:dividerHeight="5dp"
                     android:nestedScrollingEnabled="true" />
             </LinearLayout>
             <View
@@ -173,6 +187,21 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/colorPrimary" />
+                <TextView
+                    android:id="@+id/comment_empty"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/error_404"
+                    android:drawablePadding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="left|center"
+                    android:paddingLeft="40dp"
+                    android:text="Not Found"
+                    android:textColor="#2C2C2C"
+                    android:textSize="15sp"
+                    android:letterSpacing="0.1"
+                    />
 
                 <ListView
                     android:id="@+id/list_comment"
@@ -180,7 +209,7 @@
                     android:layout_height="wrap_content"
                     android:descendantFocusability="blocksDescendants"
                     android:divider="@null"
-                    android:dividerHeight="13dp"
+                    android:dividerHeight="5dp"
                     android:nestedScrollingEnabled="true" />
             </LinearLayout>
             <View
@@ -209,6 +238,21 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/colorPrimary" />
+                <TextView
+                    android:id="@+id/member_empty"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/error_404"
+                    android:drawablePadding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="left|center"
+                    android:paddingLeft="40dp"
+                    android:text="Not Found"
+                    android:textColor="#2C2C2C"
+                    android:textSize="15sp"
+                    android:letterSpacing="0.1"
+                    />
 
                 <ListView
                     android:id="@+id/list_member"
@@ -216,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:descendantFocusability="blocksDescendants"
                     android:divider="@null"
-                    android:dividerHeight="13dp"
+                    android:dividerHeight="5dp"
                     android:nestedScrollingEnabled="true" />
             </LinearLayout>
         </LinearLayout>
