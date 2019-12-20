@@ -139,6 +139,7 @@ public class FragmentHome extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent=new Intent(getContext(),TourDetail.class);
                 intent.putExtra("tourId",tours.get(position).tourId);
+                intent.putExtra("isMyTour","0");
                 startActivity(intent);
 
             }
