@@ -13,6 +13,7 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import android.os.Bundle;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
+        import android.util.Log;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
@@ -36,7 +37,10 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import com.android.volley.RequestQueue;
         import com.android.volley.Response;
         import com.android.volley.VolleyError;
+        import com.android.volley.VolleyLog;
+        import com.android.volley.toolbox.HttpHeaderParser;
         import com.android.volley.toolbox.JsonObjectRequest;
+        import com.android.volley.toolbox.StringRequest;
         import com.android.volley.toolbox.Volley;
         import com.apptour.anhem1nha.R;
 
@@ -44,6 +48,7 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import org.json.JSONException;
         import org.json.JSONObject;
 
+        import java.io.UnsupportedEncodingException;
         import java.text.DateFormat;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
@@ -56,9 +61,11 @@ package anhem1nha.shashank.platform.fancyloginpage;
         import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterComment;
         import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterMember;
         import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterStopPoint;
+        import anhem1nha.shashank.platform.fancyloginpage.Adapter.AdapterTour;
         import anhem1nha.shashank.platform.fancyloginpage.Modal.Comment;
         import anhem1nha.shashank.platform.fancyloginpage.Modal.Member;
         import anhem1nha.shashank.platform.fancyloginpage.Modal.StopPoint;
+        import anhem1nha.shashank.platform.fancyloginpage.Modal.Tour;
 
 public class TourDetail extends AppCompatActivity {
     ArrayList<StopPoint> stopPoints=new ArrayList<StopPoint>();
@@ -88,14 +95,9 @@ public class TourDetail extends AppCompatActivity {
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
         listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
-        ImageView delete_stoppoint = (ImageView) findViewById(R.id.delete_stoppoint);
 
-        delete_stoppoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
+
 
         listStopPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -103,13 +105,49 @@ public class TourDetail extends AppCompatActivity {
                 final Dialog dialog = new Dialog(TourDetail.this);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.setContentView(R.layout.popup_detail_stoppoint);
+                ImageView delete_stoppoint = (ImageView) dialog.findViewById(R.id.delete_stoppoint);
+                delete_stoppoint.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
+                        String URL = "http://35.197.153.192:3000/tour/remove-stop-point?stopPointId="+ stopPoints.get(position).getId();
+                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Toast.makeText(TourDetail.this,"Xoa thanh cong",Toast.LENGTH_LONG).show();
+                                        dialog.dismiss();
+                                        finish();
+                                        overridePendingTransition(0, 0);
+                                        startActivity(getIntent());
+                                        overridePendingTransition(0, 0);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(TourDetail.this,error.toString(),Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap<String, String> headers = new HashMap<String, String>();
+                                //headers.put("Content-Type", "application/json");
+                                headers.put("Authorization", LoginPage.token);
+                                return headers;
+                            }
+                        };
+                        requestQueue.add(request_json);
+                    }
+                });
+
 
                 final Spinner spinService=(Spinner) dialog.findViewById(R.id.up_service_type);
                 ArrayAdapter arrayAdapter = new ArrayAdapter(TourDetail.this,R.layout.spinner_items,ServiceType);
                 spinService.setAdapter(arrayAdapter);
 
                 final EditText stop_point_name = (EditText) dialog.findViewById(R.id.up_stop_point_name);
-                EditText address_stoppoint = (EditText) dialog.findViewById(R.id.up_address_stoppoint);
+                final EditText address_stoppoint = (EditText) dialog.findViewById(R.id.up_address_stoppoint);
                 final EditText mincost_stop = (EditText) dialog.findViewById(R.id.up_mincost_stop);
                 final EditText maxcost_stop = (EditText) dialog.findViewById(R.id.up_maxcost_stop);
                 Button btnUpdate = (Button) dialog.findViewById(R.id.update_btn);
@@ -119,7 +157,7 @@ public class TourDetail extends AppCompatActivity {
 
 
                 stop_point_name.setText(stopPoints.get(position).getName());
-                spinService.setSelection(Integer.parseInt(stopPoints.get(position).getServiceTypeId())+1);
+                spinService.setSelection(Integer.parseInt(stopPoints.get(position).getServiceTypeId())-1);
                 address_stoppoint.setText(stopPoints.get(position).getAddress());
 
                 mincost_stop.setText(stopPoints.get(position).getMinCost());
@@ -191,56 +229,91 @@ public class TourDetail extends AppCompatActivity {
                             mType=4;
                         }
 
-                        long mStartDate =0,mEndDate =0;
-                        Date startD, endD;
-                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 
-
+                        long mArrive =0,mLeave =0;
+                        Date dArrive, dLeave;
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy--MM-dd");
                         try {
-                            startD = sdf.parse(dateArrive.getText().toString());
-                            endD = sdf.parse(dateLeave.getText().toString());
-                            mStartDate = startD.getTime();
-                            mEndDate = endD.getTime();
+                            dArrive = sdf.parse(dateArrive.getText().toString());
+                            mArrive = dArrive.getTime();
+
+                            dLeave = sdf.parse(dateArrive.getText().toString());
+                            mLeave = dLeave.getTime();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+
+                        String URL = "http://35.197.153.192:3000/tour/set-stop-points";
+                        JSONObject jsonPoint= new JSONObject();
+                        try {
+                            jsonPoint.put("id",stopPoints.get(position).getId());
+                            jsonPoint.put("name",namePoint);
+                            jsonPoint.put("address",address_stoppoint.getText());
+                            jsonPoint.put("serviceTypeId",mType);
+                            jsonPoint.put("lat","100");
+                            jsonPoint.put("long","100");
+                            jsonPoint.put("arrivalAt",mArrive+"");
+                            jsonPoint.put("leaveAt",mLeave+"");
+                            jsonPoint.put("minCost",minCost);
+                            jsonPoint.put("maxCost",maxCost);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        JSONArray jsonArrayPoint = new JSONArray();
+                        jsonArrayPoint.put(jsonPoint);
+
+
+                        final JSONObject json_post= new JSONObject();
+                        try {
+                            json_post.put("tourId",idOfTour);
+                            json_post.put("stopPoints",jsonArrayPoint);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("AAAA",json_post.toString());
+                        final String requestBody = json_post.toString();
                         final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
-                        String URL = "http://35.197.153.192:3000/tour/update-stop-point";
-                        HashMap<String, String> params = new HashMap<String, String>();
-                        params.put("id",stopPoints.get(position).getId());
-                        params.put("name", namePoint);
-                        params.put("arrivalAt", mStartDate+"");
-                        params.put("leaveAt",mEndDate+"");
-
-                        params.put("serviceTypeId",mType+"");
-                        params.put("minCost",minCost);
-                        params.put("maxCost",maxCost);
-
-                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
-                                new Response.Listener<JSONObject>() {
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                                new Response.Listener<String>() {
                                     @Override
-                                    public void onResponse(JSONObject response) {
-                                        Toast.makeText(TourDetail.this, "Thanh cong", Toast.LENGTH_SHORT).show();
+                                    public void onResponse(String response) {
+                                        dialog.dismiss();
+                                        finish();
+                                        overridePendingTransition(0, 0);
+                                        startActivity(getIntent());
+                                        overridePendingTransition(0, 0);
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                NetworkResponse networkResponse = error.networkResponse;
-                                if (networkResponse != null) {
-                                    String statusCode=String.valueOf(networkResponse.statusCode);
-                                    switch(statusCode){
-                                        case "400":
-                                            Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        case "500":
-                                            Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        default:
-                                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                                Toast.makeText(TourDetail.this, ""+error, Toast.LENGTH_LONG).show();
                             }
                         }){
+                            @Override
+                            public String getBodyContentType() {
+                                return "application/json; charset=utf-8";
+                            }
+
+                            @Override
+                            public byte[] getBody() throws AuthFailureError {
+                                try {
+                                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                } catch (UnsupportedEncodingException uee) {
+                                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                    return null;
+                                }
+                            }
+
+                            @Override
+                            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                                String responseString = "";
+                                if (response != null) {
+                                    responseString = String.valueOf(response.statusCode);
+                                    // can get more details such as response.headers
+                                }
+                                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                            }
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -249,7 +322,8 @@ public class TourDetail extends AppCompatActivity {
                                 return headers;
                             }
                         };
-                        requestQueue.add(request_json);;
+                        requestQueue.add(stringRequest);
+
 
 
                     }
