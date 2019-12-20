@@ -102,7 +102,23 @@ public class TourDetail extends AppCompatActivity {
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
         listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
+        ImageView add_comment = (ImageView) findViewById(R.id.add_comment);
 
+        add_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(TourDetail.this);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setContentView(R.layout.popup_comment);
+
+                final EditText commentText = (EditText) dialog.findViewById(R.id.input_comment);
+                Button btnSend = (Button) dialog.findViewById(R.id.btn_send);
+
+                
+
+                dialog.show();
+            }
+        });
 
 
 
@@ -345,7 +361,7 @@ public class TourDetail extends AppCompatActivity {
 
 
 
-        
+
         Intent intent = getIntent();
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");

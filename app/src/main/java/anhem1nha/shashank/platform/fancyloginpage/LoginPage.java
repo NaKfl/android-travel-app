@@ -52,6 +52,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginPage extends AppCompatActivity {
     public static String token="";
+    public static String userId="";
     public static String avatar="",fullName="";
     Boolean isSignIn=true;
     TextView signin,signup,signin_signup_txt,forgot_password;
@@ -212,7 +213,7 @@ public class LoginPage extends AppCompatActivity {
                                 public void onResponse(JSONObject response) {
                                     try {
                                         LoginPage.token=response.getString("token");
-
+                                        LoginPage.userId=response.getString("userId");
                                         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("token",LoginPage.token);
