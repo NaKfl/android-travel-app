@@ -1,4 +1,4 @@
-package anhem1nha.shashank.platform.fancyloginpage.Modal;
+package com.ygaps.travelapp.Modal;
 
 public class Tour {
     public String tourId;

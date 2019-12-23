@@ -7,6 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        tools:context="anhem1nha.shashank.platform.fancyloginpage.MapActivity"
+        tools:context=".MapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 </RelativeLayout>

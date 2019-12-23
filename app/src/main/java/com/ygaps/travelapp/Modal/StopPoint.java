@@ -1,6 +1,4 @@
-package anhem1nha.shashank.platform.fancyloginpage.Modal;
-
-import org.json.JSONObject;
+package com.ygaps.travelapp.Modal;
 
 public class StopPoint {
     String id;

@@ -1,4 +1,4 @@
-package anhem1nha.shashank.platform.fancyloginpage.Adapter;
+package com.ygaps.travelapp.Adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -7,11 +7,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.apptour.anhem1nha.R;
+import com.ygaps.travelapp.R;
 
 import java.util.ArrayList;
 
-import anhem1nha.shashank.platform.fancyloginpage.Modal.Tour;
+import com.ygaps.travelapp.Modal.Tour;
 
 public class AdapterTour extends BaseAdapter {
     Context myContext;

@@ -1,35 +1,27 @@
-package anhem1nha.shashank.platform.fancyloginpage.Adapter;
+package com.ygaps.travelapp.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.android.volley.Response;
-import com.apptour.anhem1nha.R;
-
-import org.json.JSONObject;
-
+import com.ygaps.travelapp.R;
 import java.util.ArrayList;
+import com.ygaps.travelapp.Modal.Member;
 
-import anhem1nha.shashank.platform.fancyloginpage.Modal.StopPoint;
-
-public class AdapterStopPoint extends BaseAdapter {
+public class AdapterMember extends BaseAdapter {
     Context myContext;
     int myLayout;
     private int[]pos=new int[100];
-    private ArrayList<StopPoint> myStopPoint;
-    private ArrayList<StopPoint> arrayList;
+    private ArrayList<Member> myMember;
+    private ArrayList<Member> arrayList;
 
-    public AdapterStopPoint(Context context, int layout, ArrayList<StopPoint> stopPoints){
+    public AdapterMember(Context context, int layout, ArrayList<Member> members){
         myContext= context;
         myLayout=layout;
-        myStopPoint=stopPoints;
+        myMember=members;
         arrayList=new ArrayList<>();
-        arrayList.addAll(myStopPoint);
+        arrayList.addAll(myMember);
     }
 
 
@@ -39,13 +31,13 @@ public class AdapterStopPoint extends BaseAdapter {
     }
     public int[] getPos(){return pos;}
     public void resetPos(){
-        for (int k=0;k<myStopPoint.size();k++){
+        for (int k=0;k<myMember.size();k++){
             pos[k]=k;
         }
     }
     @Override
     public Object getItem(int i) {
-        return myStopPoint.get(i);
+        return myMember.get(i);
     }
 
     @Override
@@ -58,21 +50,17 @@ public class AdapterStopPoint extends BaseAdapter {
 
         ViewHolder holder;
         if (view == null) {
-            view = View.inflate(viewGroup.getContext(), R.layout.stop_point_single, null);
+            view = View.inflate(viewGroup.getContext(), R.layout.member_single, null);
             holder=new ViewHolder();
-            holder.name=view.findViewById(R.id.stop_point_title);
-
+            holder.name=view.findViewById(R.id.member_name);
             view.setTag(holder);
 
         } else holder = (ViewHolder)view.getTag();
-
         //ánh xạ
-        holder.name.setText(myStopPoint.get(i).getName());
-
+        holder.name.setText(myMember.get(i).getName());
         return view;
     }
     static class ViewHolder {
-        ImageView avatar;
         TextView name;
     }
 }

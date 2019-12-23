@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apptour.anhem1nha">
+    package="com.ygaps.travelapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,8 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.TourDetail"></activity>
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.ForgotPassword" />
+
+        <activity android:name=".TourDetail" />
+        <activity android:name=".ForgotPassword" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -25,11 +26,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.MapActivity" />
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.Home" />
-        <activity android:name="anhem1nha.shashank.platform.fancyloginpage.RegisterPage" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".Home" />
+        <activity android:name=".RegisterPage" />
         <activity
-            android:name="anhem1nha.shashank.platform.fancyloginpage.LoginPage"
+            android:name=".LoginPage"
             android:label="Login Page"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
