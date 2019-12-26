@@ -173,7 +173,7 @@ public class FragmentCreate extends Fragment {
                         return headers;
                     }
                 };
-                requestQueue.add(request_json);;
+                requestQueue.add(request_json);
             }
         });
 

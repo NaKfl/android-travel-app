@@ -26,4 +26,5 @@
     <string name="input_email">Enter your email address</string>
     <string name="check_email">Please check your inbox email for OTP</string>
     <string name="password_recovery">Đổi mật khẩu mới</string>
+    <string name="project_id" translatable="false">dulich-47e62</string>
 </resources>
