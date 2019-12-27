@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class FragmentHome extends Fragment {
     FragmentHome homeFragment;
     TextView emptySearch;
     EditText searchInput;
+    ImageView createTour;
 
     public static String numTour,page="1";
     @Nullable
@@ -63,6 +65,17 @@ public class FragmentHome extends Fragment {
         btnBack = (Button) rootView.findViewById(R.id.home_back_button);
         btnNext = (Button) rootView.findViewById(R.id.home_next_button);
         searchInput=(EditText)rootView.findViewById(R.id.home_search_input);
+        createTour = (ImageView) rootView.findViewById(R.id.create_button);
+
+        createTour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "1111111111111111111", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(),CreateTour.class);
+                startActivity(intent);
+
+            }
+        });
 
         //Chức năng search
         searchInput.addTextChangedListener(new TextWatcher() {

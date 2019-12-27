@@ -11,8 +11,27 @@ public class StopPoint {
     String maxCost;
     String serviceTypeId;
     String avatar;
+    String lat;
 
-    public StopPoint(String id, String serviceId, String address, String name, String arrivalAt, String leaveAt, String minCost, String maxCost, String serviceTypeId, String avatar) {
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    String longitude;
+
+    public StopPoint(String id, String serviceId, String address, String name, String arrivalAt, String leaveAt, String minCost, String maxCost, String serviceTypeId, String avatar, String lat,String longi) {
         this.id = id;
         this.serviceId = serviceId;
         this.address = address;
@@ -23,6 +42,8 @@ public class StopPoint {
         this.maxCost = maxCost;
         this.serviceTypeId = serviceTypeId;
         this.avatar = avatar;
+        this.lat = lat;
+        this.longitude=longi;
     }
 
     public String getId() {

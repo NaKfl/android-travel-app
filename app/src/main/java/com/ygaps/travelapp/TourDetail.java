@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,6 +63,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 public class TourDetail extends AppCompatActivity {
     ArrayList<StopPoint> stopPoints=new ArrayList<StopPoint>();
     ArrayList<Comment> comments=new ArrayList<Comment>();
@@ -70,6 +74,9 @@ public class TourDetail extends AppCompatActivity {
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
     TextView stopPointEmpty, commentEmpty, memberEmpty;
     ListView listStopPoint,listComment,listMember,listReview;
+    public static EditText address_stoppoint;
+    public static double mNewLat,mNewLong;
+    public static String mNewAddress,mNewProvince="-1";
     private String[] ServiceType=new String[]{
             "Restaurant",
             "Hotel",
@@ -80,6 +87,10 @@ public class TourDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Window w = getWindow();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_tour_detail);
 
         ActionBar actionBar = getSupportActionBar();
@@ -256,10 +267,17 @@ public class TourDetail extends AppCompatActivity {
         listStopPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                final Dialog dialog = new Dialog(TourDetail.this);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.setContentView(R.layout.popup_detail_stoppoint);
-                ImageView delete_stoppoint = (ImageView) dialog.findViewById(R.id.delete_stoppoint);
+                final Dialog Updatedialog = new Dialog(TourDetail.this);
+                Updatedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Updatedialog.setContentView(R.layout.popup_detail_stoppoint);
+                ImageView delete_stoppoint = (ImageView) Updatedialog.findViewById(R.id.delete_stoppoint);
+                ImageView close_dialog = (ImageView) Updatedialog.findViewById(R.id.close);
+                close_dialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Updatedialog.dismiss();
+                    }
+                });
                 delete_stoppoint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -270,7 +288,7 @@ public class TourDetail extends AppCompatActivity {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         Toast.makeText(TourDetail.this,"Xoa thanh cong",Toast.LENGTH_LONG).show();
-                                        dialog.dismiss();
+                                        Updatedialog.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
                                         startActivity(getIntent());
@@ -296,18 +314,18 @@ public class TourDetail extends AppCompatActivity {
                 });
 
 
-                final Spinner spinService=(Spinner) dialog.findViewById(R.id.up_service_type);
+                final Spinner spinService=(Spinner) Updatedialog.findViewById(R.id.up_service_type);
                 ArrayAdapter arrayAdapter = new ArrayAdapter(TourDetail.this,R.layout.spinner_items,ServiceType);
                 spinService.setAdapter(arrayAdapter);
 
-                final EditText stop_point_name = (EditText) dialog.findViewById(R.id.up_stop_point_name);
-                final EditText address_stoppoint = (EditText) dialog.findViewById(R.id.up_address_stoppoint);
-                final EditText mincost_stop = (EditText) dialog.findViewById(R.id.up_mincost_stop);
-                final EditText maxcost_stop = (EditText) dialog.findViewById(R.id.up_maxcost_stop);
-                Button btnUpdate = (Button) dialog.findViewById(R.id.update_btn);
+                final EditText stop_point_name = (EditText) Updatedialog.findViewById(R.id.up_stop_point_name);
+                address_stoppoint = (EditText) Updatedialog.findViewById(R.id.up_address_stoppoint);
+                final EditText mincost_stop = (EditText) Updatedialog.findViewById(R.id.up_mincost_stop);
+                final EditText maxcost_stop = (EditText) Updatedialog.findViewById(R.id.up_maxcost_stop);
+                Button btnUpdate = (Button) Updatedialog.findViewById(R.id.update_btn);
 
-                final EditText dateArrive = (EditText) dialog.findViewById(R.id.up_dateArrive);
-                final EditText dateLeave = (EditText) dialog.findViewById(R.id.up_dateLeave);
+                final EditText dateArrive = (EditText) Updatedialog.findViewById(R.id.up_dateArrive);
+                final EditText dateLeave = (EditText) Updatedialog.findViewById(R.id.up_dateLeave);
 
 
                 stop_point_name.setText(stopPoints.get(position).getName());
@@ -318,12 +336,6 @@ public class TourDetail extends AppCompatActivity {
                 maxcost_stop.setText(stopPoints.get(position).getMaxCost());
                 dateArrive.setText(stopPoints.get(position).getArrivalAt());
                 dateLeave.setText(stopPoints.get(position).getLeaveAt());
-
-
-                dateArrive.setFocusable(false);
-                dateLeave.setFocusable(false);
-
-
 
                 dateArrive.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -356,8 +368,44 @@ public class TourDetail extends AppCompatActivity {
                         datePickerDialog.show();
                     }
                 });
+                dateArrive.setFocusable(false);
+                dateLeave.setFocusable(false);
 
-                dialog.show();
+                if (isMyTour.equals("0"))
+                {
+                    stop_point_name.setEnabled(false);
+                    address_stoppoint.setEnabled(false);
+                    mincost_stop.setEnabled(false);
+                    maxcost_stop.setEnabled(false);
+                    btnUpdate.setVisibility(View.INVISIBLE);
+                    delete_stoppoint.setVisibility(View.INVISIBLE);
+                    spinService.setEnabled(false);
+                    dateArrive.setEnabled(false);
+                    dateLeave.setEnabled(false);
+                }
+                else{
+                    stop_point_name.setEnabled(true);
+                    address_stoppoint.setEnabled(true);
+                    address_stoppoint.setFocusable(false);
+                    mincost_stop.setEnabled(true);
+                    maxcost_stop.setEnabled(true);
+                    btnUpdate.setVisibility(View.VISIBLE);
+                    delete_stoppoint.setVisibility(View.VISIBLE);
+                    spinService.setEnabled(true);
+                    dateArrive.setEnabled(true);
+                    dateLeave.setEnabled(true);
+                }
+
+                address_stoppoint.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent=new Intent(TourDetail.this,MapActivity.class);
+                        intent.putExtra("isUpdate","1");
+                        startActivity(intent);
+                    }
+                });
+
+                Updatedialog.show();
 
                 btnUpdate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -398,14 +446,16 @@ public class TourDetail extends AppCompatActivity {
                         }
 
                         String URL = "http://35.197.153.192:3000/tour/set-stop-points";
+                        String addressFinal =address_stoppoint.getText().toString();
                         JSONObject jsonPoint= new JSONObject();
                         try {
                             jsonPoint.put("id",stopPoints.get(position).getId());
                             jsonPoint.put("name",namePoint);
-                            jsonPoint.put("address",address_stoppoint.getText());
+                            jsonPoint.put("address",addressFinal);
                             jsonPoint.put("serviceTypeId",mType);
-                            jsonPoint.put("lat","100");
-                            jsonPoint.put("long","100");
+                            jsonPoint.put("lat",mNewLat+"");
+                            jsonPoint.put("long",mNewLong+"");
+                            jsonPoint.put("provinceId",mNewProvince);
                             jsonPoint.put("arrivalAt",mArrive+"");
                             jsonPoint.put("leaveAt",mLeave+"");
                             jsonPoint.put("minCost",minCost);
@@ -432,7 +482,7 @@ public class TourDetail extends AppCompatActivity {
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
-                                        dialog.dismiss();
+                                        Updatedialog.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
                                         startActivity(getIntent());
@@ -576,7 +626,7 @@ public class TourDetail extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar);
+                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar,lat,longitude);
                                 stopPoints.add(temp);
                             }
                             if(stopPoints.isEmpty()){
@@ -882,7 +932,7 @@ public class TourDetail extends AppCompatActivity {
                         return headers;
                     }
                 };
-                requestQueue2.add(request_json);;
+                requestQueue2.add(request_json);
                 break;
         }
         return true;
@@ -1006,5 +1056,14 @@ public class TourDetail extends AppCompatActivity {
             }
         };
         requestQueueReview.add(request_json);
+    }
+
+
+    public static void SetTextAdress(double lat,double longitute,String provinceID,String address){
+        mNewProvince=provinceID;
+        mNewAddress=address;
+        mNewLat=lat;
+        mNewLong=longitute;
+        address_stoppoint.setText(address);
     }
 }

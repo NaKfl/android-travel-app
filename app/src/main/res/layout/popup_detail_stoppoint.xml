@@ -18,10 +18,18 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_alignParentRight="true"
-                android:id="@+id/delete_stoppoint"
+                android:id="@+id/close"
                 android:background="@drawable/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/close"
+                android:id="@+id/delete_stoppoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_delete_forever_black_24dp" />
 
 
 
@@ -38,10 +46,10 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="386dp"
+                    android:layout_height="458dp"
                     android:layout_below="@id/linearLayout1"
-                    android:layout_marginTop="-15dp"
+                    android:layout_marginTop="0dp"
                     android:orientation="vertical"
                     android:padding="16dp">
 
@@ -67,29 +75,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp">
+
                         <LinearLayout
-                            android:orientation="horizontal"
-                            android:weightSum="10"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
                             <TextView
-                                android:layout_weight="4"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_weight="4"
                                 android:drawableStart="@drawable/folder"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
                                 android:gravity="center_vertical"
                                 android:text="Service Type"
                                 android:textColor="@android:color/black"
-                                android:textSize="16sp"
-                                />
+                                android:textSize="16sp" />
+
                             <Spinner
-                                android:layout_weight="6"
                                 android:id="@+id/up_service_type"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                >
+                                android:layout_weight="6">
 
                             </Spinner>
 
@@ -114,21 +123,22 @@
                     </android.support.design.widget.TextInputLayout>
 
 
-
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp">
+
                         <LinearLayout
-                            android:weightSum="100"
-                            android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="100">
+
                             <EditText
-                                android:layout_weight="50"
                                 android:id="@+id/up_mincost_stop"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:layout_weight="50"
                                 android:drawableStart="@drawable/down_arrow"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
@@ -137,16 +147,17 @@
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp" />
+
                             <EditText
-                                android:layout_weight="50"
                                 android:id="@+id/up_maxcost_stop"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:layout_weight="50"
                                 android:drawableStart="@drawable/up_arrows"
                                 android:drawablePadding="16dp"
-                                android:inputType="number"
                                 android:fontFamily="@font/calibri"
                                 android:hint="Max cost"
+                                android:inputType="number"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp" />
@@ -158,17 +169,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp">
+
                         <LinearLayout
-                            android:weightSum="100"
-                            android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="100">
 
                             <EditText
-                                android:layout_weight="50"
                                 android:id="@+id/up_dateArrive"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:layout_weight="50"
                                 android:drawableStart="@drawable/start"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
@@ -179,21 +191,23 @@
                         </LinearLayout>
 
                     </android.support.design.widget.TextInputLayout>
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp">
+
                         <LinearLayout
-                            android:weightSum="100"
-                            android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="100">
 
                             <EditText
-                                android:layout_weight="50"
                                 android:id="@+id/up_dateLeave"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:layout_weight="50"
                                 android:drawableStart="@drawable/panel"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
