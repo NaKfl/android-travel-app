@@ -932,7 +932,7 @@ public class TourDetail extends AppCompatActivity {
                         return headers;
                     }
                 };
-                requestQueue2.add(request_json);;
+                requestQueue2.add(request_json);
                 break;
         }
         return true;
