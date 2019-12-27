@@ -1,9 +1,12 @@
 package com.ygaps.travelapp.Modal;
 
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.view.ActionMode;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class record {
+    private long mLastClickTime = 0;
     private Button play, record;
     public int check =1;
     private MediaRecorder myAudioRecorder;
@@ -38,14 +42,21 @@ public class record {
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(check==1){
-                    config();
-                    startRecord();
-                    Toast.makeText(context, "Đang ghi âm", Toast.LENGTH_SHORT).show();
-                }else if(check==0){
-                    stopRecord();
-                    Toast.makeText(context, "Ngừng ghi âm", Toast.LENGTH_SHORT).show();
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                    Toast.makeText(context, "Nhấp quá nhanh", Toast.LENGTH_SHORT).show();
+                    return;
+                }else{
+                    if(check==1){
+                        config();
+                        startRecord();
+                        Toast.makeText(context, "Đang ghi âm", Toast.LENGTH_SHORT).show();
+                    }else if(check==0){
+                        stopRecord();
+                        Toast.makeText(context, "Ngừng ghi âm", Toast.LENGTH_SHORT).show();
+                    }
                 }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
             }
         });
     }
@@ -81,5 +92,12 @@ public class record {
             }
         });
 
+    }
+    public void getDuration(Context context){
+        Uri uri = Uri.parse(outputFile);
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(context,uri);
+        String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        int millSecond = Integer.parseInt(durationStr);
     }
 }

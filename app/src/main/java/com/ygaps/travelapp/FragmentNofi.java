@@ -60,12 +60,6 @@ public class FragmentNofi extends Fragment {
         record=new record(play,start,myAudioRecorder,outputFile);
         record.setRecord(getContext());
         record.playRE(getContext());
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendVoice();
-            }
-        });
         return rootView;
     }
     //yêu cầu quyền ghi tập tin và quyền ghi âm
@@ -81,53 +75,5 @@ public class FragmentNofi extends Fragment {
         if (!permissionToRecordAccepted ) getActivity().finish();
         if (!permissionToWriteAccepted ) getActivity().finish();
     }
-    //send file
-    public void sendVoice(){
-        String idOfTour = "4500";
-        final RequestQueue requestQueue2= Volley.newRequestQueue(getContext());
-        String URL = "http://35.197.153.192:3000/tour/comment";
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("tourId",idOfTour);
-        params.put("userId","55");
-        params.put("comment","Bảo đẹp trai");
-        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try{
-                            Toast.makeText(getContext(),"ok", Toast.LENGTH_SHORT).show();
-                        }catch (Exception e){
-                            Toast.makeText(getContext(), e+"", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                NetworkResponse networkResponse = error.networkResponse;
-                if (networkResponse != null) {
-                    String statusCode=String.valueOf(networkResponse.statusCode);
-                    switch(statusCode){
-                        case "400":
-                            Toast.makeText(getContext(), "ERROR 400", Toast.LENGTH_SHORT).show();
-                            break;
-                        case "500":
-                            Toast.makeText(getContext(), "ERROR 500", Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(getContext(), "ERROR", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                //headers.put("Content-Type", "application/json");
-                headers.put("Authorization", LoginPage.token);
-                return headers;
-            }
-        };
-        requestQueue2.add(request_json);;
-    }
+    //s
 }
