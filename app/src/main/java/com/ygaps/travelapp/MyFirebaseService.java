@@ -31,8 +31,9 @@ import java.util.Random;
 
 public class MyFirebaseService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseService";
-    public static final String URL="http://35.197.153.192:3000/";
-    private String body="";
+    private static final String URL="http://35.197.153.192:3000/";
+    String tourId="";
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -40,33 +41,27 @@ public class MyFirebaseService extends FirebaseMessagingService {
         Map data=remoteMessage.getData();
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-        if (data.isEmpty()) { // message type is notification.
-            Log.d("data","isNull");
-            showNotification("Invite to join a Tour",remoteMessage.getNotification().getBody());
-        } else { // message type is data.
-
+        if (data.isEmpty()) {
+            showNotification("Invitation",remoteMessage.getNotification().getBody());
+        } else {
+            tourId=data.get("id").toString();
             StringBuilder noti=new StringBuilder();
-
-            noti.append(data.get("hostName")).append(" invites you to Tour: ").append(data.get("name"));
-
-            body= noti.toString();
-
-            showNotification("Invite to join a Tour",body);
-
+            noti.append("You have been invited on the \"").append(data.get("name")).append("\" trip");
+            showNotification("Invitation",noti.toString());
         }
 
     }
 
     private Intent createIntent(String actionName,int notificationID,String messaggeBody)
     {
-        Intent intent=new Intent(this, Noti.class);
+        Intent intent=new Intent(this,Noti.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setAction(actionName);
-        Bundle guiThongbao=new Bundle();
-        guiThongbao.putInt("NOTIFICATION_ID",notificationID);
-        guiThongbao.putString("MESSAGE_BODY",messaggeBody);
-
-        intent.putExtras(guiThongbao);
+        Bundle bundle=new Bundle();
+        bundle.putInt("NOTIFICATION_ID",notificationID);
+        bundle.putString("MESSAGE_BODY",messaggeBody);
+        bundle.putString("tourId",tourId);
+        intent.putExtras(bundle);
 
         return intent;
     }
@@ -80,7 +75,7 @@ public class MyFirebaseService extends FirebaseMessagingService {
         {
             NotificationChannel notificationChannel=new NotificationChannel(NOTIFICATION_CHANEL_ID,"Notification",
                     NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription("DoThanhDat");
+            notificationChannel.setDescription("");
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.BLUE);
             notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
@@ -104,10 +99,10 @@ public class MyFirebaseService extends FirebaseMessagingService {
                 .setContentInfo("Info")
                 .setAutoCancel(true)
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
-                .addAction(new NotificationCompat.Action(android.R.drawable.sym_call_outgoing,
+                .addAction(new NotificationCompat.Action(R.drawable.confirm,
                         "Accept",
                         PendingIntent.getActivity(this,0,acceptIntent,PendingIntent.FLAG_CANCEL_CURRENT)))
-                .addAction(new NotificationCompat.Action(android.R.drawable.sym_call_missed,
+                .addAction(new NotificationCompat.Action(R.drawable.cancel_white,
                         "Decline",
                         PendingIntent.getActivity(this,0,decline,PendingIntent.FLAG_CANCEL_CURRENT)));
         notificationManager.notify(notificationID,notificationBuildder.build());
@@ -161,42 +156,5 @@ public class MyFirebaseService extends FirebaseMessagingService {
             }
         };
         requestQueue.add(request_json);
-
-//        Gson gson=new GsonBuilder().serializeNulls().create();
-//        Retrofit retrofit=new Retrofit.Builder()
-//                .baseUrl(URL)
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .build();
-//        jsonPlaceHolderApi=retrofit.create(JsonPlaceHolderApi.class);
-//
-//
-//        String device_id= Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//        SharedPreferences sharedPreferences = getSharedPreferences("com.ygaps.travel", Context.MODE_PRIVATE);
-//        String token_user = sharedPreferences.getString("token_user","");
-//
-//        Map<String, String> map = new HashMap<>();
-//        map.put("Authorization",token_user);
-//
-//        SendTokenFirebaseToSever_Data sendTokenFirebaseToSever_data=new SendTokenFirebaseToSever_Data(s,device_id,1,"1.0");
-//
-//        Call<SendTokenFirebaseToServer_Result> call=jsonPlaceHolderApi.sendTokenToServer(map,sendTokenFirebaseToSever_data);
-//        call.enqueue(new Callback<SendTokenFirebaseToServer_Result>() {
-//            @Override
-//            public void onResponse(Call<SendTokenFirebaseToServer_Result> call, Response<SendTokenFirebaseToServer_Result> response) {
-//                if (!response.isSuccessful())
-//                {
-//                    Toast.makeText(getApplicationContext(),"Send khong thanh cong",Toast.LENGTH_SHORT).show();
-//                }
-//                else
-//                {
-//                    Toast.makeText(getApplicationContext(),"Send thanh cong",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<SendTokenFirebaseToServer_Result> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        Log.d(TAG, s);
     }
 }
