@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".CreateTour"></activity>
 
         <service android:name=".MyFirebaseService">
             <intent-filter>
@@ -22,8 +23,7 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".TourDetail" />
+        <activity android:name=".TourDetail" />
         <activity android:name=".ForgotPassword" />
 
         <meta-data
@@ -34,8 +34,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:noHistory="true"
-            android:name=".MapActivity" />
+            android:name=".MapActivity"
+            android:noHistory="true" />
         <activity android:name=".Home" />
         <activity android:name=".RegisterPage" />
         <activity

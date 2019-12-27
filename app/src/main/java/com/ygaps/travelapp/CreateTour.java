@@ -5,20 +5,14 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -31,12 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.ygaps.travelapp.FragmentCreate;
-import com.ygaps.travelapp.FragmentHistory;
-import com.ygaps.travelapp.FragmentHome;
-import com.ygaps.travelapp.FragmentNofi;
-import com.ygaps.travelapp.FragmentSetting;
-import com.ygaps.travelapp.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,12 +44,13 @@ public class CreateTour extends AppCompatActivity {
     RadioButton publicTour;
     Button btnCreate;
     public static String tourID="";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.fragment_create);
+
         ((AppCompatActivity)CreateTour.this).getSupportActionBar().setTitle(R.string.create_tour_title);
+
         tour_name = (EditText) findViewById(R.id.tour_name);
         startDate=(EditText)findViewById(R.id.startDate);
         startDate.setFocusable(false);
@@ -83,7 +72,7 @@ public class CreateTour extends AppCompatActivity {
         children = (EditText) findViewById(R.id.children);
         mincost = (EditText) findViewById(R.id.mincost);
         maxcost = (EditText) findViewById(R.id.maxcost);
-        isPrivate = (RadioGroup) findViewById(R.id.isPrivate);
+        isPrivate = (RadioGroup)findViewById(R.id.isPrivate);
         privateTour = (RadioButton) findViewById(R.id.privateTour);
         publicTour = (RadioButton) findViewById(R.id.publicTour);
         btnCreate = (Button) findViewById(R.id.btnCreate);
@@ -183,9 +172,6 @@ public class CreateTour extends AppCompatActivity {
                 requestQueue.add(request_json);
             }
         });
-
-
-
     }
 
     public boolean checkUserLocationPermission()
@@ -234,5 +220,4 @@ public class CreateTour extends AppCompatActivity {
         },1999,01,01);
         datePickerDialog.show();
     }
-
 }
