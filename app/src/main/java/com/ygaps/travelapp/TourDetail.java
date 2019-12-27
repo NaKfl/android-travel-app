@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -118,6 +120,8 @@ public class TourDetail extends AppCompatActivity {
                 //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.setContentView(R.layout.popup_review);
                 final RatingBar ratingBar = dialog.findViewById(R.id.rating);
+                LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+                stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
                 final EditText reviewText = (EditText) dialog.findViewById(R.id.input_review);
                 Button btnReview = (Button) dialog.findViewById(R.id.btn_send_review);
                 listReview = (ListView) dialog.findViewById(R.id.list_review);
@@ -132,10 +136,9 @@ public class TourDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         float Rate = ratingBar.getRating();
-                        if(Rate== 0 ){
-                            Toast.makeText(TourDetail.this, "Vui lòng chọn sao", Toast.LENGTH_SHORT).show();
+                        if(Rate<2 ){
+                            Rate = 2;
                         }
-                        else{
                             Toast.makeText(TourDetail.this, Rate+"", Toast.LENGTH_SHORT).show();
                             int rate = Math.round(Rate);
                             String review = reviewText.getText().toString();
@@ -185,9 +188,6 @@ public class TourDetail extends AppCompatActivity {
                                 }
                             };
                             requestQueue.add(request_json);
-                        }
-
-
                     }
                 });
                 dialog.show();
@@ -932,7 +932,7 @@ public class TourDetail extends AppCompatActivity {
                         return headers;
                     }
                 };
-                requestQueue2.add(request_json);;
+                requestQueue2.add(request_json);
                 break;
         }
         return true;
@@ -964,6 +964,8 @@ public class TourDetail extends AppCompatActivity {
                             float rating = point/(total);
                             Toast.makeText(TourDetail.this, total+"", Toast.LENGTH_SHORT).show();
                             RatingBar ratingBar = (RatingBar) findViewById(R.id.pointOfTour);
+                            LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+                            stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
                             ratingBar.setRating(rating);
                         }catch (Exception e){
                             e.printStackTrace();
