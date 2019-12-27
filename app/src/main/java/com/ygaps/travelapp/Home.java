@@ -98,7 +98,6 @@ public class Home extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                            Toast.makeText(Home.this, response.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override

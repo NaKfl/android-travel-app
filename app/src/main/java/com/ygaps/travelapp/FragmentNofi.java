@@ -39,6 +39,7 @@ public class FragmentNofi extends Fragment {
         record.setRecord(getContext());
         record.playRE(getContext());
         return rootView;
+
     }
     //yêu cầu quyền ghi tập tin và quyền ghi âm
     @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

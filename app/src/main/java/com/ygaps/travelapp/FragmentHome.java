@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -70,7 +69,6 @@ public class FragmentHome extends Fragment {
         createTour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "1111111111111111111", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(),CreateTour.class);
                 startActivity(intent);
 

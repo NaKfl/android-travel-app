@@ -21,11 +21,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -56,7 +59,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.ygaps.travelapp.Adapter.AdapterComment;
+import com.ygaps.travelapp.Adapter.AdapterMember;
+import com.ygaps.travelapp.Adapter.AdapterStopPoint;
 import com.ygaps.travelapp.Adapter.AdapterTour;
+import com.ygaps.travelapp.Modal.Comment;
+import com.ygaps.travelapp.Modal.Member;
 import com.ygaps.travelapp.Modal.StopPoint;
 import com.ygaps.travelapp.Modal.Tour;
 
@@ -95,16 +103,22 @@ public class MapActivity extends AppCompatActivity implements
     private Marker myLocation;
     public static final int Request_User_Location_Code=99;
     private Geocoder geocoder;
-    private String fullAddress="HCM";
     public static List<Marker> markerList = new ArrayList<Marker>();
+    private String fullAddress="HCM";
     private String provinceGet="HCM";
     public static LatLng myLatLngLocation = new LatLng(10.7625216,106.6801375);
     private LocationManager locationManager;
     ArrayList<StopPoint> listGetStopPoint = new ArrayList<>();
     private double latitude_marker_add,longtitude_marker_add;
     ImageView btn_ShowStoppoint;
+    ImageView btn_ShowList;
     int status=-1;
     String isUpdate="";
+    ArrayList<StopPoint> ViewstopPoints=new ArrayList<StopPoint>();
+    ListView listShowStopPoint ;
+    public static EditText address_stoppoint;
+    public static double tNewLat,tNewLong;
+    public static String tNewAddress,tNewProvince="-1";
     private String[] ServiceType=new String[]{
             "Restaurant",
             "Hotel",
@@ -123,6 +137,16 @@ public class MapActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         isUpdate = intent.getStringExtra("isUpdate");
         btn_ShowStoppoint = (ImageView) findViewById(R.id.on_off);
+        btn_ShowList = (ImageView) findViewById(R.id.showList);
+        if (isUpdate.equals("1"))
+        {
+            btn_ShowList.setVisibility(View.GONE);
+            btn_ShowStoppoint.setVisibility(View.GONE);
+        }
+        else{
+            btn_ShowList.setVisibility(View.VISIBLE);
+            btn_ShowStoppoint.setVisibility(View.VISIBLE);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             checkUserLocationPermission();
@@ -192,7 +216,7 @@ public class MapActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
         Log.d("AAAA",json_post.toString());
-        final RequestQueue requestQueue= Volley.newRequestQueue(MapActivity.this);
+        RequestQueue requestQueue= Volley.newRequestQueue(MapActivity.this);
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, json_post,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -247,6 +271,7 @@ public class MapActivity extends AppCompatActivity implements
 
 
 
+
     }
 
     private int provinceID(String str,String[] array)
@@ -294,36 +319,366 @@ public class MapActivity extends AppCompatActivity implements
                 status=-status;
             }
         });
+        btn_ShowList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RequestQueue requestQueue= Volley.newRequestQueue(MapActivity.this);
+                String URL = "http://35.197.153.192:3000/tour/info?tourId="+ CreateTour.tourID;
+                final Dialog dialog = new Dialog(MapActivity.this);
+                JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray jsonArrayStopPoint = response.getJSONArray("stopPoints");
+                                    ViewstopPoints.clear();
+                                    for (int i=0;i<jsonArrayStopPoint.length();i++)
+                                    {
+                                        JSONObject stopPoint = jsonArrayStopPoint.getJSONObject(i);
+                                        String id = stopPoint.getString("id");
+                                        String serviceId = stopPoint.getString("serviceId");
+                                        String address = stopPoint.getString("address");
+                                        String provinceId = stopPoint.getString("provinceId");
+                                        String name = stopPoint.getString("name");
+                                        String lat = stopPoint.getString("lat");
+                                        String longitude = stopPoint.getString("long");
+                                        String arrivalAt = stopPoint.getString("arrivalAt");
+                                        String leaveAt = stopPoint.getString("leaveAt");
+                                        String minCost = stopPoint.getString("minCost");
+                                        String maxCost = stopPoint.getString("maxCost");
+                                        String serviceTypeId = stopPoint.getString("serviceTypeId");
+                                        String avatar = stopPoint.getString("avatar");
+                                        String index = stopPoint.getString("index");
+                                        try{
+                                            long miliStartDate=Long.parseLong(arrivalAt);
+                                            Date startD=new Date(miliStartDate);
+                                            DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
+                                            arrivalAt=dateFormat.format(startD);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
 
+                                        try{
+                                            long miliEndDate=Long.parseLong(leaveAt);
+                                            Date endD=new Date(miliEndDate);
+                                            DateFormat dateFormat1=new SimpleDateFormat("dd/MM/yyyy");
+                                            leaveAt=dateFormat1.format(endD);
+                                        }catch(Exception e){
+                                            e.printStackTrace();
+                                        }
+
+                                        StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar,lat,longitude);
+                                        ViewstopPoints.add(temp);
+                                    }
+
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialog.setContentView(R.layout.liststoppoint_create);
+                                listShowStopPoint = (ListView) dialog.findViewById(R.id.list_show_stoppoint);
+                                AdapterStopPoint adapterStopPoint = new AdapterStopPoint(MapActivity.this, R.layout.stop_point_single, ViewstopPoints);
+                                listShowStopPoint.setAdapter(adapterStopPoint);
+                                adapterStopPoint.notifyDataSetChanged();
+                                dialog.show();
+                                listShowStopPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                                        final Dialog Updatedialog = new Dialog(MapActivity.this);
+                                        Updatedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        Updatedialog.setContentView(R.layout.popup_detail_stoppoint);
+                                        ImageView delete_stoppoint = (ImageView) Updatedialog.findViewById(R.id.delete_stoppoint);
+                                        ImageView close_dialog = (ImageView) Updatedialog.findViewById(R.id.close);
+                                        close_dialog.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Updatedialog.dismiss();
+                                            }
+                                        });
+                                        delete_stoppoint.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                RequestQueue requestQueue= Volley.newRequestQueue(MapActivity.this);
+                                                String URL = "http://35.197.153.192:3000/tour/remove-stop-point?stopPointId="+ ViewstopPoints.get(i).getId();
+                                                JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
+                                                        new Response.Listener<JSONObject>() {
+                                                            @Override
+                                                            public void onResponse(JSONObject response) {
+                                                                Toast.makeText(MapActivity.this,"Xoa thanh cong",Toast.LENGTH_LONG).show();
+                                                                Updatedialog.dismiss();
+                                                                finish();
+                                                                overridePendingTransition(0, 0);
+                                                                startActivity(getIntent());
+                                                                overridePendingTransition(0, 0);
+                                                            }
+                                                        }, new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        Toast.makeText(MapActivity.this,error.toString(),Toast.LENGTH_LONG).show();
+                                                    }
+                                                })
+                                                {
+                                                    @Override
+                                                    public Map<String, String> getHeaders() throws AuthFailureError {
+                                                        HashMap<String, String> headers = new HashMap<String, String>();
+                                                        //headers.put("Content-Type", "application/json");
+                                                        headers.put("Authorization", LoginPage.token);
+                                                        return headers;
+                                                    }
+                                                };
+                                                requestQueue.add(request_json);
+                                            }
+                                        });
+
+                                        //
+                                        final Spinner spinService=(Spinner) Updatedialog.findViewById(R.id.up_service_type);
+                                        ArrayAdapter arrayAdapter = new ArrayAdapter(MapActivity.this,R.layout.spinner_items,ServiceType);
+                                        spinService.setAdapter(arrayAdapter);
+
+                                        final EditText stop_point_name = (EditText) Updatedialog.findViewById(R.id.up_stop_point_name);
+                                        address_stoppoint = (EditText) Updatedialog.findViewById(R.id.up_address_stoppoint);
+                                        final EditText mincost_stop = (EditText) Updatedialog.findViewById(R.id.up_mincost_stop);
+                                        final EditText maxcost_stop = (EditText) Updatedialog.findViewById(R.id.up_maxcost_stop);
+                                        Button btnUpdate = (Button) Updatedialog.findViewById(R.id.update_btn);
+
+                                        final EditText dateArrive = (EditText) Updatedialog.findViewById(R.id.up_dateArrive);
+                                        final EditText dateLeave = (EditText) Updatedialog.findViewById(R.id.up_dateLeave);
+
+
+                                        stop_point_name.setText(ViewstopPoints.get(i).getName());
+                                        spinService.setSelection(Integer.parseInt(ViewstopPoints.get(i).getServiceTypeId())-1);
+                                        address_stoppoint.setText(ViewstopPoints.get(i).getAddress());
+
+                                        mincost_stop.setText(ViewstopPoints.get(i).getMinCost());
+                                        maxcost_stop.setText(ViewstopPoints.get(i).getMaxCost());
+                                        dateArrive.setText(ViewstopPoints.get(i).getArrivalAt());
+                                        dateLeave.setText(ViewstopPoints.get(i).getLeaveAt());
+
+                                        dateArrive.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                final Calendar calendar = Calendar.getInstance();
+                                                DatePickerDialog datePickerDialog=new DatePickerDialog(MapActivity.this, new DatePickerDialog.OnDateSetListener() {
+                                                    @Override
+                                                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                                                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                                        calendar.set(i,i1,i2);
+                                                        dateArrive.setText(simpleDateFormat.format(calendar.getTime()));
+                                                    }
+                                                },1999,01,01);
+                                                datePickerDialog.show();
+                                            }
+                                        });
+
+                                        dateLeave.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                final Calendar calendar = Calendar.getInstance();
+                                                DatePickerDialog datePickerDialog=new DatePickerDialog(MapActivity.this, new DatePickerDialog.OnDateSetListener() {
+                                                    @Override
+                                                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                                                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                                        calendar.set(i,i1,i2);
+                                                        dateLeave.setText(simpleDateFormat.format(calendar.getTime()));
+                                                    }
+                                                },1999,01,01);
+                                                datePickerDialog.show();
+                                            }
+                                        });
+                                        dateArrive.setFocusable(false);
+                                        dateLeave.setFocusable(false);
+                                        address_stoppoint.setFocusable(false);
+                                        address_stoppoint.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Intent intent=new Intent(MapActivity.this,MapTemp.class);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                        //
+                                        Updatedialog.show();
+                                        btnUpdate.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                String namePoint = stop_point_name.getText().toString();
+                                                String minCost = mincost_stop.getText().toString().trim();
+                                                String maxCost = maxcost_stop.getText().toString().trim();
+                                                int mType;
+                                                if (spinService.getSelectedItem().toString().equals("Restaurant"))
+                                                {
+                                                    mType=1;
+                                                }
+                                                else if(spinService.getSelectedItem().toString().equals("Hotel"))
+                                                {
+                                                    mType=2;
+                                                }
+                                                else if (spinService.getSelectedItem().toString().equals("Rest Station"))
+                                                {
+                                                    mType=3;
+                                                }
+                                                else
+                                                {
+                                                    mType=4;
+                                                }
+
+
+                                                long mArrive =0,mLeave =0;
+                                                Date dArrive, dLeave;
+                                                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                                                try {
+                                                    dArrive = sdf.parse(dateArrive.getText().toString());
+                                                    mArrive = dArrive.getTime();
+
+                                                    dLeave = sdf.parse(dateLeave.getText().toString());
+                                                    mLeave = dLeave.getTime();
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                String URL = "http://35.197.153.192:3000/tour/set-stop-points";
+                                                String addressFinal =address_stoppoint.getText().toString();
+                                                JSONObject jsonPoint= new JSONObject();
+                                                try {
+                                                    jsonPoint.put("id",ViewstopPoints.get(i).getId());
+                                                    jsonPoint.put("name",namePoint);
+                                                    jsonPoint.put("address",addressFinal);
+                                                    jsonPoint.put("serviceTypeId",mType);
+                                                    jsonPoint.put("lat",tNewLat+"");
+                                                    jsonPoint.put("long",tNewLong+"");
+                                                    jsonPoint.put("provinceId",tNewProvince);
+                                                    jsonPoint.put("arrivalAt",mArrive+"");
+                                                    jsonPoint.put("leaveAt",mLeave+"");
+                                                    jsonPoint.put("minCost",minCost);
+                                                    jsonPoint.put("maxCost",maxCost);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                JSONArray jsonArrayPoint = new JSONArray();
+                                                jsonArrayPoint.put(jsonPoint);
+
+
+                                                final JSONObject json_post= new JSONObject();
+                                                try {
+                                                    json_post.put("tourId",CreateTour.tourID);
+                                                    json_post.put("stopPoints",jsonArrayPoint);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                Log.d("AAAA",json_post.toString());
+                                                final String requestBody = json_post.toString();
+                                                final RequestQueue requestQueue= Volley.newRequestQueue(MapActivity.this);
+                                                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                                                        new Response.Listener<String>() {
+                                                            @Override
+                                                            public void onResponse(String response) {
+                                                                Updatedialog.dismiss();
+                                                                finish();
+                                                                overridePendingTransition(0, 0);
+                                                                startActivity(getIntent());
+                                                                overridePendingTransition(0, 0);
+                                                            }
+                                                        }, new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        Toast.makeText(MapActivity.this, ""+error, Toast.LENGTH_LONG).show();
+                                                    }
+                                                }){
+                                                    @Override
+                                                    public String getBodyContentType() {
+                                                        return "application/json; charset=utf-8";
+                                                    }
+
+                                                    @Override
+                                                    public byte[] getBody() throws AuthFailureError {
+                                                        try {
+                                                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                                        } catch (UnsupportedEncodingException uee) {
+                                                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                                            return null;
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                                                        String responseString = "";
+                                                        if (response != null) {
+                                                            responseString = String.valueOf(response.statusCode);
+                                                            // can get more details such as response.headers
+                                                        }
+                                                        return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                                                    }
+                                                    @Override
+                                                    public Map<String, String> getHeaders() throws AuthFailureError {
+                                                        HashMap<String, String> headers = new HashMap<String, String>();
+                                                        //headers.put("Content-Type", "application/json");
+                                                        headers.put("Authorization", LoginPage.token);
+                                                        return headers;
+                                                    }
+                                                };
+                                                requestQueue.add(stringRequest);
+
+
+
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Authorization", LoginPage.token);
+                        return headers;
+                    }
+                };
+                requestQueue.add(request_json);
+
+                //
+
+            }
+        });
        /////
         ////
 
 
-        if (true)
-        {
-            map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
-                    MarkerOptions temp = new MarkerOptions();
-                    String address_click = "";
-                    temp.position(latLng);
-                    List<Address> addressList;
-                    geocoder = new Geocoder(MapActivity.this, Locale.getDefault());
-                    try {
-                        addressList = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
-                        address_click = addressList.get(0).getAddressLine(0);
+                    if (status==-1)
+                    {
+                        MarkerOptions temp = new MarkerOptions();
+                        String address_click = "";
+                        temp.position(latLng);
+                        List<Address> addressList;
+                        geocoder = new Geocoder(MapActivity.this, Locale.getDefault());
+                        try {
+                            addressList = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
+                            address_click = addressList.get(0).getAddressLine(0);
 
-                        Toast.makeText(MapActivity.this, address_click, Toast.LENGTH_LONG).show();
+                            Toast.makeText(MapActivity.this, address_click, Toast.LENGTH_LONG).show();
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        temp.title(address_click);
+                        temp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        stopPointTemp = map.addMarker(temp);
                     }
-                    temp.title(address_click);
-                    temp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    stopPointTemp = map.addMarker(temp);
+                    else{
+
+                    }
+
                 }
             });
-        }
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -346,6 +701,7 @@ public class MapActivity extends AppCompatActivity implements
                     double mNewLat = mLatLng.latitude;
                     double mNewLong = mLatLng.longitude;
                     String mNewAddress=marker.getTitle();
+
                     int proID = provinceID(provinceGet,arrayProvince);
                     finish();
                     TourDetail.SetTextAdress(mNewLat,mNewLong,proID+"",mNewAddress);
@@ -358,14 +714,12 @@ public class MapActivity extends AppCompatActivity implements
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.setContentView(R.layout.popup_select_stop_point);
                     dialog.show();
-
                     LatLng temp = marker.getPosition();
                     double latitude_marker,longtitude_marker;
                     latitude_marker = temp.latitude;
                     longtitude_marker = temp.longitude;
                     latitude_marker_add = latitude_marker;
                     longtitude_marker_add = longtitude_marker;
-
 
                     markerSelect=marker;
 
@@ -628,7 +982,6 @@ public class MapActivity extends AppCompatActivity implements
                                                     dialogStopPoint.dismiss();
                                                     dialog.dismiss();
                                                     finish();
-                                                    overridePendingTransition(0, 0);
                                                     startActivity(getIntent());
                                             }
                                         }, new Response.ErrorListener() {
@@ -732,10 +1085,6 @@ public class MapActivity extends AppCompatActivity implements
 //        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 //        currentUserLocationMarker = map.addMarker(markerOptions);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-        if (markerList.size()>0)
-        {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerList.get(markerList.size()-1).getPosition(),10));
-        }
 
         if (googleApiClient != null)
         {
@@ -771,10 +1120,12 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if(map != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
-            map.clear();
-            // add markers from database to the map
-        }
     }
-
+    public static void SetTextAdress(double lat,double longitute,String provinceID,String address){
+        tNewProvince=provinceID;
+        tNewAddress=address;
+        tNewLat=lat;
+        tNewLong=longitute;
+        address_stoppoint.setText(address);
+    }
 }
