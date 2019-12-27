@@ -169,6 +169,7 @@ public class FragmentHome extends Fragment {
                                 String endDate = tour.getString("endDate");
                                 String adults = tour.getString("adults");
                                 String avatar = tour.getString("avatar");
+                                String status = tour.getString("status");
                                 String timeStart="0";
                                 String timeEnd="0";
                                 try{
@@ -188,10 +189,10 @@ public class FragmentHome extends Fragment {
                                }catch(Exception e){
                                    e.printStackTrace();
                                }
-
-
-                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
-                                tours.add(temp);
+                               if(!status.equals("-1")){
+                                   Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                   tours.add(temp);
+                               }
                             }
                             if(tours.isEmpty()){
                                 emptySearch=(TextView)rootView.findViewById(R.id.home_empty);
