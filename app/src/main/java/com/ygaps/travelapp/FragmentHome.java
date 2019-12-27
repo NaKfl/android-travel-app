@@ -40,7 +40,7 @@ public class FragmentHome extends Fragment {
     static ArrayList<Tour> tours=new ArrayList<>();
     public static AdapterTour adapter;
     EditText numPage;
-    Button btnShow;
+    Button btnShow,btnBack,btnNext;
     FragmentHome homeFragment;
     public static String numTour,page="1";
     @Nullable
@@ -53,6 +53,9 @@ public class FragmentHome extends Fragment {
 
         numPage = (EditText) rootView.findViewById(R.id.numPage);
         btnShow = (Button) rootView.findViewById(R.id.btnShow);
+        btnBack = (Button) rootView.findViewById(R.id.home_back_button);
+        btnNext = (Button) rootView.findViewById(R.id.home_next_button);
+
         numPage.setText(page);
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +68,38 @@ public class FragmentHome extends Fragment {
             }
         });
 
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page = numPage.getText().toString();
+                int pageInt=Integer.parseInt(page);
+                if(pageInt-1>=1){
+                    pageInt=pageInt-1;
+                }
+                page=String.valueOf(pageInt);
+                homeFragment = new FragmentHome();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.main_frame,homeFragment);
+                fragmentTransaction.commit();
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page = numPage.getText().toString();
+                int pageInt=Integer.parseInt(page);
+                pageInt=pageInt+1;
+                page=String.valueOf(pageInt);
+                homeFragment = new FragmentHome();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.main_frame,homeFragment);
+                fragmentTransaction.commit();
+            }
+        });
+
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-        String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=5"+"&pageNum="+ page;
+        String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=50"+"&pageNum="+ page;
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
                 new Response.Listener<JSONObject>() {
                     @Override
