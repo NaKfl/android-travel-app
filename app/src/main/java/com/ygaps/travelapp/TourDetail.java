@@ -10,6 +10,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,17 +67,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 public class TourDetail extends AppCompatActivity {
     ArrayList<StopPoint> stopPoints=new ArrayList<StopPoint>();
     ArrayList<Comment> comments=new ArrayList<Comment>();
     ArrayList<Member> members=new ArrayList<Member>();
+    ArrayList<Member> searchMemberArray=new ArrayList<Member>();
     ArrayList <Review> reviews=new ArrayList<Review>();
 
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
-    TextView stopPointEmpty, commentEmpty, memberEmpty;
-    ListView listStopPoint,listComment,listMember,listReview;
+    TextView stopPointEmpty, commentEmpty, memberEmpty, memberListEmpty;
+    ListView listStopPoint,listComment,listMember,listReview, searchMemberList;
+    EditText searchMemberInput;
     public static EditText address_stoppoint;
     public static double mNewLat,mNewLong;
     public static String mNewAddress,mNewProvince="-1";
@@ -101,7 +103,6 @@ public class TourDetail extends AppCompatActivity {
         Intent intent = getIntent();
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");
-        //set point of tour
         getPointOfTour(idOfTour);
         nameOfTour=(TextView)findViewById(R.id.tour_detail_destination);
         dateOfTour=(TextView)findViewById(R.id.tour_detail_datetodate);
@@ -112,6 +113,11 @@ public class TourDetail extends AppCompatActivity {
         listMember=(ListView)findViewById(R.id.list_member);
         ImageView add_comment = (ImageView) findViewById(R.id.add_comment);
         ImageView rate = (ImageView) findViewById(R.id.rate);
+        ImageView addMember = (ImageView) findViewById(R.id.add_member);
+        if(isMyTour.equals("0")){
+            addMember.setVisibility(View.GONE);
+        }
+
         //đánh giá
         rate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +145,6 @@ public class TourDetail extends AppCompatActivity {
                         if(Rate<2 ){
                             Rate = 2;
                         }
-                            Toast.makeText(TourDetail.this, Rate+"", Toast.LENGTH_SHORT).show();
                             int rate = Math.round(Rate);
                             String review = reviewText.getText().toString();
                             final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
@@ -148,12 +153,11 @@ public class TourDetail extends AppCompatActivity {
                             params.put("tourId", idOfTour);
                             params.put("review",review);
                             params.put("point",rate +"");
-                            Toast.makeText(TourDetail.this,review + " "+Rate, Toast.LENGTH_SHORT);
                             JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
                                     new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
-                                            Toast.makeText(TourDetail.this, "review thành công", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(TourDetail.this, "Review thành công", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                             finish();
                                             overridePendingTransition(0, 0);
@@ -198,7 +202,7 @@ public class TourDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(TourDetail.this);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.setContentView(R.layout.popup_comment);
 
                 final EditText commentText = (EditText) dialog.findViewById(R.id.input_comment);
@@ -263,6 +267,124 @@ public class TourDetail extends AppCompatActivity {
         });
 
 
+        //Thêm member
+        addMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(TourDetail.this);
+                dialog.setContentView(R.layout.popup_add_member);
+                searchMemberInput=(EditText)dialog.findViewById(R.id.search_member_input);
+                searchMemberList=(ListView)dialog.findViewById(R.id.search_member_list);
+                memberListEmpty = (TextView)dialog.findViewById(R.id.add_member_empty);
+                searchMemberInput.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String keyword = s.toString().trim();
+                            final RequestQueue requestQueueAddMember = Volley.newRequestQueue(TourDetail.this);
+                            String URL = "http://35.197.153.192:3000/user/search?searchKey=" + keyword + "&pageIndex=1&pageSize=" + Integer.MAX_VALUE;
+                            JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                            try {
+                                                String total = response.getString("total");
+                                                JSONArray jsonArray = response.getJSONArray("users");
+                                                searchMemberArray.clear();
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    JSONObject member = jsonArray.getJSONObject(i);
+                                                    String id = member.getString("id");
+                                                    String name = member.getString("fullName");
+                                                    String phone = member.getString("phone");
+                                                    String avatar = member.getString("avatar");
+                                                    Member temp = new Member(id, name, phone, avatar, "");
+                                                    searchMemberArray.add(temp);
+                                                }
+                                                if (searchMemberArray.isEmpty()) {
+                                                    memberListEmpty.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    memberListEmpty.setVisibility(View.GONE);
+                                                }
+                                                AdapterMember adapter = new AdapterMember(TourDetail.this, R.layout.member_single, searchMemberArray);
+                                                searchMemberList.setAdapter(adapter);
+                                                adapter.notifyDataSetChanged();
+                                                searchMemberList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                    @Override
+                                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                        final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
+                                                        String URL = "http://35.197.153.192:3000/tour/add/member";
+                                                        HashMap<String, String> params = new HashMap<String, String>();
+                                                        params.put("tourId", idOfTour);
+                                                        Toast.makeText(TourDetail.this, idOfTour, Toast.LENGTH_SHORT).show();
+                                                        params.put("invitedUserId", searchMemberArray.get(position).getId());
+                                                        params.put("isInvited", "false");
+
+                                                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                                                                new Response.Listener<JSONObject>() {
+                                                                    @Override
+                                                                    public void onResponse(JSONObject response) {
+                                                                        Toast.makeText(TourDetail.this, "Send invitation success", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }, new Response.ErrorListener() {
+                                                            @Override
+                                                            public void onErrorResponse(VolleyError error) {
+                                                                NetworkResponse networkResponse = error.networkResponse;
+                                                                if (networkResponse != null) {
+                                                                    String statusCode=String.valueOf(networkResponse.statusCode);
+                                                                    switch(statusCode){
+                                                                        case "400":
+                                                                            Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
+                                                                            break;
+                                                                        case "500":
+                                                                            Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
+                                                                            break;
+                                                                        default:
+                                                                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            }
+                                                        }){
+                                                            @Override
+                                                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                                                HashMap<String, String> headers = new HashMap<String, String>();
+                                                                headers.put("Authorization", LoginPage.token);
+                                                                return headers;
+                                                            }
+                                                        };
+                                                        requestQueue.add(request_json);
+                                                    }
+                                                });
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(TourDetail.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }) {
+                                @Override
+                                public Map<String, String> getHeaders() throws AuthFailureError {
+                                    HashMap<String, String> headers = new HashMap<String, String>();
+                                    headers.put("Authorization", LoginPage.token);
+                                    return headers;
+                                }
+                            };
+                            requestQueueAddMember.add(request_json);
+                        }
+                });
+                dialog.show();
+            }
+        });
+
 
         listStopPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -287,7 +409,7 @@ public class TourDetail extends AppCompatActivity {
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
-                                        Toast.makeText(TourDetail.this,"Xoa thanh cong",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(TourDetail.this,"Xoá thanh cong",Toast.LENGTH_LONG).show();
                                         Updatedialog.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
@@ -491,7 +613,6 @@ public class TourDetail extends AppCompatActivity {
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(TourDetail.this, ""+error, Toast.LENGTH_LONG).show();
                             }
                         }){
                             @Override
@@ -848,7 +969,6 @@ public class TourDetail extends AppCompatActivity {
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
-                                        Toast.makeText(TourDetail.this, "successs"+idOfTour, Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
@@ -962,7 +1082,6 @@ public class TourDetail extends AppCompatActivity {
 
                             }
                             float rating = point/(total);
-                            Toast.makeText(TourDetail.this, total+"", Toast.LENGTH_SHORT).show();
                             RatingBar ratingBar = (RatingBar) findViewById(R.id.pointOfTour);
                             LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
                             stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
@@ -999,7 +1118,6 @@ public class TourDetail extends AppCompatActivity {
                 return headers;
             }
         };
-        Toast.makeText(TourDetail.this, pointresult[0]+"", Toast.LENGTH_SHORT).show();
         requestQueue3.add(request_json);
     }
     public void setAdapterReview(){
@@ -1022,7 +1140,6 @@ public class TourDetail extends AppCompatActivity {
 
                                 reviews.add(tempReview);
                             }
-                            //Toast.makeText(TourDetail.this, reviews.size()+"", Toast.LENGTH_SHORT).show();
                             AdapterReview adapterReview = new AdapterReview(TourDetail.this,R.layout.rate_single,reviews);
                             listReview.setAdapter(adapterReview);
                             adapterReview.notifyDataSetChanged();
