@@ -434,12 +434,12 @@ public class TourDetail extends AppCompatActivity {
 
                         long mArrive =0,mLeave =0;
                         Date dArrive, dLeave;
-                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy--MM-dd");
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             dArrive = sdf.parse(dateArrive.getText().toString());
                             mArrive = dArrive.getTime();
 
-                            dLeave = sdf.parse(dateArrive.getText().toString());
+                            dLeave = sdf.parse(dateLeave.getText().toString());
                             mLeave = dLeave.getTime();
                         } catch (ParseException e) {
                             e.printStackTrace();
