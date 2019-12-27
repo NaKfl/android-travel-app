@@ -131,6 +131,16 @@
                     android:textColor="#2C2C2C"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+                <RatingBar
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:id="@+id/pointOfTour"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
