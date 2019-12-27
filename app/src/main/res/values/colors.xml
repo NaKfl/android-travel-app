@@ -11,6 +11,6 @@
     <color name="deep_gray">#ff657786</color>
     <color name="gray">#BDBDBD</color>
     <color name="tab_selected">@color/twitter_blue</color>
-
+    <color name="yellowStart">#F7CF69</color>
     <color name="colorBlack">#000</color>
 </resources>
