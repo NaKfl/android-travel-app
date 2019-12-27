@@ -109,7 +109,7 @@ public class TourDetail extends AppCompatActivity {
         listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
         ImageView add_comment = (ImageView) findViewById(R.id.add_comment);
-        TextView rate = (TextView) findViewById(R.id.rate);
+        ImageView rate = (ImageView) findViewById(R.id.rate);
         //đánh giá
         rate.setOnClickListener(new View.OnClickListener() {
             @Override
