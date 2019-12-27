@@ -1,5 +1,9 @@
 package com.ygaps.travelapp.Modal;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class StopPoint {
     String id;
     String serviceId;
@@ -126,6 +130,10 @@ public class StopPoint {
         this.avatar = avatar;
     }
 
+    public String setTime(){
+        String result = " "+change(getMinCost())+" - "+change(getMaxCost());
+        return result;
+    }
     @Override
     public String toString() {
         return "StopPoint{" +
@@ -140,5 +148,14 @@ public class StopPoint {
                 ", serviceTypeId='" + serviceTypeId + '\'' +
                 ", avatar='" + avatar + '\'' +
                 '}';
+    }
+
+    public String change(String str){
+        String temp;
+        long miliStartDate=Long.parseLong(str);
+        Date created=new Date(miliStartDate);
+        DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
+        temp=dateFormat.format(created);
+        return temp;
     }
 }

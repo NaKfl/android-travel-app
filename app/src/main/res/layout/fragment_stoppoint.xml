@@ -41,7 +41,7 @@
                         android:layout_weight="100"
                         android:weightSum="10">
                         <EditText
-                            android:id="@+id/search_stoppoint"
+                            android:id="@+id/search_stp"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/white_rounded_shape"
@@ -64,7 +64,7 @@
             android:background="#FAFAFA">
             <TextView
                 android:layout_marginVertical="20dp"
-                android:id="@+id/stoppoint_empty"
+                android:id="@+id/stp_empty"
                 android:visibility="gone"
                 android:drawableStart="@drawable/error_404"
                 android:drawablePadding="8dp"
@@ -82,20 +82,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <ListView
-        android:id="@+id/list_tour_home"
+        android:id="@+id/list_stp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"
         android:layout_marginTop="-2dp"
         android:divider="@null"
         android:dividerHeight="0dp"/>
-    <ImageView
-        android:id="@+id/create_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/ic_add_circle_black_24dp" />
 </RelativeLayout>
