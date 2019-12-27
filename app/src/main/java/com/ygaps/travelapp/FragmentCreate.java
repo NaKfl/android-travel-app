@@ -48,7 +48,7 @@ public class FragmentCreate extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create,container,false);
 
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.create_tour_title);
 
 
         return rootView;

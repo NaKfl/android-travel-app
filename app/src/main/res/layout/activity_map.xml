@@ -9,4 +9,22 @@
         android:id="@+id/map"
         tools:context=".MapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
+    <ImageView
+        android:id="@+id/on_off"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_add_circle_black_24dp" />
+    <ImageView
+        android:id="@+id/showList"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/folder" />
 </RelativeLayout>
