@@ -27,7 +27,7 @@
         <EditText
             android:id="@+id/history_search_input"
             android:layout_width="0dp"
-            android:layout_weight="8.8"
+            android:layout_weight="10"
             android:layout_height="match_parent"
             android:background="@drawable/white_rounded_shape"
             android:drawableLeft="@drawable/businessman"
@@ -38,18 +38,6 @@
             android:textColor="@android:color/black"
             android:textColorHint="#aeaeae"
             android:textSize="14sp" />
-
-        <Button
-            android:layout_weight="1.2"
-            android:id="@+id/history_search_button"
-            android:layout_width="3dp"
-            android:layout_height="43dp"
-            android:layout_marginLeft="5dp"
-            android:drawableTop="@drawable/search"
-            android:padding="10dp"
-            android:background="@drawable/buttonshape"
-            android:textColor="#FFFFFF"
-            android:textSize="16dp"/>
     </LinearLayout>
 
     <LinearLayout

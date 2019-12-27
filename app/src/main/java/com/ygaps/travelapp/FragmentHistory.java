@@ -45,7 +45,6 @@ public class FragmentHistory extends Fragment {
     public static AdapterTour adapter;
     TextView totalTour,newTour,successTour,failTour,inProcessTour, emptySearch;
     EditText searchInput;
-    Button searchButton;
 
     @Nullable
     @Override
@@ -59,7 +58,6 @@ public class FragmentHistory extends Fragment {
         failTour=(TextView)rootView.findViewById(R.id.fail_tour);
         inProcessTour=(TextView)rootView.findViewById(R.id.in_process_tour);
         searchInput=(EditText)rootView.findViewById(R.id.history_search_input);
-        searchButton=(Button) rootView.findViewById(R.id.history_search_button);
 
         //Chức năng search
         searchInput.addTextChangedListener(new TextWatcher() {
@@ -75,34 +73,24 @@ public class FragmentHistory extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().isEmpty()){
+                if (s.toString().isEmpty()) {
                     FragmentHistory historyFragment = new FragmentHistory();
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.main_frame,historyFragment);
+                    fragmentTransaction.replace(R.id.main_frame, historyFragment);
                     fragmentTransaction.commit();
-                }
-            }
-        });
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String keyword=searchInput.getText().toString().trim();
-                if(keyword.isEmpty()){
-                    Toast.makeText(getContext(), "Please fill out the input", Toast.LENGTH_SHORT).show();
-                }else{
-                    RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-                    String URL = "http://35.197.153.192:3000/tour/search-history-user?searchKey="+keyword+"&pageIndex=1&pageSize="+Integer.MAX_VALUE;
-                    JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
+                } else {
+                    String keyword = s.toString().trim();
+                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                    String URL = "http://35.197.153.192:3000/tour/search-history-user?searchKey=" + keyword + "&pageIndex=1&pageSize=" + Integer.MAX_VALUE;
+                    JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        String total=response.getString("total");
+                                        String total = response.getString("total");
                                         JSONArray jsonArray = response.getJSONArray("tours");
                                         tours.clear();
-                                        for (int i=0;i<jsonArray.length();i++)
-                                        {
+                                        for (int i = 0; i < jsonArray.length(); i++) {
                                             JSONObject tour = jsonArray.getJSONObject(i);
                                             String tourId = tour.getString("id");
                                             String nameTour = tour.getString("name");
@@ -112,36 +100,41 @@ public class FragmentHistory extends Fragment {
                                             String endDate = tour.getString("endDate");
                                             String adults = tour.getString("adults");
                                             String avatar = tour.getString("avatar");
-                                            String timeStart="0";
-                                            String timeEnd="0";
-                                            try{
-                                                long miliStartDate=Long.parseLong(startDate);
-                                                Date startD=new Date(miliStartDate);
-                                                DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
-                                                timeStart=dateFormat.format(startD);
-                                            }catch (Exception e){
+                                            String status = tour.getString("status");
+                                            String timeStart = "0";
+                                            String timeEnd = "0";
+                                            try {
+                                                long miliStartDate = Long.parseLong(startDate);
+                                                Date startD = new Date(miliStartDate);
+                                                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                                timeStart = dateFormat.format(startD);
+                                            } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
 
-                                            try{
-                                                long miliEndDate=Long.parseLong(endDate);
-                                                Date endD=new Date(miliEndDate);
-                                                DateFormat dateFormat1=new SimpleDateFormat("dd/MM/yyyy");
-                                                timeEnd=dateFormat1.format(endD);
-                                            }catch(Exception e){
+                                            try {
+                                                long miliEndDate = Long.parseLong(endDate);
+                                                Date endD = new Date(miliEndDate);
+                                                DateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+                                                timeEnd = dateFormat1.format(endD);
+                                            } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
-
-                                            Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
-                                            tours.add(temp);
+                                            if(!status.equals("-1")){
+                                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                                tours.add(temp);
+                                            }
                                         }
-                                        if(tours.isEmpty()){
-                                            emptySearch=(TextView)rootView.findViewById(R.id.history_empty);
+                                        if (tours.isEmpty()) {
+                                            emptySearch = (TextView) rootView.findViewById(R.id.history_empty);
                                             emptySearch.setVisibility(View.VISIBLE);
+                                        } else {
+                                            emptySearch = (TextView) rootView.findViewById(R.id.history_empty);
+                                            emptySearch.setVisibility(View.GONE);
                                         }
-                                            adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
-                                            listView.setAdapter(adapter);
-                                            adapter.notifyDataSetChanged();
+                                        adapter = new AdapterTour(getActivity(), R.layout.tour_single, tours);
+                                        listView.setAdapter(adapter);
+                                        adapter.notifyDataSetChanged();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -150,8 +143,7 @@ public class FragmentHistory extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                         }
-                    })
-                    {
+                    }) {
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             HashMap<String, String> headers = new HashMap<String, String>();
@@ -160,6 +152,7 @@ public class FragmentHistory extends Fragment {
                         }
                     };
                     requestQueue.add(request_json);
+
                 }
             }
         });
@@ -233,6 +226,7 @@ public class FragmentHistory extends Fragment {
                                 String endDate = tour.getString("endDate");
                                 String adults = tour.getString("adults");
                                 String avatar = tour.getString("avatar");
+                                String status = tour.getString("status");
                                 String timeStart="0";
                                 String timeEnd="0";
                                 try{
@@ -252,9 +246,10 @@ public class FragmentHistory extends Fragment {
                                 }catch(Exception e){
                                     e.printStackTrace();
                                 }
-
-                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
-                                tours.add(temp);
+                                if(!status.equals("-1")){
+                                    Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                    tours.add(temp);
+                                }
                             }
                             if(tours.isEmpty()){
                                 emptySearch=(TextView)rootView.findViewById(R.id.history_empty);
