@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -42,11 +46,14 @@ public class FragmentHome extends Fragment {
     EditText numPage;
     Button btnShow,btnBack,btnNext;
     FragmentHome homeFragment;
+    TextView emptySearch;
+    EditText searchInput;
+
     public static String numTour,page="1";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home,container,false);
+        final View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         final ListView listView= rootView.findViewById(R.id.list_tour_home);
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.list_tour_title);
@@ -55,7 +62,51 @@ public class FragmentHome extends Fragment {
         btnShow = (Button) rootView.findViewById(R.id.btnShow);
         btnBack = (Button) rootView.findViewById(R.id.home_back_button);
         btnNext = (Button) rootView.findViewById(R.id.home_next_button);
+        searchInput=(EditText)rootView.findViewById(R.id.home_search_input);
 
+        //Chức năng search
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().isEmpty()){
+                    FragmentHome homeFragment = new FragmentHome();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.main_frame,homeFragment);
+                    fragmentTransaction.commit();
+                }else{
+                    String keyword= s.toString().trim();
+                    ArrayList<Tour> searchListTour=new ArrayList<>();
+                    for(int i=0; i<tours.size();i++){
+                        if(tours.get(i).getDestination().contains(keyword)){
+                            searchListTour.add(tours.get(i));
+                        }
+                    }
+
+                    if(searchListTour.isEmpty()) {
+                        emptySearch = (TextView) rootView.findViewById(R.id.home_empty);
+                        emptySearch.setVisibility(View.VISIBLE);
+                    }else{
+                        emptySearch = (TextView) rootView.findViewById(R.id.home_empty);
+                        emptySearch.setVisibility(View.GONE);
+                    }
+                    adapter=new AdapterTour(getActivity(),R.layout.tour_single,searchListTour);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        //Chức năng chuyển trang
         numPage.setText(page);
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +192,10 @@ public class FragmentHome extends Fragment {
 
                                 Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
                                 tours.add(temp);
+                            }
+                            if(tours.isEmpty()){
+                                emptySearch=(TextView)rootView.findViewById(R.id.home_empty);
+                                emptySearch.setVisibility(View.VISIBLE);
                             }
                             adapter=new AdapterTour(getActivity(),R.layout.tour_single,tours);
                             listView.setAdapter(adapter);
