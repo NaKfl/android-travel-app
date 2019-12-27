@@ -626,7 +626,7 @@ public class TourDetail extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar);
+                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar,lat,longitude);
                                 stopPoints.add(temp);
                             }
                             if(stopPoints.isEmpty()){
