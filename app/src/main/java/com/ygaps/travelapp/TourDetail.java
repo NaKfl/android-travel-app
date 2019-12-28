@@ -74,10 +74,12 @@ public class TourDetail extends AppCompatActivity {
     ArrayList<Member> searchMemberArray=new ArrayList<Member>();
     ArrayList <Review> reviews=new ArrayList<Review>();
 
-    TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour;
+    TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour, isPrivateTour;
     TextView stopPointEmpty, commentEmpty, memberEmpty, memberListEmpty;
     ListView listStopPoint,listComment,listMember,listReview, searchMemberList;
     EditText searchMemberInput;
+    ImageView lockIcon;
+
     public static EditText address_stoppoint;
     public static double mNewLat,mNewLong;
     public static String mNewAddress,mNewProvince="-1";
@@ -108,9 +110,11 @@ public class TourDetail extends AppCompatActivity {
         dateOfTour=(TextView)findViewById(R.id.tour_detail_datetodate);
         peopleOfTour=(TextView)findViewById(R.id.tour_detail_people);
         cashOfTour=(TextView)findViewById(R.id.tour_detail_cash);
+        isPrivateTour=(TextView)findViewById(R.id.tour_detail_private);
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
         listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
+        lockIcon=(ImageView)findViewById(R.id.tour_detail_lock_icon);
         ImageView add_comment = (ImageView) findViewById(R.id.add_comment);
         ImageView rate = (ImageView) findViewById(R.id.rate);
         ImageView addMember = (ImageView) findViewById(R.id.add_member);
@@ -709,6 +713,15 @@ public class TourDetail extends AppCompatActivity {
                             dateOfTour.setText("Start: "+tourStartDate+ " - End: "+ tourStartDate);
                             peopleOfTour.setText("Adult(s): "+tourAdults+" - Child(s): "+tourChilds );
                             cashOfTour.setText(tourMinCost+" VND - "+tourMaxCost +" VND");
+
+                            if(tourIsPrivate.equals("true")) {
+                                isPrivateTour.setText("Private");
+                                lockIcon.setImageResource(R.drawable.lock);
+                            }
+                            else{
+                                isPrivateTour.setText("Public");
+                                lockIcon.setImageResource(R.drawable.unlock);
+                            }
 
                             JSONArray jsonArrayStopPoint = response.getJSONArray("stopPoints");
                             stopPoints.clear();
