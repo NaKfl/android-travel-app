@@ -93,7 +93,8 @@ public class TourDetail extends AppCompatActivity {
             "Rest Station",
             "Other"
     };
-    String idOfTour, isMyTour, tourName, tourMinCost, tourMaxCost, tourStartDate, tourEndDate, tourAdults, tourChilds, tourIsPrivate;
+    public static String idOfTour;
+    String isMyTour, tourName, tourMinCost, tourMaxCost, tourStartDate, tourEndDate, tourAdults, tourChilds, tourIsPrivate;
     int flagGoMap = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,14 @@ public class TourDetail extends AppCompatActivity {
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");
         getPointOfTour(idOfTour);
+        ImageView follow_action = (ImageView) findViewById(R.id.follow_action);
+        follow_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TourDetail.this,FollowActivity.class);
+                startActivity(intent);
+            }
+        });
         nameOfTour=(TextView)findViewById(R.id.tour_detail_destination);
         dateOfTour=(TextView)findViewById(R.id.tour_detail_datetodate);
         peopleOfTour=(TextView)findViewById(R.id.tour_detail_people);
