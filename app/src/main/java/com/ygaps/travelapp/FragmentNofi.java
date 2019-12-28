@@ -1,41 +1,19 @@
 package com.ygaps.travelapp;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.ygaps.travelapp.Modal.record;
-
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FragmentNofi extends Fragment {
     private Button start,play,stop;
@@ -61,6 +39,7 @@ public class FragmentNofi extends Fragment {
         record.setRecord(getContext());
         record.playRE(getContext());
         return rootView;
+
     }
     //yêu cầu quyền ghi tập tin và quyền ghi âm
     @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

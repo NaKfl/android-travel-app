@@ -1,6 +1,9 @@
 package com.ygaps.travelapp;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -48,6 +51,7 @@ public class Noti extends AppCompatActivity {
     private Button btnDecline;
     private String tourId;
     private ImageView avatar;
+    private int notiId;
     RelativeLayout tourInfo;
     CircleImageView img;
 
@@ -61,6 +65,33 @@ public class Noti extends AppCompatActivity {
 
         mapping();
         getTourInfo();
+        addAction();
+    }
+
+    private void addAction() {
+        String action=intent.getAction();
+        if(action==null){
+            return;
+        }
+
+        switch (action)
+        {
+            case ACCEPT_ACTION:
+                acceptAction();
+                clearNoti();
+                break;
+            case DECLINE_ACTION:
+                declineAction();
+                clearNoti();
+                break;
+            case SHOW_ACTION:
+                showAction();
+                clearNoti();
+                break;
+            default:
+                finish();
+                break;
+        }
     }
 
     private void mapping() {
@@ -80,6 +111,8 @@ public class Noti extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         tourId = extras.getString("tourId");
+        notiId=extras.getInt("NOTIFICATION_ID");
+
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +127,14 @@ public class Noti extends AppCompatActivity {
                 declineAction();
             }
         });
+    }
+
+    private void clearNoti(){
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notiId);
+    }
+
+    private void showAction() {
     }
 
     private void acceptAction() {

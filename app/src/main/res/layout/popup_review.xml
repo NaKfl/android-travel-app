@@ -23,20 +23,20 @@
 
 
         <EditText
+            android:gravity="top"
             android:id="@+id/input_review"
-            android:layout_margin="20dp"
+            android:layout_margin="25dp"
             android:padding="15dp"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:textSize="20dp"
+            android:textSize="15sp"
             android:background="@drawable/bordershape"
-            android:hint="Send your feedback..."
+            android:hint="Input your feedback..."
             android:textColorHint="#9e9e9e"
             />
 
 
         <Button
-
             android:id="@+id/btn_send_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,12 @@
             android:text="Send"
             android:textAllCaps="true"
             android:textColor="#fff" />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#EBEBEB"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"/>
         <ListView
             android:id="@+id/list_review"
             android:layout_width="match_parent"

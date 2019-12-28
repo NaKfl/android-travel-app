@@ -17,8 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".MapTemp"></activity>
+
         <activity android:name=".Noti"></activity>
-        <activity android:name=".CreateTour"></activity>
+        <activity android:noHistory="true"
+            android:name=".CreateTour"></activity>
 
         <service android:name=".MyFirebaseService">
             <intent-filter>
@@ -37,8 +40,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MapActivity"
-            android:noHistory="true" />
+            android:name=".MapActivity" />
         <activity android:name=".Home" />
         <activity android:name=".RegisterPage" />
         <activity

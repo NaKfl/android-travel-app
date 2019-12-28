@@ -7,8 +7,6 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.view.ActionMode;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
