@@ -1,5 +1,7 @@
 package com.ygaps.travelapp;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
@@ -49,6 +51,7 @@ public class Noti extends AppCompatActivity {
     private Button btnDecline;
     private String tourId;
     private ImageView avatar;
+    private int notiId;
     RelativeLayout tourInfo;
     CircleImageView img;
 
@@ -75,12 +78,15 @@ public class Noti extends AppCompatActivity {
         {
             case ACCEPT_ACTION:
                 acceptAction();
+                clearNoti();
                 break;
             case DECLINE_ACTION:
                 declineAction();
+                clearNoti();
                 break;
             case SHOW_ACTION:
                 showAction();
+                clearNoti();
                 break;
             default:
                 finish();
@@ -105,6 +111,8 @@ public class Noti extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         tourId = extras.getString("tourId");
+        notiId=extras.getInt("NOTIFICATION_ID");
+
 
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +127,11 @@ public class Noti extends AppCompatActivity {
                 declineAction();
             }
         });
+    }
+
+    private void clearNoti(){
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notiId);
     }
 
     private void showAction() {
