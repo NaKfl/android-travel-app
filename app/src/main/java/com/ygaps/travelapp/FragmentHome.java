@@ -234,7 +234,7 @@ public class FragmentHome extends Fragment {
             }
         };
         requestQueue.add(request_json);
-        
+
         setOnItemClick(listView,tours);
 
         return rootView;

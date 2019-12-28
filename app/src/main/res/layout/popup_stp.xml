@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#fff">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -157,8 +157,7 @@
                     android:id="@+id/rate"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/star"
+                    android:layout_gravity="start"
                     android:fontFamily="@font/calibri"
                     android:gravity="center"
                     android:paddingLeft="20dp"
@@ -166,7 +165,12 @@
                     android:textColor="#2C2C2C"
                     android:textSize="20sp"
                     android:textStyle="bold" />
-
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="3dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/colorPrimary" />
                 <RatingBar
                     android:id="@+id/pointOfStp"
                     android:layout_width="wrap_content"
@@ -179,11 +183,6 @@
 
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="7dp"
-                android:background="#EBEBEB" />
 
             <View
                 android:layout_width="match_parent"
@@ -244,15 +243,11 @@
                 <ListView
                     android:id="@+id/list_stp_feedback"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:descendantFocusability="blocksDescendants"
-                    android:divider="@null"
-                    android:dividerHeight="5dp"
-                    android:nestedScrollingEnabled="true" />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
 
 </RelativeLayout>

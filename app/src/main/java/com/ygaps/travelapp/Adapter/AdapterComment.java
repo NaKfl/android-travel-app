@@ -16,13 +16,14 @@ public class AdapterComment extends BaseAdapter {
     private int[]pos=new int[100];
     private ArrayList<Comment> myComment;
     private ArrayList<Comment> arrayList;
-
-    public AdapterComment(Context context, int layout, ArrayList<Comment> commnets){
+    private String id;
+    public AdapterComment(Context context, int layout, ArrayList<Comment> commnets, String id){
         myContext= context;
         myLayout=layout;
         myComment=commnets;
         arrayList=new ArrayList<>();
         arrayList.addAll(myComment);
+        this.id = id;
     }
 
 
@@ -51,7 +52,11 @@ public class AdapterComment extends BaseAdapter {
 
         ViewHolder holder;
         if (view == null) {
-            view = View.inflate(viewGroup.getContext(), R.layout.comment_single, null);
+            //if(myComment.get(i).getId()==id){
+                view = View.inflate(viewGroup.getContext(), R.layout.comment_single2, null);
+            //}else{
+             //   view = View.inflate(viewGroup.getContext(), R.layout.comment_single, null);
+           // }
             holder=new ViewHolder();
             holder.name=view.findViewById(R.id.comment_name);
             holder.commentContent=view.findViewById(R.id.comment_content);
