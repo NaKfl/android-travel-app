@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +47,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.ygaps.travelapp.Adapter.AdapterFeedback;
 import com.ygaps.travelapp.Adapter.AdapterStp;
+import com.ygaps.travelapp.Modal.Feedback;
 import com.ygaps.travelapp.Modal.StopPoint;
 
 import org.json.JSONArray;
@@ -62,6 +67,7 @@ import java.util.Map;
 
 public class FragmentCreate extends Fragment {
     private ArrayList<StopPoint> stp = new ArrayList<>();
+    private ArrayList<Feedback> feedbacks = new ArrayList<>();
     TextView name, cost, address;
     @Nullable
     @Override
@@ -73,9 +79,13 @@ public class FragmentCreate extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Dialog dialog = new Dialog(getContext());
+                final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.popup_stp);
+                //ánh xạ
                 mappingDiaglog(dialog,stp.get(i));
+                // sao trung bình của stp
+                pointTB(dialog,stp.get(i));
+                //list feedback
                 listFeedback(dialog,stp.get(i));
                 dialog.show();
             }
@@ -91,9 +101,73 @@ public class FragmentCreate extends Fragment {
         cost.setText(stopPoint.getMinCost() + " - " +stopPoint.getMaxCost());
         address.setText(stopPoint.getAddress());
     }
+    public void pointTB(final Dialog dialog, StopPoint stopPoint){
+        final RequestQueue requestQueue4 = Volley.newRequestQueue(getContext());
+        String URL = "http://35.197.153.192:3000/tour/get/feedback-point-stats?serviceId=" + stopPoint.getId();
+        Toast.makeText(getContext(), stopPoint.getId()+"", Toast.LENGTH_SHORT).show();
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            int point = 0;
+                            int total = 0;
+                            JSONArray pointStats = response.getJSONArray("pointStats");
+                            for (int i = 0; i < pointStats.length(); i++) {
+                                JSONObject tempPoint = pointStats.getJSONObject(i);
+                                String Spoint = tempPoint.getString("point");
+                                String Stotal = tempPoint.getString("total");
+                                int Ipoint = Integer.parseInt(Spoint);
+                                int Itotal = Integer.parseInt(Stotal);
+                                if (Itotal != 0) {
+                                    total = total + Itotal;
+                                }
+
+                                point = point + Ipoint * Itotal;
+
+                            }
+                            float rating = point/(total);
+                            RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.pointOfStp);
+                            LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+                            stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
+                            ratingBar.setRating(rating);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null) {
+                    String statusCode = String.valueOf(networkResponse.statusCode);
+                    switch (statusCode) {
+                        case "400":
+                            Toast.makeText(getContext(), "ERROR 400", Toast.LENGTH_SHORT).show();
+                            break;
+                        case "500":
+                            Toast.makeText(getContext(), "ERROR 500", Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(getContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json");
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue4.add(request_json);
+    }
     public void listFeedback(Dialog dialog,StopPoint stopPoint){
         String idOfservice = stopPoint.getId();
-        ListView listFback = dialog.findViewById(R.id.list_stp_feedback);
+        final ListView listFback = dialog.findViewById(R.id.list_stp_feedback);
         final RequestQueue requestQueue2 = Volley.newRequestQueue(getContext());
         String URL = "http://35.197.153.192:3000/tour/get/feedback-service?serviceId="+idOfservice+"&pageIndex=1&pageSize=999";
 
@@ -103,7 +177,19 @@ public class FragmentCreate extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray jsonArray = response.getJSONArray("feedbackList");
-                            Log.d("hihe", jsonArray.length() + "");
+                            feedbacks.clear();
+                            for(int i =0 ;i<jsonArray.length();i++){
+                                JSONObject jsonObject= jsonArray.getJSONObject(i);
+                                String name = jsonObject.getString("name");
+                                String feedback = jsonObject.getString("feedback");
+                                String createdOn = jsonObject.getString("createdOn");
+                                String point = jsonObject.getString("point");
+                                Feedback temp = new Feedback(name,createdOn,point,feedback);
+                                feedbacks.add(temp);
+                            }
+                            AdapterFeedback adapterFeedback = new AdapterFeedback(getContext(),R.layout.feedback_single,feedbacks);
+                            listFback.setAdapter(adapterFeedback);
+                            adapterFeedback.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
