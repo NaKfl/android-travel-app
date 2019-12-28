@@ -1,6 +1,7 @@
 package com.ygaps.travelapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -38,6 +39,13 @@ public class FragmentNofi extends Fragment {
         record=new record(play,start,myAudioRecorder,outputFile);
         record.setRecord(getContext());
         record.playRE(getContext());
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),Conversation.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
 
     }
