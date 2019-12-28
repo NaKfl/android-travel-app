@@ -18,6 +18,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,8 +51,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.ygaps.travelapp.Adapter.AdapterFeedback;
 import com.ygaps.travelapp.Adapter.AdapterStp;
+import com.ygaps.travelapp.Adapter.AdapterTour;
 import com.ygaps.travelapp.Modal.Feedback;
 import com.ygaps.travelapp.Modal.StopPoint;
+import com.ygaps.travelapp.Modal.Tour;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,30 +72,76 @@ import java.util.Map;
 public class FragmentCreate extends Fragment {
     private ArrayList<StopPoint> stp = new ArrayList<>();
     private ArrayList<Feedback> feedbacks = new ArrayList<>();
-    TextView name, cost, address;
+    TextView name, cost, address, total, emptySearch;
+    private ArrayList<StopPoint> searchList;
+    EditText searchInput;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stoppoint, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.list_stoppoint);
         final ListView listView = (ListView) rootView.findViewById(R.id.list_stp);
+        searchInput=(EditText)rootView.findViewById(R.id.search_stop_point_input);
+        total=(TextView)rootView.findViewById(R.id.total_stop_point);
+        emptySearch = (TextView)rootView.findViewById(R.id.list_stp_empty);
+
         getStoppoint(listView);
+
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String keyword= s.toString().trim();
+                searchList=new ArrayList<>();
+                for(int i=0; i<stp.size();i++){
+                    if(stp.get(i).getName().contains(keyword)){
+                        searchList.add(stp.get(i));
+                    }
+                }
+
+                if(searchList.isEmpty()) {
+                    emptySearch.setVisibility(View.VISIBLE);
+                }else {
+                    emptySearch.setVisibility(View.GONE);
+                }
+                AdapterStp adapterStpSearch = new AdapterStp(getActivity(), R.layout.list_stp_single, searchList);
+                listView.setAdapter(adapterStpSearch);
+                adapterStpSearch.notifyDataSetChanged();
+                setOnclickItem(listView, searchList);
+            }
+        });
+
+        setOnclickItem(listView,stp);
+        return rootView;
+    }
+
+    private void setOnclickItem(ListView listView, final ArrayList<StopPoint> stpArray){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.popup_stp);
                 //ánh xạ
-                mappingDiaglog(dialog,stp.get(i));
+                mappingDiaglog(dialog,stpArray.get(i));
                 // sao trung bình của stp
-                pointTB(dialog,stp.get(i));
+                pointTB(dialog,stpArray.get(i));
                 //list feedback
-                listFeedback(dialog,stp.get(i));
+                listFeedback(dialog,stpArray.get(i));
                 dialog.show();
             }
         });
-        return rootView;
     }
+
     public void mappingDiaglog(Dialog dialog, StopPoint stopPoint){
         name = (TextView) dialog.findViewById(R.id.name_stp_detail);
         cost = (TextView) dialog.findViewById(R.id.stp_cost_detail);
@@ -276,7 +326,7 @@ public class FragmentCreate extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("AAAA", json_post.toString());
+
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, json_post,
                 new Response.Listener<JSONObject>() {
@@ -301,7 +351,7 @@ public class FragmentCreate extends Fragment {
                                 StopPoint temp = new StopPoint(id, "", address, name, "", "", minCost, maxCost, serviceTypeId, avatar, lat, longi);
                                 stp.add(temp);
                             }
-                            Log.d("hihi", stp.size() + "");
+                            total.setText(stp.size()+ " Destinations");
                             AdapterStp adapterStp = new AdapterStp(getActivity(), R.layout.list_stp_single, stp);
                             listView.setAdapter(adapterStp);
                             adapterStp.notifyDataSetChanged();

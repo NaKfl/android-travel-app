@@ -108,8 +108,6 @@ public class Home extends AppCompatActivity {
                         case "500":
                             Toast.makeText(Home.this, "ERROR 500", Toast.LENGTH_SHORT).show();
                             break;
-                        default:
-                            Toast.makeText(Home.this, "ERROR", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
