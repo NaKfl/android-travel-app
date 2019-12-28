@@ -93,7 +93,8 @@ public class TourDetail extends AppCompatActivity {
             "Rest Station",
             "Other"
     };
-    String idOfTour, isMyTour, tourName, tourMinCost, tourMaxCost, tourStartDate, tourEndDate, tourAdults, tourChilds, tourIsPrivate;
+    public static String idOfTour;
+    String isMyTour, tourName, tourMinCost, tourMaxCost, tourStartDate, tourEndDate, tourAdults, tourChilds, tourIsPrivate;
     int flagGoMap = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,17 +112,23 @@ public class TourDetail extends AppCompatActivity {
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");
         getPointOfTour(idOfTour);
+        ImageView follow_action = (ImageView) findViewById(R.id.follow_action);
+        follow_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TourDetail.this,FollowActivity.class);
+                startActivity(intent);
+            }
+        });
         nameOfTour=(TextView)findViewById(R.id.tour_detail_destination);
         dateOfTour=(TextView)findViewById(R.id.tour_detail_datetodate);
         peopleOfTour=(TextView)findViewById(R.id.tour_detail_people);
         cashOfTour=(TextView)findViewById(R.id.tour_detail_cash);
         isPrivateTour=(TextView)findViewById(R.id.tour_detail_private);
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
-        listComment=(ListView)findViewById(R.id.list_comment);
         listMember=(ListView)findViewById(R.id.list_member);
         lockIcon=(ImageView)findViewById(R.id.tour_detail_lock_icon);
         followButton=(TextView)findViewById(R.id.tour_detail_follow_button);
-        ImageView add_comment = (ImageView) findViewById(R.id.add_comment);
         ImageView rate = (ImageView) findViewById(R.id.rate);
         ImageView addMember = (ImageView) findViewById(R.id.add_member);
         if(isMyTour.equals("0")){
@@ -223,76 +230,6 @@ public class TourDetail extends AppCompatActivity {
                 dialog.show();
             }
         });
-        //thêm comment
-        add_comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = new Dialog(TourDetail.this);
-//                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.setContentView(R.layout.popup_comment);
-
-                final EditText commentText = (EditText) dialog.findViewById(R.id.input_comment);
-                Button btnSend = (Button) dialog.findViewById(R.id.btn_send);
-
-                btnSend.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String inputComment = commentText.getText().toString();
-
-                        final RequestQueue requestQueue = Volley.newRequestQueue(TourDetail.this);
-                        String URL = "http://35.197.153.192:3000/tour/comment";
-                        HashMap<String, String> params = new HashMap<String, String>();
-                        params.put("tourId", idOfTour);
-                        params.put("userId", LoginPage.userId);
-                        params.put("comment", inputComment);
-
-                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
-                                new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        Toast.makeText(TourDetail.this, "Comment thành công", Toast.LENGTH_SHORT).show();
-                                        dialog.dismiss();
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                NetworkResponse networkResponse = error.networkResponse;
-                                if (networkResponse != null) {
-                                    String statusCode = String.valueOf(networkResponse.statusCode);
-                                    switch (statusCode) {
-                                        case "400":
-                                            Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        case "500":
-                                            Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        default:
-                                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        }) {
-                            @Override
-                            public Map<String, String> getHeaders() throws AuthFailureError {
-                                HashMap<String, String> headers = new HashMap<String, String>();
-                                //headers.put("Content-Type", "application/json");
-                                headers.put("Authorization", LoginPage.token);
-                                return headers;
-                            }
-                        };
-                        requestQueue.add(request_json);
-                        ;
-                    }
-                });
-
-                dialog.show();
-            }
-        });
-
 
         //Thêm member
         addMember.setOnClickListener(new View.OnClickListener() {
@@ -418,8 +355,13 @@ public class TourDetail extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final Dialog ShowInfor = new Dialog(TourDetail.this);
                 ShowInfor.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                ShowInfor.setContentView(R.layout.popup_stp);
 
+                ShowInfor.setContentView(R.layout.popup_stp);
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(ShowInfor.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                ShowInfor.getWindow().setAttributes(lp);
                 ImageView edit_infor = (ImageView) ShowInfor.findViewById(R.id.edit_showinfo);
                 ImageView delete_infor = (ImageView) ShowInfor.findViewById(R.id.delete_showinfor);
 
@@ -858,31 +800,6 @@ public class TourDetail extends AppCompatActivity {
                                 listStopPoint.setAdapter(adapterStopPoint);
                                 adapterStopPoint.notifyDataSetChanged();
                             }
-
-                            JSONArray jsonArrayComment = response.getJSONArray("comments");
-                            comments.clear();
-                            for (int i = 0; i < jsonArrayComment.length(); i++) {
-                                JSONObject comment = jsonArrayComment.getJSONObject(i);
-                                String id = comment.getString("id");
-                                String name = comment.getString("name");
-                                String commentContent = comment.getString("comment");
-                                String avatar = comment.getString("avatar");
-
-                                Comment temp = new Comment(id, name, commentContent, avatar);
-                                comments.add(temp);
-                            }
-                            if (comments.isEmpty()) {
-                                commentEmpty = (TextView) findViewById(R.id.comment_empty);
-                                commentEmpty.setVisibility(View.VISIBLE);
-                            } else {
-                                if (comments.size() >= 2) {
-                                    listComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 410));
-                                }
-                                AdapterComment adapterComment = new AdapterComment(TourDetail.this, R.layout.comment_single, comments);
-                                listComment.setAdapter(adapterComment);
-                                adapterComment.notifyDataSetChanged();
-                            }
-
 
                             JSONArray jsonArrayMember = response.getJSONArray("members");
                             members.clear();
