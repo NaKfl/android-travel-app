@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -132,6 +133,11 @@ public class FragmentCreate extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.popup_stp);
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(dialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                dialog.getWindow().setAttributes(lp);
                 //ánh xạ
                 mappingDiaglog(dialog,stpArray.get(i));
                 // sao trung bình của stp
@@ -190,6 +196,11 @@ public class FragmentCreate extends Fragment {
         name.setText(stopPoint.getName());
         cost.setText(stopPoint.getMinCost() + " - " +stopPoint.getMaxCost());
         address.setText(stopPoint.getAddress());
+        // set visible
+        TextView name_service_infor = (TextView) dialog.findViewById(R.id.name_service_infor);
+        name_service_infor.setVisibility(View.GONE);
+        TextView time_infor = (TextView) dialog.findViewById(R.id.time_infor);
+        time_infor.setVisibility(View.GONE);
     }
     public void pointTB(final Dialog dialog, StopPoint stopPoint){
         final RequestQueue requestQueue4 = Volley.newRequestQueue(getContext());
@@ -255,7 +266,7 @@ public class FragmentCreate extends Fragment {
         };
         requestQueue4.add(request_json);
     }
-    public void listFeedback(Dialog dialog,StopPoint stopPoint){
+    public void listFeedback(final Dialog dialog, StopPoint stopPoint){
         String idOfservice = stopPoint.getId();
         final ListView listFback = dialog.findViewById(R.id.list_stp_feedback);
         final RequestQueue requestQueue2 = Volley.newRequestQueue(getContext());
@@ -279,6 +290,7 @@ public class FragmentCreate extends Fragment {
                             }
                             AdapterFeedback adapterFeedback = new AdapterFeedback(getContext(),R.layout.feedback_single,feedbacks);
                             listFback.setAdapter(adapterFeedback);
+                            listFback.setMinimumHeight(92);
                             adapterFeedback.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
