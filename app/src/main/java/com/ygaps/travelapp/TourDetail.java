@@ -67,6 +67,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class TourDetail extends AppCompatActivity {
     ArrayList<StopPoint> stopPoints=new ArrayList<StopPoint>();
     ArrayList<Comment> comments=new ArrayList<Comment>();
@@ -81,15 +82,16 @@ public class TourDetail extends AppCompatActivity {
     ImageView lockIcon;
 
     public static EditText address_stoppoint;
-    public static double mNewLat,mNewLong;
-    public static String mNewAddress,mNewProvince="-1";
-    private String[] ServiceType=new String[]{
+    public static double mNewLat, mNewLong;
+    public static String mNewAddress, mNewProvince = "-1";
+    private String[] ServiceType = new String[]{
             "Restaurant",
             "Hotel",
             "Rest Station",
             "Other"
     };
-    String idOfTour,isMyTour,tourName,tourMinCost,tourMaxCost,tourStartDate,tourEndDate,tourAdults,tourChilds,tourIsPrivate;
+    String idOfTour, isMyTour, tourName, tourMinCost, tourMaxCost, tourStartDate, tourEndDate, tourAdults, tourChilds, tourIsPrivate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,56 +148,60 @@ public class TourDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         float Rate = ratingBar.getRating();
-                        if(Rate<2 ){
+                        if (Rate < 2) {
                             Rate = 2;
                         }
-                            int rate = Math.round(Rate);
-                            String review = reviewText.getText().toString();
-                            final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
-                            String URL = "http://35.197.153.192:3000/tour/add/review";
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put("tourId", idOfTour);
-                            params.put("review",review);
-                            params.put("point",rate +"");
-                            JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                            Toast.makeText(TourDetail.this, "Review thành công", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                            finish();
-                                            overridePendingTransition(0, 0);
-                                            startActivity(getIntent());
-                                            overridePendingTransition(0, 0);
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    NetworkResponse networkResponse = error.networkResponse;
-                                    if (networkResponse != null) {
-                                        String statusCode=String.valueOf(networkResponse.statusCode);
-                                        switch(statusCode){
-                                            case "400":
-                                                Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
-                                                break;
-                                            case "500":
-                                                Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
-                                                break;
-                                            default:
-                                                Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
-                                        }
+
+                        Toast.makeText(TourDetail.this, Rate + "", Toast.LENGTH_SHORT).show();
+                        int rate = Math.round(Rate);
+                        String review = reviewText.getText().toString();
+                        final RequestQueue requestQueue = Volley.newRequestQueue(TourDetail.this);
+                        String URL = "http://35.197.153.192:3000/tour/add/review";
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        params.put("tourId", idOfTour);
+                        params.put("review", review);
+                        params.put("point", rate + "");
+                        Toast.makeText(TourDetail.this, review + " " + Rate, Toast.LENGTH_SHORT);
+                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Toast.makeText(TourDetail.this, "review thành công", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        finish();
+                                        overridePendingTransition(0, 0);
+                                        startActivity(getIntent());
+                                        overridePendingTransition(0, 0);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                NetworkResponse networkResponse = error.networkResponse;
+                                if (networkResponse != null) {
+                                    String statusCode = String.valueOf(networkResponse.statusCode);
+                                    switch (statusCode) {
+                                        case "400":
+                                            Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case "500":
+                                            Toast.makeText(TourDetail.this, "ERROR 500", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        default:
+                                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            }){
-                                @Override
-                                public Map<String, String> getHeaders() throws AuthFailureError {
-                                    HashMap<String, String> headers = new HashMap<String, String>();
-                                    //headers.put("Content-Type", "application/json");
-                                    headers.put("Authorization", LoginPage.token);
-                                    return headers;
-                                }
-                            };
-                            requestQueue.add(request_json);
+                            }
+                        }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap<String, String> headers = new HashMap<String, String>();
+                                //headers.put("Content-Type", "application/json");
+                                headers.put("Authorization", LoginPage.token);
+                                return headers;
+                            }
+                        };
+                        requestQueue.add(request_json);
+
                     }
                 });
                 dialog.show();
@@ -217,12 +223,12 @@ public class TourDetail extends AppCompatActivity {
                     public void onClick(View view) {
                         String inputComment = commentText.getText().toString();
 
-                        final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
+                        final RequestQueue requestQueue = Volley.newRequestQueue(TourDetail.this);
                         String URL = "http://35.197.153.192:3000/tour/comment";
                         HashMap<String, String> params = new HashMap<String, String>();
                         params.put("tourId", idOfTour);
                         params.put("userId", LoginPage.userId);
-                        params.put("comment",inputComment);
+                        params.put("comment", inputComment);
 
                         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
@@ -240,8 +246,8 @@ public class TourDetail extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 NetworkResponse networkResponse = error.networkResponse;
                                 if (networkResponse != null) {
-                                    String statusCode=String.valueOf(networkResponse.statusCode);
-                                    switch(statusCode){
+                                    String statusCode = String.valueOf(networkResponse.statusCode);
+                                    switch (statusCode) {
                                         case "400":
                                             Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
                                             break;
@@ -253,7 +259,7 @@ public class TourDetail extends AppCompatActivity {
                                     }
                                 }
                             }
-                        }){
+                        }) {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -262,7 +268,8 @@ public class TourDetail extends AppCompatActivity {
                                 return headers;
                             }
                         };
-                        requestQueue.add(request_json);;
+                        requestQueue.add(request_json);
+                        ;
                     }
                 });
 
@@ -407,13 +414,13 @@ public class TourDetail extends AppCompatActivity {
                 delete_stoppoint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
-                        String URL = "http://35.197.153.192:3000/tour/remove-stop-point?stopPointId="+ stopPoints.get(position).getId();
-                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
+                        RequestQueue requestQueue = Volley.newRequestQueue(TourDetail.this);
+                        String URL = "http://35.197.153.192:3000/tour/remove-stop-point?stopPointId=" + stopPoints.get(position).getId();
+                        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
-                                        Toast.makeText(TourDetail.this,"Xoá thanh cong",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(TourDetail.this, "Xoa thanh cong", Toast.LENGTH_LONG).show();
                                         Updatedialog.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
@@ -423,10 +430,9 @@ public class TourDetail extends AppCompatActivity {
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(TourDetail.this,error.toString(),Toast.LENGTH_LONG).show();
+                                Toast.makeText(TourDetail.this, error.toString(), Toast.LENGTH_LONG).show();
                             }
-                        })
-                        {
+                        }) {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -440,8 +446,8 @@ public class TourDetail extends AppCompatActivity {
                 });
 
 
-                final Spinner spinService=(Spinner) Updatedialog.findViewById(R.id.up_service_type);
-                ArrayAdapter arrayAdapter = new ArrayAdapter(TourDetail.this,R.layout.spinner_items,ServiceType);
+                final Spinner spinService = (Spinner) Updatedialog.findViewById(R.id.up_service_type);
+                ArrayAdapter arrayAdapter = new ArrayAdapter(TourDetail.this, R.layout.spinner_items, ServiceType);
                 spinService.setAdapter(arrayAdapter);
 
                 final EditText stop_point_name = (EditText) Updatedialog.findViewById(R.id.up_stop_point_name);
@@ -455,7 +461,7 @@ public class TourDetail extends AppCompatActivity {
 
 
                 stop_point_name.setText(stopPoints.get(position).getName());
-                spinService.setSelection(Integer.parseInt(stopPoints.get(position).getServiceTypeId())-1);
+                spinService.setSelection(Integer.parseInt(stopPoints.get(position).getServiceTypeId()) - 1);
                 address_stoppoint.setText(stopPoints.get(position).getAddress());
 
                 mincost_stop.setText(stopPoints.get(position).getMinCost());
@@ -467,14 +473,14 @@ public class TourDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         final Calendar calendar = Calendar.getInstance();
-                        DatePickerDialog datePickerDialog=new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                calendar.set(i,i1,i2);
+                                calendar.set(i, i1, i2);
                                 dateArrive.setText(simpleDateFormat.format(calendar.getTime()));
                             }
-                        },1999,01,01);
+                        }, 1999, 01, 01);
                         datePickerDialog.show();
                     }
                 });
@@ -483,22 +489,21 @@ public class TourDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         final Calendar calendar = Calendar.getInstance();
-                        DatePickerDialog datePickerDialog=new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                calendar.set(i,i1,i2);
+                                calendar.set(i, i1, i2);
                                 dateLeave.setText(simpleDateFormat.format(calendar.getTime()));
                             }
-                        },1999,01,01);
+                        }, 1999, 01, 01);
                         datePickerDialog.show();
                     }
                 });
                 dateArrive.setFocusable(false);
                 dateLeave.setFocusable(false);
 
-                if (isMyTour.equals("0"))
-                {
+                if (isMyTour.equals("0")) {
                     stop_point_name.setEnabled(false);
                     address_stoppoint.setEnabled(false);
                     mincost_stop.setEnabled(false);
@@ -508,8 +513,7 @@ public class TourDetail extends AppCompatActivity {
                     spinService.setEnabled(false);
                     dateArrive.setEnabled(false);
                     dateLeave.setEnabled(false);
-                }
-                else{
+                } else {
                     stop_point_name.setEnabled(true);
                     address_stoppoint.setEnabled(true);
                     address_stoppoint.setFocusable(false);
@@ -525,8 +529,8 @@ public class TourDetail extends AppCompatActivity {
                 address_stoppoint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent=new Intent(TourDetail.this,MapActivity.class);
-                        intent.putExtra("isUpdate","1");
+                        Intent intent = new Intent(TourDetail.this, MapActivity.class);
+                        intent.putExtra("isUpdate", "1");
                         startActivity(intent);
                     }
                 });
@@ -540,25 +544,18 @@ public class TourDetail extends AppCompatActivity {
                         String minCost = mincost_stop.getText().toString().trim();
                         String maxCost = maxcost_stop.getText().toString().trim();
                         int mType;
-                        if (spinService.getSelectedItem().toString().equals("Restaurant"))
-                        {
-                            mType=1;
-                        }
-                        else if(spinService.getSelectedItem().toString().equals("Hotel"))
-                        {
-                            mType=2;
-                        }
-                        else if (spinService.getSelectedItem().toString().equals("Rest Station"))
-                        {
-                            mType=3;
-                        }
-                        else
-                        {
-                            mType=4;
+                        if (spinService.getSelectedItem().toString().equals("Restaurant")) {
+                            mType = 1;
+                        } else if (spinService.getSelectedItem().toString().equals("Hotel")) {
+                            mType = 2;
+                        } else if (spinService.getSelectedItem().toString().equals("Rest Station")) {
+                            mType = 3;
+                        } else {
+                            mType = 4;
                         }
 
 
-                        long mArrive =0,mLeave =0;
+                        long mArrive = 0, mLeave = 0;
                         Date dArrive, dLeave;
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
                         try {
@@ -572,20 +569,20 @@ public class TourDetail extends AppCompatActivity {
                         }
 
                         String URL = "http://35.197.153.192:3000/tour/set-stop-points";
-                        String addressFinal =address_stoppoint.getText().toString();
-                        JSONObject jsonPoint= new JSONObject();
+                        String addressFinal = address_stoppoint.getText().toString();
+                        JSONObject jsonPoint = new JSONObject();
                         try {
-                            jsonPoint.put("id",stopPoints.get(position).getId());
-                            jsonPoint.put("name",namePoint);
-                            jsonPoint.put("address",addressFinal);
-                            jsonPoint.put("serviceTypeId",mType);
-                            jsonPoint.put("lat",mNewLat+"");
-                            jsonPoint.put("long",mNewLong+"");
-                            jsonPoint.put("provinceId",mNewProvince);
-                            jsonPoint.put("arrivalAt",mArrive+"");
-                            jsonPoint.put("leaveAt",mLeave+"");
-                            jsonPoint.put("minCost",minCost);
-                            jsonPoint.put("maxCost",maxCost);
+                            jsonPoint.put("id", stopPoints.get(position).getId());
+                            jsonPoint.put("name", namePoint);
+                            jsonPoint.put("address", addressFinal);
+                            jsonPoint.put("serviceTypeId", mType);
+                            jsonPoint.put("lat", mNewLat + "");
+                            jsonPoint.put("long", mNewLong + "");
+                            jsonPoint.put("provinceId", mNewProvince);
+                            jsonPoint.put("arrivalAt", mArrive + "");
+                            jsonPoint.put("leaveAt", mLeave + "");
+                            jsonPoint.put("minCost", minCost);
+                            jsonPoint.put("maxCost", maxCost);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -594,16 +591,16 @@ public class TourDetail extends AppCompatActivity {
                         jsonArrayPoint.put(jsonPoint);
 
 
-                        final JSONObject json_post= new JSONObject();
+                        final JSONObject json_post = new JSONObject();
                         try {
-                            json_post.put("tourId",idOfTour);
-                            json_post.put("stopPoints",jsonArrayPoint);
+                            json_post.put("tourId", idOfTour);
+                            json_post.put("stopPoints", jsonArrayPoint);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Log.d("AAAA",json_post.toString());
+                        Log.d("AAAA", json_post.toString());
                         final String requestBody = json_post.toString();
-                        final RequestQueue requestQueue= Volley.newRequestQueue(TourDetail.this);
+                        final RequestQueue requestQueue = Volley.newRequestQueue(TourDetail.this);
                         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                                 new Response.Listener<String>() {
                                     @Override
@@ -617,8 +614,9 @@ public class TourDetail extends AppCompatActivity {
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(TourDetail.this, "" + error, Toast.LENGTH_LONG).show();
                             }
-                        }){
+                        }) {
                             @Override
                             public String getBodyContentType() {
                                 return "application/json; charset=utf-8";
@@ -643,6 +641,7 @@ public class TourDetail extends AppCompatActivity {
                                 }
                                 return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
                             }
+
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -654,7 +653,6 @@ public class TourDetail extends AppCompatActivity {
                         requestQueue.add(stringRequest);
 
 
-
                     }
                 });
 
@@ -662,57 +660,49 @@ public class TourDetail extends AppCompatActivity {
         });
 
 
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://35.197.153.192:3000/tour/info?tourId=" + idOfTour;
 
-
-
-
-
-
-
-
-        RequestQueue requestQueue= Volley.newRequestQueue(this);
-        String URL = "http://35.197.153.192:3000/tour/info?tourId="+ idOfTour;
-
-        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            String tourId=response.getString("id");
-                            String tourHostId=response.getString("hostId");
-                            String tourStatus=response.getString("status");
-                             tourName=response.getString("name");
-                             tourMinCost=response.getString("minCost");
-                             tourMaxCost=response.getString("maxCost");
-                             tourStartDate=response.getString("startDate");
-                             tourEndDate=response.getString("endDate");
-                             tourAdults=response.getString("adults");
-                             tourChilds=response.getString("childs");
-                             tourIsPrivate=response.getString("isPrivate");
-                            String tourAvatar=response.getString("avatar");
+                            String tourId = response.getString("id");
+                            String tourHostId = response.getString("hostId");
+                            String tourStatus = response.getString("status");
+                            tourName = response.getString("name");
+                            tourMinCost = response.getString("minCost");
+                            tourMaxCost = response.getString("maxCost");
+                            tourStartDate = response.getString("startDate");
+                            tourEndDate = response.getString("endDate");
+                            tourAdults = response.getString("adults");
+                            tourChilds = response.getString("childs");
+                            tourIsPrivate = response.getString("isPrivate");
+                            String tourAvatar = response.getString("avatar");
 
-                            try{
-                                long miliStartDate=Long.parseLong(tourStartDate);
-                                Date startD=new Date(miliStartDate);
-                                DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
-                                tourStartDate=dateFormat.format(startD);
-                            }catch (Exception e){
+                            try {
+                                long miliStartDate = Long.parseLong(tourStartDate);
+                                Date startD = new Date(miliStartDate);
+                                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                tourStartDate = dateFormat.format(startD);
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
-                            try{
-                                long miliEndDate=Long.parseLong(tourEndDate);
-                                Date endD=new Date(miliEndDate);
-                                DateFormat dateFormat1=new SimpleDateFormat("dd/MM/yyyy");
-                                tourEndDate=dateFormat1.format(endD);
-                            }catch(Exception e){
+                            try {
+                                long miliEndDate = Long.parseLong(tourEndDate);
+                                Date endD = new Date(miliEndDate);
+                                DateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+                                tourEndDate = dateFormat1.format(endD);
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
                             nameOfTour.setText(tourName);
-                            dateOfTour.setText("Start: "+tourStartDate+ " - End: "+ tourStartDate);
-                            peopleOfTour.setText("Adult(s): "+tourAdults+" - Child(s): "+tourChilds );
-                            cashOfTour.setText(tourMinCost+" VND - "+tourMaxCost +" VND");
+                            dateOfTour.setText("Start: " + tourStartDate + " - End: " + tourStartDate);
+                            peopleOfTour.setText("Adult(s): " + tourAdults + " - Child(s): " + tourChilds);
+                            cashOfTour.setText(tourMinCost + " VND - " + tourMaxCost + " VND");
 
                             if(tourIsPrivate.equals("true")) {
                                 isPrivateTour.setText("Private");
@@ -725,8 +715,7 @@ public class TourDetail extends AppCompatActivity {
 
                             JSONArray jsonArrayStopPoint = response.getJSONArray("stopPoints");
                             stopPoints.clear();
-                            for (int i=0;i<jsonArrayStopPoint.length();i++)
-                            {
+                            for (int i = 0; i < jsonArrayStopPoint.length(); i++) {
                                 JSONObject stopPoint = jsonArrayStopPoint.getJSONObject(i);
                                 String id = stopPoint.getString("id");
                                 String serviceId = stopPoint.getString("serviceId");
@@ -742,32 +731,32 @@ public class TourDetail extends AppCompatActivity {
                                 String serviceTypeId = stopPoint.getString("serviceTypeId");
                                 String avatar = stopPoint.getString("avatar");
                                 String index = stopPoint.getString("index");
-                                try{
-                                    long miliStartDate=Long.parseLong(arrivalAt);
-                                    Date startD=new Date(miliStartDate);
-                                    DateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
-                                    arrivalAt=dateFormat.format(startD);
-                                }catch (Exception e){
+                                try {
+                                    long miliStartDate = Long.parseLong(arrivalAt);
+                                    Date startD = new Date(miliStartDate);
+                                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                    arrivalAt = dateFormat.format(startD);
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
-                                try{
-                                    long miliEndDate=Long.parseLong(leaveAt);
-                                    Date endD=new Date(miliEndDate);
-                                    DateFormat dateFormat1=new SimpleDateFormat("dd/MM/yyyy");
-                                    leaveAt=dateFormat1.format(endD);
-                                }catch(Exception e){
+                                try {
+                                    long miliEndDate = Long.parseLong(leaveAt);
+                                    Date endD = new Date(miliEndDate);
+                                    DateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+                                    leaveAt = dateFormat1.format(endD);
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
-                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar,lat,longitude);
+                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar, lat, longitude);
                                 stopPoints.add(temp);
                             }
-                            if(stopPoints.isEmpty()){
-                                stopPointEmpty=(TextView)findViewById(R.id.stop_point_empty);
+                            if (stopPoints.isEmpty()) {
+                                stopPointEmpty = (TextView) findViewById(R.id.stop_point_empty);
                                 stopPointEmpty.setVisibility(View.VISIBLE);
-                            }else {
-                                if(stopPoints.size()>=2) {
+                            } else {
+                                if (stopPoints.size() >= 2) {
                                     listStopPoint.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 360));
                                 }
                                 AdapterStopPoint adapterStopPoint = new AdapterStopPoint(TourDetail.this, R.layout.stop_point_single, stopPoints);
@@ -777,22 +766,21 @@ public class TourDetail extends AppCompatActivity {
 
                             JSONArray jsonArrayComment = response.getJSONArray("comments");
                             comments.clear();
-                            for (int i=0;i<jsonArrayComment.length();i++)
-                            {
+                            for (int i = 0; i < jsonArrayComment.length(); i++) {
                                 JSONObject comment = jsonArrayComment.getJSONObject(i);
                                 String id = comment.getString("id");
                                 String name = comment.getString("name");
                                 String commentContent = comment.getString("comment");
                                 String avatar = comment.getString("avatar");
 
-                                Comment temp = new Comment( id,  name,  commentContent,  avatar);
+                                Comment temp = new Comment(id, name, commentContent, avatar);
                                 comments.add(temp);
                             }
-                            if(comments.isEmpty()){
-                                commentEmpty=(TextView)findViewById(R.id.comment_empty);
+                            if (comments.isEmpty()) {
+                                commentEmpty = (TextView) findViewById(R.id.comment_empty);
                                 commentEmpty.setVisibility(View.VISIBLE);
-                            }else {
-                                if(comments.size()>=2){
+                            } else {
+                                if (comments.size() >= 2) {
                                     listComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 410));
                                 }
                                 AdapterComment adapterComment = new AdapterComment(TourDetail.this, R.layout.comment_single, comments);
@@ -803,8 +791,7 @@ public class TourDetail extends AppCompatActivity {
 
                             JSONArray jsonArrayMember = response.getJSONArray("members");
                             members.clear();
-                            for (int i=0;i<jsonArrayMember.length();i++)
-                            {
+                            for (int i = 0; i < jsonArrayMember.length(); i++) {
                                 JSONObject member = jsonArrayMember.getJSONObject(i);
                                 String id = member.getString("id");
                                 String name = member.getString("name");
@@ -812,14 +799,14 @@ public class TourDetail extends AppCompatActivity {
                                 String avatar = member.getString("avatar");
                                 String isHost = member.getString("isHost");
 
-                                Member temp = new Member( id,  name,  phone,  avatar,  isHost);
+                                Member temp = new Member(id, name, phone, avatar, isHost);
                                 members.add(temp);
                             }
-                            if(members.isEmpty()){
-                                memberEmpty=(TextView)findViewById(R.id.member_empty);
+                            if (members.isEmpty()) {
+                                memberEmpty = (TextView) findViewById(R.id.member_empty);
                                 memberEmpty.setVisibility(View.VISIBLE);
-                            }else {
-                                if(members.size()>=2) {
+                            } else {
+                                if (members.size() >= 2) {
                                     listMember.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 410));
                                 }
                                 AdapterMember adapterMember = new AdapterMember(TourDetail.this, R.layout.member_single, members);
@@ -834,8 +821,7 @@ public class TourDetail extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
             }
-        })
-        {
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -848,14 +834,11 @@ public class TourDetail extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit_delete,menu);
-        if (isMyTour.equals("0"))
-        {
+        getMenuInflater().inflate(R.menu.menu_edit_delete, menu);
+        if (isMyTour.equals("0")) {
             for (int i = 0; i < menu.size(); i++)
                 menu.getItem(i).setVisible(false);
-        }
-        else
-        {
+        } else {
             for (int i = 0; i < menu.size(); i++)
                 menu.getItem(i).setVisible(true);
         }
@@ -865,7 +848,7 @@ public class TourDetail extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.edit_tour:
                 final Dialog dialog = new Dialog(this);
@@ -874,37 +857,37 @@ public class TourDetail extends AppCompatActivity {
 
 
                 final EditText tour_name = (EditText) dialog.findViewById(R.id.edit_tour_name);
-                final EditText startDate=(EditText)dialog.findViewById(R.id.edit_startDate);
+                final EditText startDate = (EditText) dialog.findViewById(R.id.edit_startDate);
                 startDate.setFocusable(false);
                 startDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         final Calendar calendar = Calendar.getInstance();
-                        DatePickerDialog datePickerDialog=new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                calendar.set(i,i1,i2);
+                                calendar.set(i, i1, i2);
                                 startDate.setText(simpleDateFormat.format(calendar.getTime()));
                             }
-                        },1999,01,01);
+                        }, 1999, 01, 01);
                         datePickerDialog.show();
                     }
                 });
-                final EditText endDate= (EditText)dialog.findViewById(R.id.edit_endDate);
+                final EditText endDate = (EditText) dialog.findViewById(R.id.edit_endDate);
                 endDate.setFocusable(false);
                 endDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         final Calendar calendar = Calendar.getInstance();
-                        DatePickerDialog datePickerDialog=new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(TourDetail.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                calendar.set(i,i1,i2);
+                                calendar.set(i, i1, i2);
                                 endDate.setText(simpleDateFormat.format(calendar.getTime()));
                             }
-                        },1999,01,01);
+                        }, 1999, 01, 01);
                         datePickerDialog.show();
                     }
                 });
@@ -912,7 +895,7 @@ public class TourDetail extends AppCompatActivity {
                 final EditText children = (EditText) dialog.findViewById(R.id.edit_children);
                 final EditText mincost = (EditText) dialog.findViewById(R.id.edit_mincost);
                 final EditText maxcost = (EditText) dialog.findViewById(R.id.edit_maxcost);
-                RadioGroup isPrivate = (RadioGroup)dialog.findViewById(R.id.edit_isPrivate);
+                RadioGroup isPrivate = (RadioGroup) dialog.findViewById(R.id.edit_isPrivate);
                 final RadioButton privateTour = (RadioButton) dialog.findViewById(R.id.edit_privateTour);
                 final RadioButton publicTour = (RadioButton) dialog.findViewById(R.id.edit_publicTour);
                 Button btnUpdate = (Button) dialog.findViewById(R.id.edit_btnCreate);
@@ -924,28 +907,28 @@ public class TourDetail extends AppCompatActivity {
                 endDate.setText(tourEndDate);
                 adults.setText(tourAdults);
                 children.setText(tourChilds);
-                if(tourIsPrivate.equals("false")){
+                if (tourIsPrivate.equals("false")) {
                     publicTour.setChecked(true);
-                }else{
+                } else {
                     privateTour.setChecked(true);
                 }
 
                 dialog.show();
 
-                final RequestQueue requestQueue= Volley.newRequestQueue(this);
+                final RequestQueue requestQueue = Volley.newRequestQueue(this);
                 btnUpdate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String txtTourName=tour_name.getText().toString().trim();
-                        String txtStartDate=startDate.getText().toString().trim();
-                        String txtEndDate=endDate.getText().toString().trim();
-                        String txtAdults=adults.getText().toString().trim();
+                        String txtTourName = tour_name.getText().toString().trim();
+                        String txtStartDate = startDate.getText().toString().trim();
+                        String txtEndDate = endDate.getText().toString().trim();
+                        String txtAdults = adults.getText().toString().trim();
                         String txtChildren = children.getText().toString().trim();
                         String txtMinCost = mincost.getText().toString().trim();
                         String txtMaxCost = maxcost.getText().toString().trim();
-                        long mStartDate =0,mEndDate =0;
+                        long mStartDate = 0, mEndDate = 0;
                         Date startD, endD;
-                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 
                         try {
@@ -958,30 +941,30 @@ public class TourDetail extends AppCompatActivity {
                         }
 
 
-
-                        String private_select="1";
+                        String private_select = "1";
 
                         if (privateTour.isChecked())
-                            private_select="1";
+                            private_select = "1";
                         if (publicTour.isChecked())
-                            private_select="0";
+                            private_select = "0";
 
                         String URL = "http://35.197.153.192:3000/tour/update-tour";
                         HashMap<String, String> params = new HashMap<String, String>();
-                        params.put("id",idOfTour);
+                        params.put("id", idOfTour);
                         params.put("name", txtTourName);
-                        params.put("startDate", mStartDate+"");
-                        params.put("endDate",mEndDate+"");
-                        params.put("isPrivate",private_select);
-                        params.put("adults",txtAdults);
-                        params.put("childs",txtChildren);
-                        params.put("minCost",txtMinCost);
-                        params.put("maxCost",txtMaxCost);
+                        params.put("startDate", mStartDate + "");
+                        params.put("endDate", mEndDate + "");
+                        params.put("isPrivate", private_select);
+                        params.put("adults", txtAdults);
+                        params.put("childs", txtChildren);
+                        params.put("minCost", txtMinCost);
+                        params.put("maxCost", txtMaxCost);
 
                         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
+                                        Toast.makeText(TourDetail.this, "successs" + idOfTour, Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
@@ -994,8 +977,8 @@ public class TourDetail extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 NetworkResponse networkResponse = error.networkResponse;
                                 if (networkResponse != null) {
-                                    String statusCode=String.valueOf(networkResponse.statusCode);
-                                    switch(statusCode){
+                                    String statusCode = String.valueOf(networkResponse.statusCode);
+                                    switch (statusCode) {
                                         case "400":
                                             Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
                                             break;
@@ -1007,7 +990,7 @@ public class TourDetail extends AppCompatActivity {
                                     }
                                 }
                             }
-                        }){
+                        }) {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -1016,22 +999,23 @@ public class TourDetail extends AppCompatActivity {
                                 return headers;
                             }
                         };
-                        requestQueue.add(request_json);;
+                        requestQueue.add(request_json);
+                        ;
                     }
                 });
                 break;
             case R.id.delete_tour:
-                final RequestQueue requestQueue2= Volley.newRequestQueue(this);
+                final RequestQueue requestQueue2 = Volley.newRequestQueue(this);
                 String URL = "http://35.197.153.192:3000/tour/update-tour";
                 HashMap<String, String> params = new HashMap<String, String>();
-                params.put("status","-1");
-                params.put("id",idOfTour);
+                params.put("status", "-1");
+                params.put("id", idOfTour);
                 JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
 
-                                Intent intent = new Intent(TourDetail.this,Home.class);
+                                Intent intent = new Intent(TourDetail.this, Home.class);
 
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -1043,8 +1027,8 @@ public class TourDetail extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         NetworkResponse networkResponse = error.networkResponse;
                         if (networkResponse != null) {
-                            String statusCode=String.valueOf(networkResponse.statusCode);
-                            switch(statusCode){
+                            String statusCode = String.valueOf(networkResponse.statusCode);
+                            switch (statusCode) {
                                 case "400":
                                     Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
                                     break;
@@ -1056,7 +1040,7 @@ public class TourDetail extends AppCompatActivity {
                             }
                         }
                     }
-                }){
+                }) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         HashMap<String, String> headers = new HashMap<String, String>();
@@ -1070,36 +1054,40 @@ public class TourDetail extends AppCompatActivity {
         }
         return true;
     }
-    public void getPointOfTour(String idOfTour){
+
+    public void getPointOfTour(String idOfTour) {
         final float[] pointresult = new float[1];
-        final RequestQueue requestQueue3= Volley.newRequestQueue(TourDetail.this);
-        String URL = "http://35.197.153.192:3000/tour/get/review-point-stats?tourId="+idOfTour;
+        final RequestQueue requestQueue3 = Volley.newRequestQueue(TourDetail.this);
+        String URL = "http://35.197.153.192:3000/tour/get/review-point-stats?tourId=" + idOfTour;
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try{
-                            int point=0;
-                            int total =0;
+                        try {
+                            int point = 0;
+                            int total = 0;
                             JSONArray pointStats = response.getJSONArray("pointStats");
-                            for(int i = 0; i < pointStats.length();i++){
+                            for (int i = 0; i < pointStats.length(); i++) {
                                 JSONObject tempPoint = pointStats.getJSONObject(i);
                                 String Spoint = tempPoint.getString("point");
                                 String Stotal = tempPoint.getString("total");
                                 int Ipoint = Integer.parseInt(Spoint);
                                 int Itotal = Integer.parseInt(Stotal);
-                                if(Itotal !=0 ){
-                                    total = total + Itotal;}
+                                if (Itotal != 0) {
+                                    total = total + Itotal;
+                                }
 
-                                point =point + Ipoint*Itotal;
+                                point = point + Ipoint * Itotal;
 
                             }
+
+                            Toast.makeText(TourDetail.this, total + "", Toast.LENGTH_SHORT).show();
                             float rating = point/(total);
                             RatingBar ratingBar = (RatingBar) findViewById(R.id.pointOfTour);
                             LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
                             stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
                             ratingBar.setRating(rating);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -1109,8 +1097,8 @@ public class TourDetail extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null) {
-                    String statusCode=String.valueOf(networkResponse.statusCode);
-                    switch(statusCode){
+                    String statusCode = String.valueOf(networkResponse.statusCode);
+                    switch (statusCode) {
                         case "400":
                             Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
                             break;
@@ -1122,7 +1110,7 @@ public class TourDetail extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -1131,32 +1119,35 @@ public class TourDetail extends AppCompatActivity {
                 return headers;
             }
         };
+        Toast.makeText(TourDetail.this, pointresult[0] + "", Toast.LENGTH_SHORT).show();
         requestQueue3.add(request_json);
     }
-    public void setAdapterReview(){
 
-        final RequestQueue requestQueueReview= Volley.newRequestQueue(TourDetail.this);
-        String URL = "http://35.197.153.192:3000/tour/get/review-list?tourId="+idOfTour+"&pageIndex=1&pageSize=100";
+    public void setAdapterReview() {
+
+        final RequestQueue requestQueueReview = Volley.newRequestQueue(TourDetail.this);
+        String URL = "http://35.197.153.192:3000/tour/get/review-list?tourId=" + idOfTour + "&pageIndex=1&pageSize=100";
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try{
+                        try {
                             JSONArray reviewJson = response.getJSONArray("reviewList");
                             reviews.clear();
-                            for(int i =0 ;i<reviewJson.length();i++){
+                            for (int i = 0; i < reviewJson.length(); i++) {
                                 JSONObject obj = reviewJson.getJSONObject(i);
                                 String name = obj.getString("name");
                                 String review = obj.getString("review");
                                 String createOn = obj.getString("createdOn");
-                                Review tempReview = new Review(name,review,createOn);
+                                Review tempReview = new Review(name, review, createOn);
 
                                 reviews.add(tempReview);
                             }
+
                             AdapterReview adapterReview = new AdapterReview(TourDetail.this,R.layout.rate_single,reviews);
                             listReview.setAdapter(adapterReview);
                             adapterReview.notifyDataSetChanged();
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -1165,8 +1156,8 @@ public class TourDetail extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null) {
-                    String statusCode=String.valueOf(networkResponse.statusCode);
-                    switch(statusCode){
+                    String statusCode = String.valueOf(networkResponse.statusCode);
+                    switch (statusCode) {
                         case "400":
                             Toast.makeText(TourDetail.this, "ERROR 400", Toast.LENGTH_SHORT).show();
                             break;
@@ -1178,7 +1169,7 @@ public class TourDetail extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -1191,11 +1182,11 @@ public class TourDetail extends AppCompatActivity {
     }
 
 
-    public static void SetTextAdress(double lat,double longitute,String provinceID,String address){
-        mNewProvince=provinceID;
-        mNewAddress=address;
-        mNewLat=lat;
-        mNewLong=longitute;
+    public static void SetTextAdress(double lat, double longitute, String provinceID, String address) {
+        mNewProvince = provinceID;
+        mNewAddress = address;
+        mNewLat = lat;
+        mNewLong = longitute;
         address_stoppoint.setText(address);
     }
 }
