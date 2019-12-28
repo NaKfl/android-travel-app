@@ -14,8 +14,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".LoginPage">
@@ -49,6 +48,26 @@
                             android:orientation="vertical"
                             android:paddingHorizontal="18dp"
                             android:paddingVertical="5dp">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:id="@+id/edit_showinfo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/ic_map_gray_24dp" />
+                                <ImageView
+                                    android:id="@+id/delete_showinfor"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toLeftOf="@+id/edit_showinfo"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/ic_delete_forever_black_24dp" />
+                            </RelativeLayout>
+
 
                             <TextView
                                 android:id="@+id/name_stp_detail"
@@ -73,7 +92,7 @@
                                 android:fontFamily="@font/calibri"
                                 android:maxLines="5"
                                 android:paddingTop="12dp"
-                                android:text="14/5/2017 - 20/5/2017"
+                                android:text="HCM-city"
                                 android:textAlignment="center"
                                 android:textSize="16dp"
                                 android:textStyle="bold" />
@@ -87,6 +106,32 @@
                                 android:fontFamily="@font/calibri"
                                 android:paddingTop="12dp"
                                 android:text="500.000 - 1.000.000 VND"
+                                android:textAlignment="center"
+                                android:textColor="@android:color/holo_orange_dark"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/name_service_infor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/price_tag"
+                                android:drawablePadding="16dp"
+                                android:fontFamily="@font/calibri"
+                                android:paddingTop="12dp"
+                                android:text="Time : "
+                                android:textAlignment="center"
+                                android:textColor="@android:color/holo_orange_dark"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/time_infor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/price_tag"
+                                android:drawablePadding="16dp"
+                                android:fontFamily="@font/calibri"
+                                android:paddingTop="12dp"
+                                android:text="Time : "
                                 android:textAlignment="center"
                                 android:textColor="@android:color/holo_orange_dark"
                                 android:textSize="16dp"
@@ -194,6 +239,7 @@
                     android:divider="@null"
                     android:dividerHeight="5dp"
                     android:nestedScrollingEnabled="true" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

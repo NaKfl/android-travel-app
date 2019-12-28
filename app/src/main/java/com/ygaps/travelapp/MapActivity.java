@@ -119,6 +119,7 @@ public class MapActivity extends AppCompatActivity implements
     public static EditText address_stoppoint;
     public static double tNewLat,tNewLong;
     public static String tNewAddress,tNewProvince="-1";
+    int flagGoTempMap=0;
     private String[] ServiceType=new String[]{
             "Restaurant",
             "Hotel",
@@ -494,6 +495,7 @@ public class MapActivity extends AppCompatActivity implements
                                             @Override
                                             public void onClick(View view) {
                                                 Intent intent=new Intent(MapActivity.this,MapTemp.class);
+                                                flagGoTempMap=1;
                                                 startActivity(intent);
                                             }
                                         });
@@ -539,14 +541,23 @@ public class MapActivity extends AppCompatActivity implements
 
                                                 String URL = "http://35.197.153.192:3000/tour/set-stop-points";
                                                 String addressFinal =address_stoppoint.getText().toString();
+                                                double latPost = Double.parseDouble(ViewstopPoints.get(i).getLat());
+                                                double longPost = Double.parseDouble(ViewstopPoints.get(i).getLongitude());
+
+                                                if (flagGoTempMap==1)
+                                                {
+                                                    latPost=tNewLat;
+                                                    longPost=tNewLong;
+                                                    flagGoTempMap=0;
+                                                }
                                                 JSONObject jsonPoint= new JSONObject();
                                                 try {
                                                     jsonPoint.put("id",ViewstopPoints.get(i).getId());
                                                     jsonPoint.put("name",namePoint);
                                                     jsonPoint.put("address",addressFinal);
                                                     jsonPoint.put("serviceTypeId",mType);
-                                                    jsonPoint.put("lat",tNewLat+"");
-                                                    jsonPoint.put("long",tNewLong+"");
+                                                    jsonPoint.put("lat",latPost+"");
+                                                    jsonPoint.put("long",longPost+"");
                                                     jsonPoint.put("provinceId",tNewProvince);
                                                     jsonPoint.put("arrivalAt",mArrive+"");
                                                     jsonPoint.put("leaveAt",mLeave+"");
