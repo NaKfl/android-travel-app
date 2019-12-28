@@ -141,8 +141,6 @@ public class MyFirebaseService extends FirebaseMessagingService {
                         case "500":
                             Toast.makeText(MyFirebaseService.this, "ERROR 500", Toast.LENGTH_SHORT).show();
                             break;
-                        default:
-                            Toast.makeText(MyFirebaseService.this, "ERROR", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

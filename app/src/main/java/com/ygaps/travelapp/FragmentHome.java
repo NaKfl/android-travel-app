@@ -54,6 +54,7 @@ public class FragmentHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
         final View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         final ListView listView= rootView.findViewById(R.id.list_tour_home);
 
@@ -110,8 +111,10 @@ public class FragmentHome extends Fragment {
                         emptySearch = (TextView) rootView.findViewById(R.id.home_empty);
                         emptySearch.setVisibility(View.GONE);
                     }
+
                     adapter=new AdapterTour(getActivity(),R.layout.tour_single,searchListTour);
                     listView.setAdapter(adapter);
+                    setOnItemClick(listView,searchListTour);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -161,7 +164,7 @@ public class FragmentHome extends Fragment {
         });
 
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-        String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=50"+"&pageNum="+ page;
+        String URL = "http://35.197.153.192:3000/tour/list?rowPerPage=100"+"&pageNum="+ page;
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL,null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -231,20 +234,20 @@ public class FragmentHome extends Fragment {
             }
         };
         requestQueue.add(request_json);
+        
+        setOnItemClick(listView,tours);
 
+        return rootView;
+    }
+    private void setOnItemClick(ListView listView, final ArrayList<Tour>tourArray){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent=new Intent(getContext(),TourDetail.class);
-                intent.putExtra("tourId",tours.get(position).tourId);
+                intent.putExtra("tourId",tourArray.get(position).tourId);
                 intent.putExtra("isMyTour","0");
                 startActivity(intent);
-
             }
         });
-
-        super.onCreateView(inflater,container,savedInstanceState);
-        return rootView;
     }
-
 }
