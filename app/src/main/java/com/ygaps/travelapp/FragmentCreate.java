@@ -216,7 +216,7 @@ public class FragmentCreate extends Fragment {
         requestQueue4.add(request_json);
     }
     public void listFeedback(Dialog dialog,StopPoint stopPoint){
-        String idOfservice = stopPoint.getServiceId();
+        String idOfservice = stopPoint.getId();
         final ListView listFback = dialog.findViewById(R.id.list_stp_feedback);
         final RequestQueue requestQueue2 = Volley.newRequestQueue(getContext());
         String URL = "http://35.197.153.192:3000/tour/get/feedback-service?serviceId="+idOfservice+"&pageIndex=1&pageSize=999";
@@ -248,7 +248,7 @@ public class FragmentCreate extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), "" + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),   error+"", Toast.LENGTH_SHORT).show();
 
             }
         }) {

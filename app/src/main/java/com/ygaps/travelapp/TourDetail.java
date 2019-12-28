@@ -1235,7 +1235,7 @@ public class TourDetail extends AppCompatActivity {
     }
     public void pointTB(final Dialog dialog, StopPoint stopPoint){
         final RequestQueue requestQueue4 = Volley.newRequestQueue(TourDetail.this);
-        String URL = "http://35.197.153.192:3000/tour/get/feedback-point-stats?serviceId=" + stopPoint.getId();
+        String URL = "http://35.197.153.192:3000/tour/get/feedback-point-stats?serviceId=" + stopPoint.getServiceId();
         Toast.makeText(TourDetail.this, stopPoint.getId()+"", Toast.LENGTH_SHORT).show();
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
