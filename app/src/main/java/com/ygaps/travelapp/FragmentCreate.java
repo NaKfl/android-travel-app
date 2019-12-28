@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -128,7 +129,7 @@ public class FragmentCreate extends Fragment {
     private void setOnclickItem(ListView listView, final ArrayList<StopPoint> stpArray){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.popup_stp);
                 //ánh xạ
@@ -137,7 +138,46 @@ public class FragmentCreate extends Fragment {
                 pointTB(dialog,stpArray.get(i));
                 //list feedback
                 listFeedback(dialog,stpArray.get(i));
+                ImageView send_feedback = (ImageView) dialog.findViewById(R.id.send_feedback);
                 dialog.show();
+                send_feedback.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Dialog dialog_send = new Dialog(getActivity());
+                        dialog_send.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog_send.setContentView(R.layout.popup_feedback);
+
+                        final RatingBar ratingBar2 = dialog_send.findViewById(R.id.rating);
+                        LayerDrawable stars = (LayerDrawable) ratingBar2.getProgressDrawable();
+                        stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
+                        final EditText feedText = (EditText) dialog_send.findViewById(R.id.input_review);
+                        Button btnSend = (Button) dialog_send.findViewById(R.id.btn_send_review);
+
+                        ratingBar2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                                        boolean fromUser) {
+                                ratingBar.setRating(rating);
+                            }
+                        });
+                        btnSend.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                float Ratefeed = ratingBar2.getRating();
+                                if (Ratefeed < 2) {
+                                    Ratefeed = 2;
+                                }
+                                int Ratefeedround = Math.round(Ratefeed);
+                                String feed = feedText.getText().toString();
+                                sendFeedBack(dialog_send,stpArray.get(i),feed,Ratefeedround);
+                                listFeedback(dialog,stpArray.get(i));
+                                listFeedback(dialog,stpArray.get(i));
+                            }
+                        });
+                        dialog_send.show();
+                    }
+                });
+
+
             }
         });
     }
@@ -376,5 +416,51 @@ public class FragmentCreate extends Fragment {
             }
         };
         requestQueue.add(request_json);
+    }
+    public void sendFeedBack(final Dialog dialog1, StopPoint stopPoint, String feedback, int point)
+    {
+        final int check=0;
+        final RequestQueue requestQueue5 = Volley.newRequestQueue(getActivity());
+        String URL = "http://35.197.153.192:3000/tour/add/feedback-service";
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("serviceId", stopPoint.getId());
+        params.put("feedback", feedback+"");
+        params.put("point",point+"");
+
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getActivity(), "Send Thanh cong", Toast.LENGTH_SHORT).show();
+                        dialog1.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null) {
+                    String statusCode=String.valueOf(networkResponse.statusCode);
+                    switch(statusCode){
+                        case "400":
+                            Toast.makeText(getActivity(),"ERROR 400", Toast.LENGTH_SHORT).show();
+                            break;
+                        case "500":
+                            Toast.makeText(getActivity(),"ERROR 500", Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json");
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue5.add(request_json);
     }
 }

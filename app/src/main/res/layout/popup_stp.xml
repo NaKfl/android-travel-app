@@ -195,18 +195,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingVertical="10dp">
-
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:fontFamily="@font/calibri"
-                    android:gravity="left|center"
-                    android:paddingLeft="20dp"
-                    android:drawableEnd="@drawable/ic_add_circle_black_24dp"
-                    android:text="Feedbacks >"
-                    android:textColor="#2C2C2C"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:fontFamily="@font/calibri"
+                        android:gravity="left|center"
+                        android:paddingLeft="20dp"
+                        android:text="Feedbacks >"
+                        android:textColor="#2C2C2C"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/send_feedback"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_add_circle_black_24dp" />
+                </RelativeLayout>
+
 
 
                 <View
