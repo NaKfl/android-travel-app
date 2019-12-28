@@ -416,6 +416,44 @@ public class TourDetail extends AppCompatActivity {
                 TextView stp_cost_detail = (TextView) ShowInfor.findViewById(R.id.stp_cost_detail);
                 TextView time_infor = (TextView) ShowInfor.findViewById(R.id.time_infor);
                 TextView name_service_infor = (TextView)ShowInfor.findViewById(R.id.name_service_infor);
+                ImageView send_feedback = (ImageView) ShowInfor.findViewById(R.id.send_feedback);
+
+                send_feedback.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Dialog dialog_send = new Dialog(TourDetail.this);
+                        dialog_send.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog_send.setContentView(R.layout.popup_feedback);
+
+                        final RatingBar ratingBar2 = dialog_send.findViewById(R.id.rating);
+                        LayerDrawable stars = (LayerDrawable) ratingBar2.getProgressDrawable();
+                        stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.yellowStart), PorterDuff.Mode.SRC_ATOP);
+                        final EditText feedText = (EditText) dialog_send.findViewById(R.id.input_review);
+                        Button btnSend = (Button) dialog_send.findViewById(R.id.btn_send_review);
+
+                        ratingBar2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                                        boolean fromUser) {
+                                ratingBar.setRating(rating);
+                            }
+                        });
+                        btnSend.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                float Ratefeed = ratingBar2.getRating();
+                                if (Ratefeed < 2) {
+                                    Ratefeed = 2;
+                                }
+                                int Ratefeedround = Math.round(Ratefeed);
+                                String feed = feedText.getText().toString();
+                                sendFeedBack(dialog_send,stopPoints.get(position),feed,Ratefeedround);
+                                listFeedback(ShowInfor,stopPoints.get(position));
+                                listFeedback(ShowInfor,stopPoints.get(position));
+                            }
+                        });
+                        dialog_send.show();
+                    }
+                });
 
                 name_stp_detail.setText(stopPoints.get(position).getName());
                 String serviceType = stopPoints.get(position).getServiceTypeId();
@@ -1343,5 +1381,51 @@ public class TourDetail extends AppCompatActivity {
             }
         };
         requestQueue2.add(request_json);
+    }
+    public void sendFeedBack(final Dialog dialog1, StopPoint stopPoint, String feedback, int point)
+    {
+        final int check=0;
+        final RequestQueue requestQueue5 = Volley.newRequestQueue(TourDetail.this);
+        String URL = "http://35.197.153.192:3000/tour/add/feedback-service";
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("serviceId", stopPoint.getServiceId());
+        params.put("feedback", feedback+"");
+        params.put("point",point+"");
+
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(TourDetail.this, "Send Thanh cong", Toast.LENGTH_SHORT).show();
+                        dialog1.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null) {
+                    String statusCode=String.valueOf(networkResponse.statusCode);
+                    switch(statusCode){
+                        case "400":
+                            Toast.makeText(TourDetail.this,"ERROR 400", Toast.LENGTH_SHORT).show();
+                            break;
+                        case "500":
+                            Toast.makeText(TourDetail.this,"ERROR 500", Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(TourDetail.this, "ERROR", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json");
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue5.add(request_json);
     }
 }
