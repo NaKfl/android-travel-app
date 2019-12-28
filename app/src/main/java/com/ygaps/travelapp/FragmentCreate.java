@@ -2,8 +2,11 @@ package com.ygaps.travelapp;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -57,7 +62,7 @@ import java.util.Map;
 
 public class FragmentCreate extends Fragment {
     private ArrayList<StopPoint> stp = new ArrayList<>();
-
+    TextView name, cost, address;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,10 +70,62 @@ public class FragmentCreate extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.list_stoppoint);
         final ListView listView = (ListView) rootView.findViewById(R.id.list_stp);
         getStoppoint(listView);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.popup_stp);
+                mappingDiaglog(dialog,stp.get(i));
+                listFeedback(dialog,stp.get(i));
+                dialog.show();
+            }
+        });
         return rootView;
     }
+    public void mappingDiaglog(Dialog dialog, StopPoint stopPoint){
+        name = (TextView) dialog.findViewById(R.id.name_stp_detail);
+        cost = (TextView) dialog.findViewById(R.id.stp_cost_detail);
+        address = (TextView) dialog.findViewById(R.id.stp_address_detail);
 
+        name.setText(stopPoint.getName());
+        cost.setText(stopPoint.getMinCost() + " - " +stopPoint.getMaxCost());
+        address.setText(stopPoint.getAddress());
+    }
+    public void listFeedback(Dialog dialog,StopPoint stopPoint){
+        String idOfservice = stopPoint.getId();
+        ListView listFback = dialog.findViewById(R.id.list_stp_feedback);
+        final RequestQueue requestQueue2 = Volley.newRequestQueue(getContext());
+        String URL = "http://35.197.153.192:3000/tour/get/feedback-service?serviceId="+idOfservice+"&pageIndex=1&pageSize=999";
+
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("feedbackList");
+                            Log.d("hihe", jsonArray.length() + "");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "" + error, Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue2.add(request_json);
+    }
     public void getStoppoint(final ListView listView) {
         String URL = "http://35.197.153.192:3000/tour/suggested-destination-list";
         JSONObject coordinate1 = new JSONObject();
