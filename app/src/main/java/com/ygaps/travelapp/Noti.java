@@ -1,6 +1,7 @@
 package com.ygaps.travelapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -61,6 +62,30 @@ public class Noti extends AppCompatActivity {
 
         mapping();
         getTourInfo();
+        addAction();
+    }
+
+    private void addAction() {
+        String action=intent.getAction();
+        if(action==null){
+            return;
+        }
+
+        switch (action)
+        {
+            case ACCEPT_ACTION:
+                acceptAction();
+                break;
+            case DECLINE_ACTION:
+                declineAction();
+                break;
+            case SHOW_ACTION:
+                showAction();
+                break;
+            default:
+                finish();
+                break;
+        }
     }
 
     private void mapping() {
@@ -94,6 +119,9 @@ public class Noti extends AppCompatActivity {
                 declineAction();
             }
         });
+    }
+
+    private void showAction() {
     }
 
     private void acceptAction() {
