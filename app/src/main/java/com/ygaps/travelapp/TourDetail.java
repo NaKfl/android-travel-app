@@ -156,10 +156,25 @@ public class TourDetail extends AppCompatActivity {
         lockIcon=(ImageView)findViewById(R.id.tour_detail_lock_icon);
         ImageView rate = (ImageView) findViewById(R.id.rate);
         ImageView addMember = (ImageView) findViewById(R.id.add_member);
+        ImageView add_show = (ImageView) findViewById(R.id.add_show);
         if(isMyTour.equals("0")){
             addMember.setVisibility(View.GONE);
+            add_show.setVisibility(View.GONE);
         }
-
+        else{
+            addMember.setVisibility(View.VISIBLE);
+            add_show.setVisibility(View.VISIBLE);
+        }
+        add_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MapActivity.markerList.clear();
+                Intent intent = new Intent(TourDetail.this,MapActivity.class);
+                intent.putExtra("isUpdate","0");
+                CreateTour.tourID=idOfTour;
+                startActivity(intent);
+            }
+        });
         //đánh giá
         rate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,8 +389,15 @@ public class TourDetail extends AppCompatActivity {
                 ShowInfor.getWindow().setAttributes(lp);
                 ImageView edit_infor = (ImageView) ShowInfor.findViewById(R.id.edit_showinfo);
                 ImageView delete_infor = (ImageView) ShowInfor.findViewById(R.id.delete_showinfor);
-
-
+                if (isMyTour.equals("1"))
+                {
+                    edit_infor.setVisibility(View.VISIBLE);
+                    delete_infor.setVisibility(View.VISIBLE);
+                }
+                else{
+                    edit_infor.setVisibility(View.GONE);
+                    delete_infor.setVisibility(View.GONE);
+                }
                 TextView name_stp_detail =(TextView) ShowInfor.findViewById(R.id.name_stp_detail);
                 TextView stp_address_detail = (TextView) ShowInfor.findViewById(R.id.stp_address_detail);
                 TextView stp_cost_detail = (TextView) ShowInfor.findViewById(R.id.stp_cost_detail);
@@ -1412,5 +1434,156 @@ public class TourDetail extends AppCompatActivity {
         }
         return name;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://35.197.153.192:3000/tour/info?tourId=" + idOfTour;
 
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String tourId = response.getString("id");
+                            String tourHostId = response.getString("hostId");
+                            String tourStatus = response.getString("status");
+                            tourName = response.getString("name");
+                            tourMinCost = response.getString("minCost");
+                            tourMaxCost = response.getString("maxCost");
+                            tourStartDate = response.getString("startDate");
+                            tourEndDate = response.getString("endDate");
+                            tourAdults = response.getString("adults");
+                            tourChilds = response.getString("childs");
+                            tourIsPrivate = response.getString("isPrivate");
+                            String tourAvatar = response.getString("avatar");
+
+
+
+                            try {
+                                long miliStartDate = Long.parseLong(tourStartDate);
+                                Date startD = new Date(miliStartDate);
+                                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                tourStartDate = dateFormat.format(startD);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                long miliEndDate = Long.parseLong(tourEndDate);
+                                Date endD = new Date(miliEndDate);
+                                DateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+                                tourEndDate = dateFormat1.format(endD);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            nameOfTour.setText(tourName);
+                            dateOfTour.setText("Start: " + tourStartDate + " - End: " + tourStartDate);
+                            peopleOfTour.setText("Adult(s): " + tourAdults + " - Child(s): " + tourChilds);
+                            cashOfTour.setText(tourMinCost + " VND - " + tourMaxCost + " VND");
+
+                            if(tourIsPrivate.equals("true")) {
+                                isPrivateTour.setText("Private");
+                                lockIcon.setImageResource(R.drawable.lock);
+                            }
+                            else{
+                                isPrivateTour.setText("Public");
+                                lockIcon.setImageResource(R.drawable.unlock);
+                            }
+
+                            JSONArray jsonArrayStopPoint = response.getJSONArray("stopPoints");
+                            stopPoints.clear();
+                            for (int i = 0; i < jsonArrayStopPoint.length(); i++) {
+                                JSONObject stopPoint = jsonArrayStopPoint.getJSONObject(i);
+                                String id = stopPoint.getString("id");
+                                String serviceId = stopPoint.getString("serviceId");
+                                String address = stopPoint.getString("address");
+                                String provinceId = stopPoint.getString("provinceId");
+                                String name = stopPoint.getString("name");
+                                String lat = stopPoint.getString("lat");
+                                String longitude = stopPoint.getString("long");
+                                String arrivalAt = stopPoint.getString("arrivalAt");
+                                String leaveAt = stopPoint.getString("leaveAt");
+                                String minCost = stopPoint.getString("minCost");
+                                String maxCost = stopPoint.getString("maxCost");
+                                String serviceTypeId = stopPoint.getString("serviceTypeId");
+                                String avatar = stopPoint.getString("avatar");
+                                String index = stopPoint.getString("index");
+                                try {
+                                    long miliStartDate = Long.parseLong(arrivalAt);
+                                    Date startD = new Date(miliStartDate);
+                                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                    arrivalAt = dateFormat.format(startD);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                try {
+                                    long miliEndDate = Long.parseLong(leaveAt);
+                                    Date endD = new Date(miliEndDate);
+                                    DateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+                                    leaveAt = dateFormat1.format(endD);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                StopPoint temp = new StopPoint(id, serviceId, address, name, arrivalAt, leaveAt, minCost, maxCost, serviceTypeId, avatar, lat, longitude);
+                                stopPoints.add(temp);
+                            }
+                            if (stopPoints.isEmpty()) {
+                                stopPointEmpty = (TextView) findViewById(R.id.stop_point_empty);
+                                stopPointEmpty.setVisibility(View.VISIBLE);
+                            } else {
+                                if (stopPoints.size() >= 2) {
+                                    listStopPoint.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 360));
+                                }
+                                AdapterStopPoint adapterStopPoint = new AdapterStopPoint(TourDetail.this, R.layout.stop_point_single, stopPoints);
+                                listStopPoint.setAdapter(adapterStopPoint);
+                                adapterStopPoint.notifyDataSetChanged();
+                            }
+
+                            JSONArray jsonArrayMember = response.getJSONArray("members");
+                            members.clear();
+                            for (int i = 0; i < jsonArrayMember.length(); i++) {
+                                JSONObject member = jsonArrayMember.getJSONObject(i);
+                                String id = member.getString("id");
+                                String name = member.getString("name");
+                                String phone = member.getString("phone");
+                                String avatar = member.getString("avatar");
+                                String isHost = member.getString("isHost");
+
+                                Member temp = new Member(id, name, phone, avatar, isHost);
+                                members.add(temp);
+                            }
+                            if (members.isEmpty()) {
+                                memberEmpty = (TextView) findViewById(R.id.member_empty);
+                                memberEmpty.setVisibility(View.VISIBLE);
+                            } else {
+                                if (members.size() >= 2) {
+                                    listMember.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 410));
+                                }
+                                AdapterMember adapterMember = new AdapterMember(TourDetail.this, R.layout.member_single, members);
+                                listMember.setAdapter(adapterMember);
+                                adapterMember.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue.add(request_json);
+    }
 }
