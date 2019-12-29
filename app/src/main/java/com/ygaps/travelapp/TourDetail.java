@@ -79,7 +79,7 @@ import java.util.Map;
 public class TourDetail extends AppCompatActivity {
     ArrayList<StopPoint> stopPoints=new ArrayList<StopPoint>();
     ArrayList<Comment> comments=new ArrayList<Comment>();
-    ArrayList<Member> members=new ArrayList<Member>();
+    public static ArrayList<Member> members=new ArrayList<Member>();
     ArrayList<Member> searchMemberArray=new ArrayList<Member>();
     ArrayList <Review> reviews=new ArrayList<Review>();
     String isHost="";
@@ -1404,6 +1404,20 @@ public class TourDetail extends AppCompatActivity {
                 break;
         }
         if (!isRecord ) this.finish();
+    }
+
+
+    public static String nameUserId(String id)
+    {
+        String name="";
+        for (int i=0;i<members.size();i++)
+        {
+            if (members.get(i).getId().equals(id))
+            {
+                name = members.get(i).getName();
+            }
+        }
+        return name;
     }
 
 }

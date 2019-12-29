@@ -118,6 +118,19 @@ public class FollowActivity extends AppCompatActivity implements
                 .findFragmentById(R.id.followmap);
         mapFragment.getMapAsync(FollowActivity.this);
     }
+    public void ShowSpeed()
+    {
+        map.clear();
+        for (int i=0;i<listSpeedGet.size();i++)
+        {
+            MarkerOptions markerOptions = new MarkerOptions();
+            LatLng temp = new LatLng(Double.parseDouble(listSpeedGet.get(i).getLat()),Double.parseDouble(listSpeedGet.get(i).getLongitute()));
+            markerOptions.position(temp);
+            markerOptions.title(listSpeedGet.get(i).getSpeed()+"km/h");
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.checked));
+            map.addMarker(markerOptions);
+        }
+    }
     private void Clear(int k){
         if (k==-1)
         {
@@ -141,7 +154,7 @@ public class FollowActivity extends AppCompatActivity implements
                 MarkerOptions markerOptions = new MarkerOptions();
                 LatLng temp = new LatLng(Double.parseDouble(listUserGet.get(i).getLat()),Double.parseDouble(listUserGet.get(i).getLongitute()));
                 markerOptions.position(temp);
-                markerOptions.title(listUserGet.get(i).getId());
+                markerOptions.title(TourDetail.nameUserId(listUserGet.get(i).getId()));
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man));
                 map.addMarker(markerOptions);
             }
@@ -177,7 +190,7 @@ public class FollowActivity extends AppCompatActivity implements
                     MarkerOptions markerOptions = new MarkerOptions();
                     LatLng temp = new LatLng(Double.parseDouble(listUserGet.get(i).getLat()),Double.parseDouble(listUserGet.get(i).getLongitute()));
                     markerOptions.position(temp);
-                    markerOptions.title(listUserGet.get(i).getId());
+                    markerOptions.title(TourDetail.nameUserId(listUserGet.get(i).getId()));
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man));
                     map.addMarker(markerOptions);
                 }
@@ -213,6 +226,7 @@ public class FollowActivity extends AppCompatActivity implements
                 },
                 1000);
 
+
         ha=new Handler();
         runnable=new Runnable() {
             @Override
@@ -220,10 +234,10 @@ public class FollowActivity extends AppCompatActivity implements
                 map.clear();
                 sendLocation();
 //                getSpeedLimit();
-                ha.postDelayed(this, 5000);
+                ha.postDelayed(this, 10000);
             }
         };
-        ha.postDelayed(runnable,5000);
+        ha.postDelayed(runnable,10000);
 
 
 
@@ -233,7 +247,7 @@ public class FollowActivity extends AppCompatActivity implements
             public void run() {
                 map.clear();
                 getSpeedLimit(false);
-                speed.postDelayed(this, 5000);
+                speed.postDelayed(this, 10000);
             }
         };
 
@@ -243,7 +257,7 @@ public class FollowActivity extends AppCompatActivity implements
                 Clear(status);
                 if (status==-1)
                 {
-                    speed.postDelayed(runspeed,5000);
+                    speed.postDelayed(runspeed,10000);
                     ha.removeCallbacks(runnable);
                     follow_show_icon.setImageResource(R.drawable.group);
                 }else{
@@ -465,15 +479,17 @@ public class FollowActivity extends AppCompatActivity implements
                                 Speed temp = new Speed(lat,longi,speed);
                                 listSpeedGet.add(temp);
                             }
-                            DeleteSameSpeedLimit(listSpeedGet);
-                            if (firstRun==false)
+                            if (firstRun)
                             {
+
+                            }
+                            else{
                                 for (int i=0;i<listSpeedGet.size();i++)
                                 {
                                     MarkerOptions markerOptions = new MarkerOptions();
                                     LatLng temp = new LatLng(Double.parseDouble(listSpeedGet.get(i).getLat()),Double.parseDouble(listSpeedGet.get(i).getLongitute()));
                                     markerOptions.position(temp);
-                                    markerOptions.title(listSpeedGet.get(i).getSpeed()+"km/h");
+                                    markerOptions.title(listSpeedGet.get(i).getSpeed());
                                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.warning));
                                     map.addMarker(markerOptions);
                                 }
