@@ -48,7 +48,6 @@ public class FragmentNofi extends Fragment {
         return rootView;
     }
 
-
     private void getListNoti(){
         RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
         String URL = "http://35.197.153.192:3000/tour/get/invitation?pageIndex=1&pageSize="+ Integer.MAX_VALUE;

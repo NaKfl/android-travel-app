@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterPage">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/circleImageView"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerHorizontal="true"
+                android:elevation="9dp"
+                android:src="@drawable/destination"
+                app:civ_border_color="@color/colorAccent"
+                app:civ_border_width="3dp" />
+                <RelativeLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/circleImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-15dp"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:weightSum="10">
+                            <TextView
+                                android:layout_height="match_parent"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:drawableStart="@drawable/folder"
+                                android:drawablePadding="16dp"
+                                android:fontFamily="@font/calibri"
+                                android:gravity="center_vertical"
+                                android:text="Speed Limit: "
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp" />
+
+                            <RadioGroup
+                                android:weightSum="30"
+                                android:gravity="center_vertical"
+                                android:id="@+id/speed"
+                                android:layout_weight="6"
+                                android:layout_height="match_parent"
+                                android:layout_width="0dp"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:id="@+id/speed_40"
+                                    android:layout_weight="10"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:checked="true"
+                                    android:text="40"/>
+
+                                <RadioButton
+                                    android:id="@+id/speed_50"
+                                    android:layout_weight="10"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:text="50"/>
+                                <RadioButton
+                                    android:id="@+id/speed_60"
+                                    android:layout_weight="10"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:text="60"/>
+                            </RadioGroup>
+                        </LinearLayout>
+                        <Button
+                            android:id="@+id/send_speed"
+                            android:layout_width="210dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/buttonshape"
+                            android:drawableLeft="@drawable/ic_touch_app_white_24dp"
+                            android:fontFamily="@font/calibri"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:text="Send"
+                            android:textAllCaps="false"
+                            android:textColor="#ffffff"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+        </RelativeLayout>
+
+    </ScrollView>
+</RelativeLayout>
