@@ -50,7 +50,8 @@ public class FragmentNofi extends Fragment {
 
     }
     //yêu cầu quyền ghi tập tin và quyền ghi âm
-    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                                      @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){

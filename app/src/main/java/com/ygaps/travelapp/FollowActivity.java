@@ -1,8 +1,11 @@
 package com.ygaps.travelapp;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
@@ -17,6 +20,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -42,6 +48,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.ygaps.travelapp.Adapter.AdapterComment;
+import com.ygaps.travelapp.Modal.Comment;
+import com.ygaps.travelapp.Modal.Speed;
 import com.ygaps.travelapp.Modal.UserCoordinate;
 
 import org.json.JSONArray;
@@ -67,10 +76,20 @@ public class FollowActivity extends AppCompatActivity implements
     String latCurr="",longCurr="";
     private Marker markerSelect;
     public ArrayList<UserCoordinate> listUserGet= new ArrayList <UserCoordinate>();
+    public ArrayList<Speed> listSpeedGet= new ArrayList <Speed>();
     public static final int Request_User_Location_Code=99;
     private Geocoder geocoder;
     public String message="";
-    ImageView messButton;
+    ImageView messButton,alertButton,follow_show_icon;
+    RadioGroup speedR;
+    RadioButton speed_40R;
+    RadioButton speed_50R;
+    RadioButton speed_60R;
+    Button send_speed;
+    String speed_select = "40";
+    int status=-1;
+    Handler ha,speed;
+    Runnable runnable,runspeed;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +98,8 @@ public class FollowActivity extends AppCompatActivity implements
 
         //Nút xem mess
         messButton=(ImageView)findViewById(R.id.follow_mess_icon);
+        alertButton=(ImageView)findViewById(R.id.follow_alert_icon);
+        follow_show_icon=(ImageView)findViewById(R.id.follow_show_icon);
         messButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +118,35 @@ public class FollowActivity extends AppCompatActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.followmap);
         mapFragment.getMapAsync(FollowActivity.this);
+    }
+    private void Clear(int k){
+        if (k==-1)
+        {
+            map.clear();
+            for (int i=0;i<listSpeedGet.size();i++)
+            {
+                MarkerOptions markerOptions = new MarkerOptions();
+                LatLng temp = new LatLng(Double.parseDouble(listSpeedGet.get(i).getLat()),Double.parseDouble(listSpeedGet.get(i).getLongitute()));
+                markerOptions.position(temp);
+                markerOptions.title(listSpeedGet.get(i).getSpeed()+"km/h");
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                map.addMarker(markerOptions);
+            }
+
+        }
+        else
+        {
+            map.clear();
+            for (int i=0;i<listUserGet.size();i++)
+            {
+                MarkerOptions markerOptions = new MarkerOptions();
+                LatLng temp = new LatLng(Double.parseDouble(listUserGet.get(i).getLat()),Double.parseDouble(listUserGet.get(i).getLongitute()));
+                markerOptions.position(temp);
+                markerOptions.title(listUserGet.get(i).getId());
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                map.addMarker(markerOptions);
+            }
+        }
     }
     public void sendLocation()
     {
@@ -145,8 +195,6 @@ public class FollowActivity extends AppCompatActivity implements
         };
         requestQueue5.add(request_json);
 
-
-
     }
 
     @Override
@@ -157,35 +205,85 @@ public class FollowActivity extends AppCompatActivity implements
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }
-
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         sendLocation();
+                        getSpeedLimit(true);
                     }
                 },
-                500);
+                1000);
 
-        final Handler ha=new Handler();
-        ha.postDelayed(new Runnable() {
+        ha=new Handler();
+        runnable=new Runnable() {
             @Override
             public void run() {
-                //call function
                 map.clear();
                 sendLocation();
-
-//                for (int i=0;i<listUserGet.size();i++)
-//                {
-//                    MarkerOptions markerOptions = new MarkerOptions();
-//                    LatLng temp = new LatLng(Double.parseDouble(listUserGet.get(i).getLat()),Double.parseDouble(listUserGet.get(i).getLongitute()));
-//                    markerOptions.position(temp);
-//                    markerOptions.title(listUserGet.get(i).getId());
-//                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-//                    map.addMarker(markerOptions);
-//                }
-                ha.postDelayed(this, 10000);
+                Toast.makeText(FollowActivity.this, "1111", Toast.LENGTH_SHORT).show();
+//                getSpeedLimit();
+                ha.postDelayed(this, 5000);
             }
-        }, 10000);
+        };
+        ha.postDelayed(runnable,5000);
+
+
+
+        speed=new Handler();
+        runspeed=new Runnable() {
+            @Override
+            public void run() {
+                map.clear();
+                getSpeedLimit(false);
+                Toast.makeText(FollowActivity.this, "222222", Toast.LENGTH_SHORT).show();
+                speed.postDelayed(this, 5000);
+            }
+        };
+
+        follow_show_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Clear(status);
+                if (status==-1)
+                {
+                    speed.postDelayed(runspeed,5000);
+                    ha.removeCallbacks(runnable);
+                    follow_show_icon.setImageResource(R.drawable.cancel);
+                }else{
+                    ha.postDelayed(runnable,10000);
+                    speed.removeCallbacks(runspeed);
+                    follow_show_icon.setImageResource(R.drawable.checked);
+                }
+                status=-status;
+            }
+        });
+        alertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog speedDialog = new Dialog(FollowActivity.this);
+                //speedDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                speedDialog.setContentView(R.layout.popup_speed);
+                speedR = (RadioGroup) speedDialog.findViewById(R.id.speed);
+                speed_40R = (RadioButton) speedDialog.findViewById(R.id.speed_40);
+                speed_50R = (RadioButton) speedDialog.findViewById(R.id.speed_50);
+                speed_60R = (RadioButton) speedDialog.findViewById(R.id.speed_60);
+                send_speed = (Button) speedDialog.findViewById(R.id.send_speed);
+
+                send_speed.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (speed_40R.isChecked())
+                            speed_select="40";
+                        if (speed_50R.isChecked())
+                            speed_select="50";
+                        if (speed_60R.isChecked())
+                            speed_select="60";
+                        sendSpeedLimit(speed_select,speedDialog);
+                    }
+                });
+                speedDialog.show();
+            }
+        });
     }
 
 
@@ -313,5 +411,92 @@ public class FollowActivity extends AppCompatActivity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendSpeedLimit(String speed, final Dialog dialog1)
+    {
+        final RequestQueue requestQueue5 = Volley.newRequestQueue(FollowActivity.this);
+        String URL = "http://35.197.153.192:3000/tour/add/notification-on-road";
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("userId", LoginPage.userId);
+        params.put("tourId", TourDetail.idOfTour);
+        params.put("lat",latCurr);
+        params.put("long",longCurr);
+        params.put("notificationType","3");
+        params.put("speed",speed);
+
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(FollowActivity.this, "Send Thanh cong", Toast.LENGTH_SHORT).show();
+                        dialog1.dismiss();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FollowActivity.this, "ERROR : "+error, Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json");
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue5.add(request_json);
+    }
+
+    public void getSpeedLimit(final boolean firstRun){
+        final RequestQueue requestQueue = Volley.newRequestQueue(FollowActivity.this);
+        String URL = "http://35.197.153.192:3000/tour/get/noti-on-road?tourId="+TourDetail.idOfTour+"&pageIndex=1&pageSize="+Integer.MAX_VALUE;
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try{
+                            JSONArray jsonArray = response.getJSONArray("notiList");
+                            listSpeedGet.clear();
+                            for(int i=0;i<jsonArray.length();i++){
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                String lat = jsonObject.getString("lat");
+                                String longi = jsonObject.getString("long");
+                                String speed = jsonObject.getString("speed");
+                                Speed temp = new Speed(lat,longi,speed);
+                                listSpeedGet.add(temp);
+                            }
+                            if (firstRun==false)
+                            {
+                                for (int i=0;i<listSpeedGet.size();i++)
+                                {
+                                    MarkerOptions markerOptions = new MarkerOptions();
+                                    LatLng temp = new LatLng(Double.parseDouble(listSpeedGet.get(i).getLat()),Double.parseDouble(listSpeedGet.get(i).getLongitute()));
+                                    markerOptions.position(temp);
+                                    markerOptions.title(listSpeedGet.get(i).getSpeed()+"km/h");
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                                    map.addMarker(markerOptions);
+                                }
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FollowActivity.this, error+"", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", LoginPage.token);
+                return headers;
+            }
+        };
+        requestQueue.add(request_json);
     }
 }
