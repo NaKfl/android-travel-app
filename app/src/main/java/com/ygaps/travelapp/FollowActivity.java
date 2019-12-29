@@ -128,7 +128,7 @@ public class FollowActivity extends AppCompatActivity implements
                 LatLng temp = new LatLng(Double.parseDouble(listSpeedGet.get(i).getLat()),Double.parseDouble(listSpeedGet.get(i).getLongitute()));
                 markerOptions.position(temp);
                 markerOptions.title(listSpeedGet.get(i).getSpeed()+"km/h");
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.warning));
                 map.addMarker(markerOptions);
             }
 
@@ -142,7 +142,7 @@ public class FollowActivity extends AppCompatActivity implements
                 LatLng temp = new LatLng(Double.parseDouble(listUserGet.get(i).getLat()),Double.parseDouble(listUserGet.get(i).getLongitute()));
                 markerOptions.position(temp);
                 markerOptions.title(listUserGet.get(i).getId());
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man));
                 map.addMarker(markerOptions);
             }
         }
@@ -178,7 +178,7 @@ public class FollowActivity extends AppCompatActivity implements
                     LatLng temp = new LatLng(Double.parseDouble(listUserGet.get(i).getLat()),Double.parseDouble(listUserGet.get(i).getLongitute()));
                     markerOptions.position(temp);
                     markerOptions.title(listUserGet.get(i).getId());
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man));
                     map.addMarker(markerOptions);
                 }
 
@@ -219,7 +219,6 @@ public class FollowActivity extends AppCompatActivity implements
             public void run() {
                 map.clear();
                 sendLocation();
-                Toast.makeText(FollowActivity.this, "1111", Toast.LENGTH_SHORT).show();
 //                getSpeedLimit();
                 ha.postDelayed(this, 5000);
             }
@@ -234,7 +233,6 @@ public class FollowActivity extends AppCompatActivity implements
             public void run() {
                 map.clear();
                 getSpeedLimit(false);
-                Toast.makeText(FollowActivity.this, "222222", Toast.LENGTH_SHORT).show();
                 speed.postDelayed(this, 5000);
             }
         };
@@ -476,7 +474,7 @@ public class FollowActivity extends AppCompatActivity implements
                                     LatLng temp = new LatLng(Double.parseDouble(listSpeedGet.get(i).getLat()),Double.parseDouble(listSpeedGet.get(i).getLongitute()));
                                     markerOptions.position(temp);
                                     markerOptions.title(listSpeedGet.get(i).getSpeed()+"km/h");
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.warning));
                                     map.addMarker(markerOptions);
                                 }
                             }
@@ -517,4 +515,5 @@ public class FollowActivity extends AppCompatActivity implements
             }
         }
     }
+
 }
