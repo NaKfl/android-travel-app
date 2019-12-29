@@ -484,14 +484,7 @@ public class TourDetail extends AppCompatActivity {
                         final Dialog Updatedialog = new Dialog(TourDetail.this);
                         Updatedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         Updatedialog.setContentView(R.layout.popup_detail_stoppoint);
-                        ImageView close_dialog = (ImageView) Updatedialog.findViewById(R.id.close);
                         ImageView delete_stop = (ImageView) Updatedialog.findViewById(R.id.delete_stoppoint);
-                        close_dialog.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Updatedialog.dismiss();
-                            }
-                        });
 
 
 
