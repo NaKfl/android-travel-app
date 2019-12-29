@@ -467,6 +467,7 @@ public class FollowActivity extends AppCompatActivity implements
                                 Speed temp = new Speed(lat,longi,speed);
                                 listSpeedGet.add(temp);
                             }
+                            DeleteSameSpeedLimit(listSpeedGet);
                             if (firstRun==false)
                             {
                                 for (int i=0;i<listSpeedGet.size();i++)
@@ -497,5 +498,23 @@ public class FollowActivity extends AppCompatActivity implements
             }
         };
         requestQueue.add(request_json);
+    }
+    public void DeleteSameSpeedLimit(ArrayList<Speed> list)
+    {
+        for (int i=0;i<list.size();i++)
+        {
+            for (int j=i+1;j<list.size();j++)
+            {
+                String lat =list.get(i).getLat();
+                String longi =list.get(i).getLat();
+                String lat2 =list.get(j).getLat();
+                String longi2 =list.get(j).getLat();
+                if (lat.equals(lat2) && longi.equals(longi2))
+                {
+                    list.remove(i);
+                    i=i-1;
+                }
+            }
+        }
     }
 }
