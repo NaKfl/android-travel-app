@@ -1,20 +1,19 @@
 package com.ygaps.travelapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
+import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -23,17 +22,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ygaps.travelapp.Adapter.AdapterComment;
 import com.ygaps.travelapp.Modal.Comment;
+import com.ygaps.travelapp.Modal.record;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,14 +46,33 @@ public class Conversation extends AppCompatActivity {
     AdapterComment adapterComment;
     Handler ha;
     Runnable runnable;
+    private Button start,play;
+    private MediaRecorder myAudioRecorder;
+    public String outputFile;
+    private boolean permissionToRecordAccepted = false;
+    private boolean permissionToWriteAccepted = false;
+    private com.ygaps.travelapp.Modal.record record;
+    private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conservation);
 
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
+
+        start = (Button)findViewById(R.id.convervation_record);
+        play = (Button)findViewById(R.id.convervation_play);
+        record=new record(play,start,myAudioRecorder,outputFile);
+        record.setRecord(this);
+        record.playRE(this);
+
         Intent intent = getIntent();
         tourId = intent.getStringExtra("tourId");
         userId = intent.getStringExtra("userId");
+
         Toast.makeText(this, tourId+" - "+userId, Toast.LENGTH_SHORT).show();
         mapping();
         setAdapter(listView,tourId);
@@ -83,6 +100,18 @@ public class Conversation extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 200:
+                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) this.finish();
+        if (!permissionToWriteAccepted ) this.finish();
     }
 
     private void mapping(){

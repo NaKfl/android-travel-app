@@ -24,12 +24,13 @@
             android:layout_height="0dp"
             android:layout_weight="1.5"
             android:weightSum="10"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:gravity="center">
             <EditText
                 android:id="@+id/convervation_input"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="8"
+                android:layout_weight="6"
                 android:background="@drawable/white_rounded_shape"
                 android:drawableLeft="@drawable/chat"
                 android:drawablePadding="10dp"
@@ -40,6 +41,24 @@
                 android:textSize="15sp"
                 android:paddingLeft="10dp"
                 android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/convervation_record"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/voice"
+                android:paddingTop="13dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="5dp"/>
+            <Button
+                android:id="@+id/convervation_play"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/play_button"
+                android:paddingTop="16dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="5dp"/>
             <Button
                 android:id="@+id/convervation_button"
                 android:layout_width="0dp"

@@ -109,7 +109,7 @@ public class LoginPage extends AppCompatActivity {
         TextView googleTitle = (TextView) signInButtonGoogle.getChildAt(0);
         googleTitle.setText(R.string.google_login_title);
 
-        if(token==""){
+        if(token.isEmpty()){
             LoginManager.getInstance().logOut();
         }
         callbackManager=CallbackManager.Factory.create();
