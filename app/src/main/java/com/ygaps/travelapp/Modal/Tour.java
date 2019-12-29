@@ -7,20 +7,24 @@ public class Tour {
     public String date;
     public String cash;
     public String people;
+    public String hostId;
 
-    public Tour(String tourId, String avatar, String destination, String date, String people, String cash){
+    public Tour(String tourId, String avatar, String destination, String date, String people, String cash, String hostId){
         this.tourId=tourId;
         this.avatar=avatar;
         this.destination=destination;
         this.date=date;
         this.people=people;
         this.cash=cash;
+        this.hostId=hostId;
     }
 
     public String getTour() {
         return tourId;
     }
-
+    public String getHostId() {
+        return hostId;
+    }
     public String getDestination() {
         return destination;
     }

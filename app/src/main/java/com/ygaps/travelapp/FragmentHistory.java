@@ -43,6 +43,7 @@ public class FragmentHistory extends Fragment {
     public static AdapterTour adapter;
     TextView totalTour,newTour,successTour,failTour,inProcessTour, emptySearch;
     EditText searchInput;
+    String hostId;
 
     @Nullable
     @Override
@@ -93,6 +94,7 @@ public class FragmentHistory extends Fragment {
                                             String tourId = tour.getString("id");
                                             String nameTour = tour.getString("name");
                                             String minCost = tour.getString("minCost");
+                                            String isHost = tour.getString("isHost");
                                             String maxCost = tour.getString("maxCost");
                                             String startDate = tour.getString("startDate");
                                             String endDate = tour.getString("endDate");
@@ -119,7 +121,7 @@ public class FragmentHistory extends Fragment {
                                                 e.printStackTrace();
                                             }
                                             if(!status.equals("-1")){
-                                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                                Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost,isHost);
                                                 tours.add(temp);
                                             }
                                         }
@@ -218,6 +220,7 @@ public class FragmentHistory extends Fragment {
                                 JSONObject tour = jsonArray.getJSONObject(i);
                                 String tourId = tour.getString("id");
                                 String nameTour = tour.getString("name");
+                                hostId = tour.getString("hostId");
                                 String minCost = tour.getString("minCost");
                                 String maxCost = tour.getString("maxCost");
                                 String startDate = tour.getString("startDate");
@@ -245,7 +248,12 @@ public class FragmentHistory extends Fragment {
                                     e.printStackTrace();
                                 }
                                 if(!status.equals("-1")){
-                                    Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                    if (hostId.equals(LoginPage.userId)){
+                                        hostId="true";
+                                    }else{
+                                        hostId="false";
+                                    }
+                                    Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost,hostId);
                                     tours.add(temp);
                                 }
                             }
@@ -282,8 +290,10 @@ public class FragmentHistory extends Fragment {
                 Intent intent=new Intent(getContext(),TourDetail.class);
                 intent.putExtra("tourId",tours.get(position).tourId);
                 intent.putExtra("isMyTour","1");
-                startActivity(intent);
+                intent.putExtra("hostId",tours.get(position).getHostId());
 
+
+                startActivity(intent);
             }
         });
 

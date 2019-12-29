@@ -204,7 +204,7 @@ public class FragmentHome extends Fragment {
                                    e.printStackTrace();
                                }
                                if(!status.equals("-1")){
-                                   Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost);
+                                   Tour temp = new Tour(tourId,"",nameTour,timeStart+" - "+timeEnd,adults,minCost+" - "+maxCost,"");
                                    tours.add(temp);
                                }
                             }

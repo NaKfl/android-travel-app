@@ -82,6 +82,7 @@ public class TourDetail extends AppCompatActivity {
     ArrayList<Member> members=new ArrayList<Member>();
     ArrayList<Member> searchMemberArray=new ArrayList<Member>();
     ArrayList <Review> reviews=new ArrayList<Review>();
+    String isHost="";
 
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour, isPrivateTour;
     TextView stopPointEmpty, commentEmpty, memberEmpty, memberListEmpty;
@@ -119,7 +120,6 @@ public class TourDetail extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             isRecord=checkRecordPermission();
-
         }
 
 
@@ -128,8 +128,17 @@ public class TourDetail extends AppCompatActivity {
         Intent intent = getIntent();
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");
+        isHost=intent.getStringExtra("hostId");
+
+
         getPointOfTour(idOfTour);
         TextView follow_action = (TextView) findViewById(R.id.follow_action);
+        LinearLayout followButton=(LinearLayout)findViewById(R.id.follow_button);
+        if(isMyTour.equals("0")){
+            followButton.setVisibility(View.GONE);
+        }else{
+            followButton.setVisibility(View.VISIBLE);
+        }
         follow_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,7 +188,6 @@ public class TourDetail extends AppCompatActivity {
                             Rate = 2;
                         }
 
-                        Toast.makeText(TourDetail.this, Rate + "", Toast.LENGTH_SHORT).show();
                         int rate = Math.round(Rate);
                         String review = reviewText.getText().toString();
                         final RequestQueue requestQueue = Volley.newRequestQueue(TourDetail.this);
@@ -188,7 +196,6 @@ public class TourDetail extends AppCompatActivity {
                         params.put("tourId", idOfTour);
                         params.put("review", review);
                         params.put("point", rate + "");
-                        Toast.makeText(TourDetail.this, review + " " + Rate, Toast.LENGTH_SHORT);
                         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
@@ -290,7 +297,6 @@ public class TourDetail extends AppCompatActivity {
                                                         String URL = "http://35.197.153.192:3000/tour/add/member";
                                                         HashMap<String, String> params = new HashMap<String, String>();
                                                         params.put("tourId", idOfTour);
-                                                        Toast.makeText(TourDetail.this, idOfTour, Toast.LENGTH_SHORT).show();
                                                         params.put("invitedUserId", searchMemberArray.get(position).getId());
                                                         params.put("isInvited", "false");
 
@@ -722,6 +728,8 @@ public class TourDetail extends AppCompatActivity {
                             tourIsPrivate = response.getString("isPrivate");
                             String tourAvatar = response.getString("avatar");
 
+
+
                             try {
                                 long miliStartDate = Long.parseLong(tourStartDate);
                                 Date startD = new Date(miliStartDate);
@@ -855,8 +863,13 @@ public class TourDetail extends AppCompatActivity {
             for (int i = 0; i < menu.size(); i++)
                 menu.getItem(i).setVisible(false);
         } else {
-            for (int i = 0; i < menu.size(); i++)
-                menu.getItem(i).setVisible(true);
+            if(isHost.equals("true")) {
+                for (int i = 0; i < menu.size(); i++)
+                    menu.getItem(i).setVisible(true);
+            }else{
+                for (int i = 0; i < menu.size(); i++)
+                    menu.getItem(i).setVisible(false);
+            }
         }
         super.onCreateOptionsMenu(menu);
         return true;
@@ -1097,7 +1110,6 @@ public class TourDetail extends AppCompatActivity {
 
                             }
 
-                            Toast.makeText(TourDetail.this, total + "", Toast.LENGTH_SHORT).show();
                             float rating = point/(total);
                             RatingBar ratingBar = (RatingBar) findViewById(R.id.pointOfTour);
                             LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
@@ -1135,7 +1147,6 @@ public class TourDetail extends AppCompatActivity {
                 return headers;
             }
         };
-        Toast.makeText(TourDetail.this, pointresult[0] + "", Toast.LENGTH_SHORT).show();
         requestQueue3.add(request_json);
     }
 
@@ -1208,7 +1219,6 @@ public class TourDetail extends AppCompatActivity {
     public void pointTB(final Dialog dialog, StopPoint stopPoint){
         final RequestQueue requestQueue4 = Volley.newRequestQueue(TourDetail.this);
         String URL = "http://35.197.153.192:3000/tour/get/feedback-point-stats?serviceId=" + stopPoint.getServiceId();
-        Toast.makeText(TourDetail.this, stopPoint.getId()+"", Toast.LENGTH_SHORT).show();
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
