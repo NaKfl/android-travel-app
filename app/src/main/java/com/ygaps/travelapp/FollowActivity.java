@@ -247,11 +247,11 @@ public class FollowActivity extends AppCompatActivity implements
                 {
                     speed.postDelayed(runspeed,5000);
                     ha.removeCallbacks(runnable);
-                    follow_show_icon.setImageResource(R.drawable.cancel);
+                    follow_show_icon.setImageResource(R.drawable.group);
                 }else{
                     ha.postDelayed(runnable,10000);
                     speed.removeCallbacks(runspeed);
-                    follow_show_icon.setImageResource(R.drawable.checked);
+                    follow_show_icon.setImageResource(R.drawable.notice);
                 }
                 status=-status;
             }

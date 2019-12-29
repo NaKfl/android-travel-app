@@ -9,23 +9,31 @@
         android:id="@+id/map"
         tools:context=".MapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
+
     <ImageView
         android:id="@+id/on_off"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
 
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="384dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/ic_add_circle_black_24dp" />
+        android:layout_marginBottom="179dp"
+        android:background="@drawable/circle_button"
+        android:clickable="true"
+        android:src="@drawable/light" />
+
     <ImageView
         android:id="@+id/showList"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:focusable="false"
-        android:layout_alignParentLeft="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/on_off"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/folder" />
+        android:layout_marginBottom="123dp"
+        android:background="@drawable/circle_button"
+        android:focusable="false"
+        android:src="@drawable/list" />
 </RelativeLayout>
