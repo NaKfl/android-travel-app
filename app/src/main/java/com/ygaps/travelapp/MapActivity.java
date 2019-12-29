@@ -394,13 +394,6 @@ public class MapActivity extends AppCompatActivity implements
                                         Updatedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         Updatedialog.setContentView(R.layout.popup_detail_stoppoint);
                                         ImageView delete_stoppoint = (ImageView) Updatedialog.findViewById(R.id.delete_stoppoint);
-                                        ImageView close_dialog = (ImageView) Updatedialog.findViewById(R.id.close);
-                                        close_dialog.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                Updatedialog.dismiss();
-                                            }
-                                        });
                                         delete_stoppoint.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
