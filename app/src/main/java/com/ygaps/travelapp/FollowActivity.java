@@ -76,7 +76,6 @@ public class FollowActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
 
-
         //Nút xem mess
         messButton=(ImageView)findViewById(R.id.follow_mess_icon);
         messButton.setOnClickListener(new View.OnClickListener() {
