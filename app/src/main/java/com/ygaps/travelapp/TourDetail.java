@@ -1,13 +1,19 @@
 package com.ygaps.travelapp;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -94,6 +100,7 @@ public class TourDetail extends AppCompatActivity {
             "Other"
     };
     public static String idOfTour;
+    boolean isRecord = false;
     String isMyTour, tourName, tourMinCost, tourMaxCost, tourStartDate, tourEndDate, tourAdults, tourChilds, tourIsPrivate;
     int flagGoMap = 0;
     @Override
@@ -107,6 +114,16 @@ public class TourDetail extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.tour_detail);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            isRecord=checkRecordPermission();
+
+        }
+
+
+
 
         Intent intent = getIntent();
         idOfTour = intent.getStringExtra("tourId");
@@ -1345,4 +1362,38 @@ public class TourDetail extends AppCompatActivity {
         };
         requestQueue5.add(request_json);
     }
+
+
+    public boolean checkRecordPermission()
+    {
+        if (ContextCompat.checkSelfPermission(TourDetail.this, Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(TourDetail.this,Manifest.permission.RECORD_AUDIO))
+            {
+                ActivityCompat.requestPermissions(TourDetail.this,new String[]{Manifest.permission.RECORD_AUDIO},200);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(TourDetail.this,new String[]{Manifest.permission.RECORD_AUDIO},200);
+
+            }
+            return  false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+
+    public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 200:
+                isRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!isRecord ) this.finish();
+    }
+
 }

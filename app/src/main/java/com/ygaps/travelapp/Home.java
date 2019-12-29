@@ -1,10 +1,15 @@
 package com.ygaps.travelapp;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -31,7 +36,7 @@ public class Home extends AppCompatActivity {
     FragmentCreate createFragment;
     FragmentNofi nofiFragment;
     FragmentSetting settingFragment;
-
+    boolean isLocation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,11 @@ public class Home extends AppCompatActivity {
         mainFrame= findViewById(R.id.main_frame);
         homeFragment = new FragmentHome();
         setFragment(homeFragment);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            isLocation=checkUserLocationPermission();
 
+        }
         mainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -121,5 +130,34 @@ public class Home extends AppCompatActivity {
             }
         };
         requestQueue.add(request_json);
+    }
+    public boolean checkUserLocationPermission()
+    {
+        if (ContextCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Home.this,Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                ActivityCompat.requestPermissions(Home.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MapActivity.Request_User_Location_Code);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(Home.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MapActivity.Request_User_Location_Code);
+
+            }
+            return  false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 99:
+                isLocation = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!isLocation ) this.finish();
     }
 }

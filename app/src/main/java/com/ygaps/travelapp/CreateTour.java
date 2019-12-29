@@ -97,7 +97,6 @@ public class CreateTour extends AppCompatActivity {
                 Date startD, endD;
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 
-
                 try {
                     startD = sdf.parse(txtStartDate);
                     endD = sdf.parse(txtEndDate);
