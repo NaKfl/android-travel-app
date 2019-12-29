@@ -1,11 +1,15 @@
 package com.ygaps.travelapp.Adapter;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ygaps.travelapp.LoginPage;
 import com.ygaps.travelapp.R;
 import java.util.ArrayList;
 import com.ygaps.travelapp.Modal.Comment;
@@ -52,14 +56,11 @@ public class AdapterComment extends BaseAdapter {
 
         ViewHolder holder;
         if (view == null) {
-            //if(myComment.get(i).getId()==id){
-                view = View.inflate(viewGroup.getContext(), R.layout.comment_single2, null);
-            //}else{
-             //   view = View.inflate(viewGroup.getContext(), R.layout.comment_single, null);
-           // }
+                view = View.inflate(viewGroup.getContext(), myLayout, null);
             holder=new ViewHolder();
             holder.name=view.findViewById(R.id.comment_name);
             holder.commentContent=view.findViewById(R.id.comment_content);
+            holder.commentLayout=view.findViewById(R.id.commemt_layout);
 
 
             view.setTag(holder);
@@ -69,12 +70,16 @@ public class AdapterComment extends BaseAdapter {
         //ánh xạ
         holder.name.setText(myComment.get(i).getName());
         holder.commentContent.setText(myComment.get(i).getCommentContent());
-
+        if(myComment.get(i).getId().equals(id))
+            holder.commentLayout.setGravity(Gravity.END);
+        else
+            holder.commentLayout.setGravity(Gravity.START);
         return view;
     }
     static class ViewHolder {
         ImageView avatar;
         TextView name;
         TextView commentContent;
+        LinearLayout commentLayout;
     }
 }

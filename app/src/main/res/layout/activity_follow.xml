@@ -10,22 +10,14 @@
         tools:context=".FollowActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
     <ImageView
-        android:id="@+id/send_location"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/ic_add_circle_black_24dp" />
-    <ImageView
-        android:id="@+id/showList"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:focusable="false"
-        android:layout_alignParentLeft="true"
+        android:id="@+id/follow_mess_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/folder" />
+        android:layout_marginBottom="45dp"
+        android:src="@drawable/chat_icon"
+        android:background="@drawable/circle_button"
+        android:clickable="true"/>
 </RelativeLayout>

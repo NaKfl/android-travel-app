@@ -78,6 +78,8 @@ public class LoginPage extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         token=sharedPreferences.getString("token","");
+        userId=sharedPreferences.getString("userId","");
+
 
         if(!token.isEmpty()) {
             Intent intent = new Intent(LoginPage.this, Home.class);
@@ -215,6 +217,7 @@ public class LoginPage extends AppCompatActivity {
                                         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("token",LoginPage.token);
+                                        editor.putString("userId",LoginPage.userId);
                                         editor.apply();
 
                                         Intent intent = new Intent(LoginPage.this,Home.class);

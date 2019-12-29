@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -69,12 +70,26 @@ public class FollowActivity extends AppCompatActivity implements
     public static final int Request_User_Location_Code=99;
     private Geocoder geocoder;
     public String message="";
-    ImageView send_location;
+    ImageView messButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
-        send_location = (ImageView) findViewById(R.id.send_location);
+
+
+        //Nút xem mess
+        messButton=(ImageView)findViewById(R.id.follow_mess_icon);
+        messButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FollowActivity.this, Conversation.class);
+                intent.putExtra("tourId",TourDetail.idOfTour);
+                intent.putExtra("userId",LoginPage.userId);
+                startActivity(intent);
+            }
+        });
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             checkUserLocationPermission();
@@ -107,7 +122,7 @@ public class FollowActivity extends AppCompatActivity implements
             public void onErrorResponse(VolleyError error) {
                 message = error.getMessage();
                 showLocationMember(message);
-                Toast.makeText(FollowActivity.this, listUserGet.size()+"--size", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(FollowActivity.this, listUserGet.size()+"--size", Toast.LENGTH_SHORT).show();
                 for (int i=0;i<listUserGet.size();i++)
                 {
                     MarkerOptions markerOptions = new MarkerOptions();
@@ -142,12 +157,6 @@ public class FollowActivity extends AppCompatActivity implements
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }
-        send_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                sendLocation();
-            }
-        });
 
         new android.os.Handler().postDelayed(
                 new Runnable() {

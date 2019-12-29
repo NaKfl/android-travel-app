@@ -49,7 +49,7 @@
                                     android:layout_height="match_parent"
                                     android:background="#F0F0F0" />
                                 <TextView
-                                    android:id="@+id/tour_detail_follow_button"
+                                    android:id="@+id/follow_action"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="10"
@@ -67,14 +67,6 @@
                             android:layout_below="@+id/linear1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <ImageView
-                                android:id="@+id/follow_action"
-                                android:layout_centerVertical="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="18dp"
-                                android:background="@drawable/ic_add_circle_black_24dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
                             <TextView
                                 android:id="@+id/tour_detail_destination"
                                 android:layout_width="wrap_content"

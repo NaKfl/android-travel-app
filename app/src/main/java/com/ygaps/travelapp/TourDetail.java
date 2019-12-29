@@ -78,7 +78,7 @@ public class TourDetail extends AppCompatActivity {
     ArrayList <Review> reviews=new ArrayList<Review>();
 
     TextView nameOfTour, dateOfTour, peopleOfTour, cashOfTour, isPrivateTour;
-    TextView stopPointEmpty, commentEmpty, memberEmpty, memberListEmpty, followButton;
+    TextView stopPointEmpty, commentEmpty, memberEmpty, memberListEmpty;
     ListView listStopPoint,listComment,listMember,listReview, searchMemberList;
     EditText searchMemberInput;
     ImageView lockIcon;
@@ -112,7 +112,7 @@ public class TourDetail extends AppCompatActivity {
         idOfTour = intent.getStringExtra("tourId");
         isMyTour = intent.getStringExtra("isMyTour");
         getPointOfTour(idOfTour);
-        ImageView follow_action = (ImageView) findViewById(R.id.follow_action);
+        TextView follow_action = (TextView) findViewById(R.id.follow_action);
         follow_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,24 +128,11 @@ public class TourDetail extends AppCompatActivity {
         listStopPoint=(ListView)findViewById(R.id.list_stop_point);
         listMember=(ListView)findViewById(R.id.list_member);
         lockIcon=(ImageView)findViewById(R.id.tour_detail_lock_icon);
-        followButton=(TextView)findViewById(R.id.tour_detail_follow_button);
         ImageView rate = (ImageView) findViewById(R.id.rate);
         ImageView addMember = (ImageView) findViewById(R.id.add_member);
         if(isMyTour.equals("0")){
             addMember.setVisibility(View.GONE);
         }
-
-        //Theo dõi chuyến đi
-        followButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TourDetail.this,Home.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
 
         //đánh giá
         rate.setOnClickListener(new View.OnClickListener() {

@@ -113,9 +113,11 @@ public class FragmentSetting extends Fragment {
             @Override
             public void onClick(View view) {
                 LoginPage.token="";
+                LoginPage.userId="";
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("token",LoginPage.token);
+                editor.putString("userId",LoginPage.userId);
                 editor.apply();
 
                 LoginPage.avatar="";
