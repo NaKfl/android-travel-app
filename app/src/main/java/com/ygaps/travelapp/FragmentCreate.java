@@ -205,7 +205,6 @@ public class FragmentCreate extends Fragment {
     public void pointTB(final Dialog dialog, StopPoint stopPoint){
         final RequestQueue requestQueue4 = Volley.newRequestQueue(getContext());
         String URL = "http://35.197.153.192:3000/tour/get/feedback-point-stats?serviceId=" + stopPoint.getId();
-        Toast.makeText(getContext(), stopPoint.getId()+"", Toast.LENGTH_SHORT).show();
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -443,7 +442,7 @@ public class FragmentCreate extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "Send Thanh cong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Send success", Toast.LENGTH_SHORT).show();
                         dialog1.dismiss();
                     }
                 }, new Response.ErrorListener() {

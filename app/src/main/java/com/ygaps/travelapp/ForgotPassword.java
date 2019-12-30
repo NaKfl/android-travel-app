@@ -71,7 +71,7 @@ public class ForgotPassword extends AppCompatActivity {
                         public void onClick(View view) {
                             recovery_passsword();
                             check=0;
-                            Toast.makeText(ForgotPassword.this,"Đổi mật khẩu thành công",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPassword.this,"Change password success",Toast.LENGTH_SHORT).show();
                             Intent intent=new Intent(ForgotPassword.this,LoginPage.class);
                             startActivity(intent);
                         }

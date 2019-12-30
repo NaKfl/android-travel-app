@@ -234,7 +234,6 @@ public class LoginPage extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
 
                             NetworkResponse networkResponse = error.networkResponse;
-                            Toast.makeText(LoginPage.this,"abc",Toast.LENGTH_SHORT).show();
                             if (networkResponse != null) {
                                 String statusCode=String.valueOf(networkResponse.statusCode);
                                 switch(statusCode){

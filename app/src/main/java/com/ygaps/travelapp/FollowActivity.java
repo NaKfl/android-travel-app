@@ -177,14 +177,13 @@ public class FollowActivity extends AppCompatActivity implements
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(FollowActivity.this, "Send Thanh cong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FollowActivity.this, "Send success", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 message = error.getMessage();
                 showLocationMember(message);
-//                Toast.makeText(FollowActivity.this, listUserGet.size()+"--size", Toast.LENGTH_SHORT).show();
                 for (int i=0;i<listUserGet.size();i++)
                 {
                     MarkerOptions markerOptions = new MarkerOptions();
@@ -440,7 +439,7 @@ public class FollowActivity extends AppCompatActivity implements
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(FollowActivity.this, "Send Thanh cong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FollowActivity.this, "Send success", Toast.LENGTH_SHORT).show();
                         dialog1.dismiss();
 
                     }

@@ -100,7 +100,6 @@ public class RegisterPage extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 Intent intent = new Intent(RegisterPage.this,LoginPage.class);
                                 startActivity(intent);
-                                Toast.makeText(RegisterPage.this, "OK", Toast.LENGTH_SHORT).show();
                             }
                         }, new Response.ErrorListener() {
                     @Override

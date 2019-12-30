@@ -50,14 +50,15 @@
                             android:paddingVertical="5dp">
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp">
                                 <ImageView
                                     android:id="@+id/edit_showinfo"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:background="@drawable/ic_map_gray_24dp" />
+                                    android:background="@drawable/edit" />
                                 <ImageView
                                     android:id="@+id/delete_showinfor"
                                     android:layout_width="wrap_content"
@@ -65,7 +66,7 @@
                                     android:layout_toLeftOf="@+id/edit_showinfo"
                                     android:layout_marginRight="10dp"
                                     android:layout_centerVertical="true"
-                                    android:background="@drawable/ic_delete_forever_black_24dp" />
+                                    android:background="@drawable/delete" />
                             </RelativeLayout>
 
 
@@ -73,7 +74,7 @@
                                 android:id="@+id/name_stp_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableStart="@drawable/address"
+                                android:drawableStart="@drawable/ic_place_red_24dp"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
                                 android:paddingTop="12dp"
@@ -87,7 +88,7 @@
                                 android:id="@+id/stp_address_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableStart="@drawable/ic_place_red_24dp"
+                                android:drawableStart="@drawable/book"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
                                 android:maxLines="5"
@@ -114,26 +115,24 @@
                                 android:id="@+id/name_service_infor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableStart="@drawable/price_tag"
+                                android:drawableStart="@drawable/address"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
                                 android:paddingTop="12dp"
                                 android:text="Time : "
                                 android:textAlignment="center"
-                                android:textColor="@android:color/holo_orange_dark"
                                 android:textSize="16dp"
                                 android:textStyle="bold" />
                             <TextView
                                 android:id="@+id/time_infor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableStart="@drawable/price_tag"
+                                android:drawableStart="@drawable/calendar"
                                 android:drawablePadding="16dp"
                                 android:fontFamily="@font/calibri"
                                 android:paddingTop="12dp"
                                 android:text="Time : "
                                 android:textAlignment="center"
-                                android:textColor="@android:color/holo_orange_dark"
                                 android:textSize="16dp"
                                 android:textStyle="bold" />
 
@@ -207,12 +206,15 @@
                         android:textColor="#2C2C2C"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+
                     <ImageView
                         android:id="@+id/send_feedback"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
                         android:background="@drawable/ic_add_circle_black_24dp" />
                 </RelativeLayout>
 

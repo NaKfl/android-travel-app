@@ -137,7 +137,6 @@ public class CreateTour extends AppCompatActivity {
                                     Intent intent = new Intent(CreateTour.this,MapActivity.class);
                                     intent.putExtra("isUpdate","0");
                                     startActivity(intent);
-                                    Toast.makeText(CreateTour.this, "TourID :"+tourID, Toast.LENGTH_SHORT).show();
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();

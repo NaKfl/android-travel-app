@@ -475,7 +475,7 @@ public class TourDetail extends AppCompatActivity {
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
-                                        Toast.makeText(TourDetail.this, "Xoa thanh cong", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(TourDetail.this, "Delete success", Toast.LENGTH_LONG).show();
                                         ShowInfor.dismiss();
                                         finish();
                                         overridePendingTransition(0, 0);
@@ -669,7 +669,6 @@ public class TourDetail extends AppCompatActivity {
                                         }, new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-                                        Toast.makeText(TourDetail.this, "" + error, Toast.LENGTH_LONG).show();
                                     }
                                 }) {
                                     @Override
@@ -764,7 +763,7 @@ public class TourDetail extends AppCompatActivity {
                             }
 
                             nameOfTour.setText(tourName);
-                            dateOfTour.setText("Start: " + tourStartDate + " - End: " + tourStartDate);
+                            dateOfTour.setText("Start: " + tourStartDate + " - End: " + tourEndDate);
                             peopleOfTour.setText("Adult(s): " + tourAdults + " - Child(s): " + tourChilds);
                             cashOfTour.setText(tourMinCost + " VND - " + tourMaxCost + " VND");
 
